@@ -118,7 +118,8 @@ function launch {
   fi
 
   cat /data/openpilot/selfdrive/car/hyundai/values.py | grep ' = "' | awk -F'"' '{print $2}' > /data/params/d/CarList
-
+  python ./selfdrive/car/hyundai/values.py > /data/params/d/SupportedCars
+  
   # start manager
   cd selfdrive/manager
   ./build.py && ./manager.py
