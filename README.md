@@ -1,6 +1,6 @@
 https://github.com/neokii/npilot/tree/hkg_0814_c2
 
-OP for EON. Oneplus 3T and LeEco Le Pro3 X727
+OP for EON. Oneplus 3T and LeEco Le Pro3 X727 X722 X720
 
 Add OnePlus 3T camera.
 
