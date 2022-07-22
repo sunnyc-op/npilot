@@ -125,6 +125,12 @@ function launch {
   fi
 
   python ./selfdrive/car/hyundai/values.py > /data/params/d/SupportedCars
+  
+  dongleid=`cat /data/params/d/DongleId`
+
+  if [[ $dongleid == *"Unregistered"* ]]; then
+    echo -en "000000" > /data/params/d/DongleId
+  fi
 
   # start manager
   cd selfdrive/manager
