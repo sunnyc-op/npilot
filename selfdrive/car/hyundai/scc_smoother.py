@@ -135,7 +135,7 @@ class SccSmoother:
       road_speed_limiter.get_max_speed(clu11_speed, self.is_metric)
 
     curv_limit = 0
-    #self.cal_curve_speed(sm, CS.out.vEgo, frame)
+    self.cal_curve_speed(sm, CS.out.vEgo, frame)
     if self.slow_on_curves and self.curve_speed_ms >= MIN_CURVE_SPEED:
       max_speed_clu = min(controls.v_cruise_kph * CV.KPH_TO_MS, self.curve_speed_ms) * self.speed_conv_to_clu
       curv_limit = int(max_speed_clu)
