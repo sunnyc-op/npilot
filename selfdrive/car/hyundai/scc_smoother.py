@@ -228,7 +228,7 @@ class SccSmoother:
         self.reset()
         self.wait_timer = max(ALIVE_COUNT) + max(WAIT_COUNT)
         return
-
+    # janpoo6427
     if not ascc_enabled and not ascc_auto_set:
       self.reset()
 
