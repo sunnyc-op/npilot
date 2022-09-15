@@ -12,7 +12,8 @@ from common.params import Params
 from selfdrive.controls.lib.drive_helpers import V_CRUISE_MAX, V_CRUISE_MIN, V_CRUISE_DELTA_KM, V_CRUISE_DELTA_MI, CONTROL_N
 from selfdrive.controls.lib.longitudinal_mpc_lib.long_mpc import AUTO_TR_CRUISE_GAP
 
-from selfdrive.ntune import ntune_scc_get
+from selfdrive.ntune import ntune_scc_get, ntune_option_enabled
+
 from selfdrive.road_speed_limiter import road_speed_limiter_get_max_speed, road_speed_limiter_get_active, \
   get_road_speed_limiter
 
@@ -212,16 +213,24 @@ class SccSmoother:
 
     CC.sccSmoother.autoTrGap = AUTO_TR_CRUISE_GAP
 
+    # janpoo6427
+    activated_hda = road_speed_limiter_get_active()
+
+    # janpoo6427
+    ascc_auto_set = ntune_option_enabled('autoCruiseSet') and enabled and (clu11_speed > 30 or CS.obj_valid) \
+                  and CS.gas_pressed and CS.prev_cruiseState_speed and not CS.cruiseState_speed
+
     ascc_enabled = CS.acc_mode and enabled and CS.cruiseState_enabled \
                    and 1 < CS.cruiseState_speed < 255 and not CS.brake_pressed
 
     if not self.longcontrol:
-      if not ascc_enabled or CS.standstill or CS.cruise_buttons != Buttons.NONE:
+      # janpoo6427
+      if (not ascc_enabled or CS.standstill or CS.cruise_buttons != Buttons.NONE) and not ascc_auto_set:
         self.reset()
         self.wait_timer = max(ALIVE_COUNT) + max(WAIT_COUNT)
         return
-
-    if not ascc_enabled:
+    # janpoo6427
+    if not ascc_enabled and not ascc_auto_set:
       self.reset()
 
     self.cal_target_speed(CS, clu11_speed, controls)
@@ -230,10 +239,16 @@ class SccSmoother:
 
     if self.wait_timer > 0:
       self.wait_timer -= 1
-    elif ascc_enabled and not CS.out.cruiseState.standstill:
-
+    # janpoo6427
+    elif (ascc_enabled and not CS.out.cruiseState.standstill) or ascc_auto_set:
       if self.alive_timer == 0:
-        self.btn = self.get_button(CS.cruiseState_speed * self.speed_conv_to_clu)
+        if ascc_enabled:
+          self.btn = self.get_button(CS.cruiseState_speed * self.speed_conv_to_clu)
+        elif ascc_auto_set:
+          if activated_hda == 1: # when nda connected# if clu11_speed < 60:
+                self.btn = Buttons.SET_DECEL
+          else:                                        # active hda(nda from openpilot)
+            self.btn = Buttons.RES_ACCEL
         self.alive_count = SccSmoother.get_alive_count()
 
       if self.btn != Buttons.NONE:
