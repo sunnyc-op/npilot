@@ -12,7 +12,8 @@ from common.params import Params
 from selfdrive.controls.lib.drive_helpers import V_CRUISE_MAX, V_CRUISE_MIN, V_CRUISE_DELTA_KM, V_CRUISE_DELTA_MI, CONTROL_N
 from selfdrive.controls.lib.longitudinal_mpc_lib.long_mpc import AUTO_TR_CRUISE_GAP
 
-from selfdrive.ntune import ntune_scc_get
+from selfdrive.ntune import ntune_scc_get, ntune_option_enabled
+
 from selfdrive.road_speed_limiter import road_speed_limiter_get_max_speed, road_speed_limiter_get_active, \
   get_road_speed_limiter
 
@@ -216,7 +217,7 @@ class SccSmoother:
     activated_hda = road_speed_limiter_get_active()
 
     # janpoo6427
-    ascc_auto_set = enabled and (clu11_speed > 30 or CS.obj_valid) \
+    ascc_auto_set = ntune_option_enabled('autoCruiseSet') and enabled and (clu11_speed > 30 or CS.obj_valid) \
                   and CS.gas_pressed and CS.prev_cruiseState_speed and not CS.cruiseState_speed
 
     ascc_enabled = CS.acc_mode and enabled and CS.cruiseState_enabled \

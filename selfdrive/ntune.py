@@ -255,6 +255,9 @@ class nTune():
     if self.checkValue("autoEngage", 0., 1., 1.):
       updated = True
 
+    if self.checkValue("autoCruiseSet", 0., 1., 1.):
+      updated = True
+
     return updated
 
   def updateIndi(self):
