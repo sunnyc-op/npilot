@@ -280,7 +280,7 @@ class nTune():
       torque.steering_angle_deadzone_deg = float(self.config["angle_deadzone_v2"])
       torque.reset()
 
-  def updateLQR(self):
+  def updateLqr(self):
     lqr = self.get_ctrl()
     if lqr is not None:
       lqr.scale = float(self.config["scale"])
@@ -370,6 +370,6 @@ def ntune_scc_get(key):
 
 def ntune_option_get(key):
       return ntune_get("option", key)
-      
+
 def ntune_option_enabled(key):
   return ntune_option_get(key) > 0.5
