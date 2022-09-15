@@ -51,6 +51,9 @@ class CarState(CarStateBase):
     self.use_cluster_speed = Params().get_bool('UseClusterSpeed')
     self.long_control_enabled = Params().get_bool('LongControlEnabled')
 
+    # janpoo6427
+    self.prev_cruiseState_speed = 0
+
   def update(self, cp, cp2, cp_cam):
     cp_mdps = cp2 if self.mdps_bus else cp
     cp_sas = cp2 if self.sas_bus else cp
@@ -225,6 +228,12 @@ class CarState(CarStateBase):
     ret.tpms.fr = tpms_unit * cp.vl["TPMS11"]["PRESSURE_FR"]
     ret.tpms.rl = tpms_unit * cp.vl["TPMS11"]["PRESSURE_RL"]
     ret.tpms.rr = tpms_unit * cp.vl["TPMS11"]["PRESSURE_RR"]
+
+    # janpoo6427
+    self.prev_cruiseState_speed = self.cruiseState_speed if self.cruiseState_speed else self.prev_cruiseState_speed
+    self.obj_valid = cp_scc.vl["SCC11"]['ObjValid']
+    if self.cruise_buttons == 4: #cancel
+      self.prev_cruiseState_speed = 0
 
     return ret
 
