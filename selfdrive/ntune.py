@@ -7,6 +7,7 @@ from enum import Enum
 import numpy as np
 
 CONF_PATH = '/data/ntune/'
+CONF_LAT_LQR_FILE = '/data/ntune/lat_lqr.json'
 CONF_LAT_INDI_FILE = '/data/ntune/lat_indi.json'
 CONF_LAT_TORQUE_FILE = '/data/ntune/lat_torque_v4.json'
 
@@ -23,6 +24,7 @@ class LatType(Enum):
   NONE = 0
   INDI = 1
   TORQUE = 2
+  LQR = 3
 
 
 class nTune():
@@ -52,6 +54,14 @@ class nTune():
     elif "LatControlINDI" in str(type(ctrl)):
       self.type = LatType.INDI
       self.file = CONF_LAT_INDI_FILE
+    elif "LatControlLQR" in str(type(ctrl)):
+      self.type = LatType.LQR
+      self.file = CONF_LAT_LQR_FILE
+      ctrl.A = np.array([0., 1., -0.22619643, 1.21822268]).reshape((2, 2))
+      ctrl.B = np.array([-1.92006585e-04, 3.95603032e-05]).reshape((2, 1))
+      ctrl.C = np.array([1., 0.]).reshape((1, 2))
+      ctrl.K = np.array([-110., 451.]).reshape((1, 2))
+      ctrl.L = np.array([0.33, 0.318]).reshape((2, 1))
     else:
       self.file = CONF_PATH + group + ".json"
 
@@ -138,8 +148,12 @@ class nTune():
       return self.checkValidIndi()
     elif self.type == LatType.TORQUE:
       return self.checkValidTorque()
+    elif self.type == LatType.LQR:
+      return self.checkValidLqr()
     elif self.group == "common":
       return self.checkValidCommon()
+    elif self.group == "option":
+      return self.checkValidOption()
     else:
       return self.checkValidISCC()
 
@@ -152,6 +166,8 @@ class nTune():
       self.updateIndi()
     elif self.type == LatType.TORQUE:
       self.updateTorque()
+    elif self.type == LatType.LQR:
+      self.updateLqr()
 
   def checkValidCommon(self):
     updated = False
@@ -216,6 +232,31 @@ class nTune():
 
     return updated
 
+  def checkValidLQR(self):
+    updated = False
+
+    if self.checkValue("scale", 500.0, 5000.0, 1600.0):
+      updated = True
+
+    if self.checkValue("ki", 0.0, 0.2, 0.01):
+      updated = True
+
+    if self.checkValue("dcGain", 0.002, 0.004, 0.0025):
+      updated = True
+
+    if self.checkValue("steerLimitTimer", 0.5, 3.0, 2.5):
+      updated = True
+
+    return updated
+
+  def checkValidOption(self):
+    updated = False
+
+    if self.checkValue("autoEngage", 0., 1., 1.):
+      updated = True
+
+    return updated
+
   def updateIndi(self):
     indi = self.get_ctrl()
     if indi is not None:
@@ -238,6 +279,16 @@ class nTune():
       torque.friction = float(self.config["friction"])
       torque.steering_angle_deadzone_deg = float(self.config["angle_deadzone_v2"])
       torque.reset()
+
+  def updateLQR(self):
+    lqr = self.get_ctrl()
+    if lqr is not None:
+      lqr.scale = float(self.config["scale"])
+      lqr.ki = float(self.config["ki"])
+      lqr.dc_gain = float(self.config["dcGain"])
+
+      lqr.x_hat = np.array([[0], [0]])
+      lqr.reset()
 
   def read_cp(self):
 
