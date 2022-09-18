@@ -13,8 +13,8 @@ def create_lkas11(packer, frame, car_fingerprint, apply_steer, steer_req,
   values = copy.copy(lkas11)
   values["CF_Lkas_LdwsSysState"] = sys_state
   values["CF_Lkas_SysWarning"] = 3 if sys_warning else 0
-  values["CF_Lkas_LdwsLHWarning"] = left_lane_depart
-  values["CF_Lkas_LdwsRHWarning"] = right_lane_depart
+  values["CF_Lkas_LdwsLHWarning"] = left_lane_depart or lkas11["CF_Lkas_LdwsLHWarning"]
+  values["CF_Lkas_LdwsRHWarning"] = right_lane_depart or lkas11["CF_Lkas_LdwsRHWarning"]
   values["CR_Lkas_StrToqReq"] = apply_steer
   values["CF_Lkas_ActToi"] = steer_req and not cut_steer_temp
   values["CF_Lkas_ToiFlt"] = cut_steer_temp  # seems to allow actuation on CR_Lkas_StrToqReq
