@@ -258,6 +258,9 @@ class nTune():
     if self.checkValue("autoCruiseSet", 0., 1., 1.):
       updated = True
 
+    if self.checkValue("autoCruiseSetDependsOnNda", 0., 1., 0.):
+      updated = True
+      
     return updated
 
   def updateIndi(self):
