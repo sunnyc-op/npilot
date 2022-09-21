@@ -264,7 +264,7 @@ class nTune():
     if self.checkValue("isLiveTorque", 0., 1., 0.):
       updated = True
 
-    if self.checkValue("IsLowSpeedFactor", 0., 1., 0.):
+    if self.checkValue("isLowSpeedFactor", 0., 1., 0.):
       updated = True
 
     if self.checkValue("batteryChargingControl", 0., 1., 0.):
