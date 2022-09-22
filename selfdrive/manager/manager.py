@@ -83,7 +83,7 @@ def manager_init() -> None:
     ("OpkrLiveSteerRatio", "0"),
     ("LiveSteerRatioPercent", "-5"),
     ("OpkrVariableSteerMax", "0"),
-    ("TorqueFriction", "5"),
+    ("TorqueFriction", "100"),
     ("TorqueMaxLatAccel", "28"),
     ("IsLiveTorque", "0"),
     ("IsLowSpeedFactor", "0"),
