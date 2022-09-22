@@ -468,11 +468,13 @@ void panda_state_thread(PubMaster *pm, std::vector<Panda *> pandas, bool spoofin
 
     ignition_last = ignition;
 
-    sm.update(0);
-    const bool engaged = sm.allAliveAndValid({"controlsState"}) && sm["controlsState"].getControlsState().getEnabled();
+    //auto engage
+    //sm.update(0);
+    //const bool engaged = sm.allAliveAndValid({"controlsState"}) && sm["controlsState"].getControlsState().getEnabled();
 
     for (const auto &panda : pandas) {
-      panda->send_heartbeat(engaged);
+      //panda->send_heartbeat(engaged);
+      panda->send_heartbeat(true);
     }
 
     uint64_t dt = nanos_since_boot() - start_time;

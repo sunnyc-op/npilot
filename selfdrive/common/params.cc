@@ -230,7 +230,10 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"TorqueMaxLatAccel", PERSISTENT},
     {"IsLiveTorque", PERSISTENT},
     {"IsLowSpeedFactor", PERSISTENT},
-
+    {"AutoEnable", PERSISTENT},
+    {"AutoEnableSpeed", PERSISTENT},
+    {"OPKRServer", PERSISTENT},
+    {"OPKRServerAPI", PERSISTENT},
 };
 
 } // namespace

@@ -4,8 +4,16 @@ import requests
 from datetime import datetime, timedelta
 from common.basedir import PERSIST
 from selfdrive.version import get_version
+from common.params import Params
 
-API_HOST = os.getenv('API_HOST', 'https://api.commadotai.com')
+if Params().get("OPKRServer", encoding="utf8") == "0":
+  API_HOST = os.getenv('API_HOST', 'http://opkr.tk:3000')
+elif Params().get("OPKRServer", encoding="utf8") == "1":
+  API_HOST = os.getenv('API_HOST', 'https://api.commadotai.com')
+elif Params().get("OPKRServer", encoding="utf8") == "2":
+  API_HOST = os.getenv('API_HOST', 'http://' + Params().get("OPKRServerAPI", encoding="utf8"))
+else:
+  API_HOST = os.getenv('API_HOST', 'http://opkr.tk:3000')
 
 class Api():
   def __init__(self, dongle_id):

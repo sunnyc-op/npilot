@@ -86,7 +86,9 @@ def manager_init() -> None:
     ("TorqueMaxLatAccel", "28"),
     ("IsLiveTorque", "0"),
     ("IsLowSpeedFactor", "0"),
-
+    ("AutoEnable", "0"),
+    ("AutoEnableSpeed", "3"),
+    ("OPKRServer", "0"),
   ]
   if not PC:
     default_params.append(("LastUpdateTime", datetime.datetime.utcnow().isoformat().encode('utf8')))

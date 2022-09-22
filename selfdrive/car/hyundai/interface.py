@@ -48,7 +48,32 @@ class CarInterface(CarInterfaceBase):
 
     ret.disableLateralLiveTuning = False
 
-    ret.lateralTuning.init('torque')
+    # lateral
+    lateral_control = Params().get("LateralControl", encoding='utf-8')
+    if lateral_control == 'INDI':
+      ret.lateralTuning.init('indi')
+      ret.lateralTuning.indi.innerLoopGainBP = [0.]
+      ret.lateralTuning.indi.innerLoopGainV = [3.3]
+      ret.lateralTuning.indi.outerLoopGainBP = [0.]
+      ret.lateralTuning.indi.outerLoopGainV = [2.8]
+      ret.lateralTuning.indi.timeConstantBP = [0.]
+      ret.lateralTuning.indi.timeConstantV = [1.4]
+      ret.lateralTuning.indi.actuatorEffectivenessBP = [0.]
+      ret.lateralTuning.indi.actuatorEffectivenessV = [1.8]
+    elif lateral_control == 'LQR':
+      ret.lateralTuning.init('lqr')
+
+      ret.lateralTuning.lqr.scale = 1600.
+      ret.lateralTuning.lqr.ki = 0.01
+      ret.lateralTuning.lqr.dcGain = 0.0025
+
+      ret.lateralTuning.lqr.a = [0., 1., -0.22619643, 1.21822268]
+      ret.lateralTuning.lqr.b = [-1.92006585e-04, 3.95603032e-05]
+      ret.lateralTuning.lqr.c = [1., 0.]
+      ret.lateralTuning.lqr.k = [-110., 451.]
+      ret.lateralTuning.lqr.l = [0.33, 0.318]
+    else:
+      ret.lateralTuning.init('torque')
 
     ret.steerRatio = 16.5
 
@@ -256,14 +281,15 @@ class CarInterface(CarInterfaceBase):
 
     ret.steerRatio = float(Decimal(params.get("SteerRatioAdj", encoding="utf8")) * Decimal('0.01'))
 
-    #TORQUE ONLY
-    #selfdrive/car/torque_data/params.yaml 참조해서 값 입력 https://codebeautify.org/jsonviewer/y220b1623
-    torque_lat_accel_factor = float(Decimal(params.get("TorqueMaxLatAccel", encoding="utf8")) * Decimal('0.1')) #2.544642494803999 #LAT_ACCEL_FACTOR
-    torque_friction = float(Decimal(params.get("TorqueFriction", encoding="utf8")) * Decimal('0.001')) #0.05 #FRICTION
-    ret.maxLateralAccel = 1.8721703683337008 #MAX_LAT_ACCEL_MEASURED
+    if ret.lateralTuning.which() == 'torque':
+      #TORQUE ONLY
+      #selfdrive/car/torque_data/params.yaml 참조해서 값 입력 https://codebeautify.org/jsonviewer/y220b1623
+      torque_lat_accel_factor = float(Decimal(params.get("TorqueMaxLatAccel", encoding="utf8")) * Decimal('0.1')) #2.544642494803999 #LAT_ACCEL_FACTOR
+      torque_friction = float(Decimal(params.get("TorqueFriction", encoding="utf8")) * Decimal('0.001')) #0.05 #FRICTION
+      ret.maxLateralAccel = 1.8721703683337008 #MAX_LAT_ACCEL_MEASURED
 
-    #토크
-    CarInterfaceBase.configure_torque_tune(ret.lateralTuning, torque_lat_accel_factor, torque_friction)
+      #토크
+      CarInterfaceBase.configure_torque_tune(ret.lateralTuning, torque_lat_accel_factor, torque_friction)
 
     # TODO: get actual value, for now starting with reasonable value for
     # civic and scaling by mass and wheelbase
