@@ -90,6 +90,11 @@ def manager_init() -> None:
     ("AutoEnable", "0"),
     ("AutoEnableSpeed", "3"),
     ("OPKRServer", "0"),
+    
+    #nPilot_Manager
+    ("UseNpilotManager", "0"),
+
+
   ]
   if not PC:
     default_params.append(("LastUpdateTime", datetime.datetime.utcnow().isoformat().encode('utf8')))

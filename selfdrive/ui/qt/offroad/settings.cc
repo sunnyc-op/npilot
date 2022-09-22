@@ -2033,8 +2033,36 @@ CommunityPanel::CommunityPanel(QWidget* parent) : QWidget(parent) {
     }
   )");
 
+  QString useNpilotManager = QString::fromStdString(Params().get("UseNpilotManager"));
+
   QList<ParamControl*> toggles;
 
+  toggleLayout->addWidget(new UseNpilotManagerToggle());
+  if(!QVariant(useNpilotManager).toBool()){
+    toggleLayout->addWidget(horizontal_line());
+    toggleLayout->addWidget(new AutoEnabledToggle());
+    toggleLayout->addWidget(new AutoEnableSpeed());
+    
+    toggleLayout->addWidget(horizontal_line());
+    toggles.append(new ParamControl("IsLiveTorque",
+                                              "Enable Live Torque",
+                                              "",
+                                              "../assets/offroad/icon_shell.png",
+                                              this));
+    toggles.append(new ParamControl("IsLowSpeedFactor",
+                                          "Enable Low Speed Factor",
+                                          "",
+                                          "../assets/offroad/icon_shell.png",
+                                          this));
+    toggleLayout->addWidget(horizontal_line());
+    toggleLayout->addWidget(new ParamControl("OpkrBatteryChargingControl",
+                                          "Enable Battery Charging Control",
+                                          "It uses the battery charge control function.",
+                                          "../assets/offroad/icon_shell.png",
+                                          this));
+    toggleLayout->addWidget(new ChargingMin());
+    toggleLayout->addWidget(new ChargingMax());
+  }
   toggleLayout->addWidget(new LabelControl(tr("〓〓〓〓〓〓〓〓〓〓【 TUNING 】〓〓〓〓〓〓〓〓〓〓"), ""));
   toggleLayout->addWidget(new CameraOffset());
   toggleLayout->addWidget(new PathOffset());
@@ -2054,21 +2082,7 @@ CommunityPanel::CommunityPanel(QWidget* parent) : QWidget(parent) {
   toggleLayout->addWidget(new TorqueMaxLatAccel());
   toggleLayout->addWidget(horizontal_line());
   toggleLayout->addWidget(new TorqueFriction());
-  toggleLayout->addWidget(horizontal_line());
-  toggleLayout->addWidget(new AutoEnabledToggle());
-  toggleLayout->addWidget(new AutoEnableSpeed());
 
-  toggles.append(new ParamControl("IsLiveTorque",
-                                            "Enable Live Torque",
-                                            "",
-                                            "../assets/offroad/icon_shell.png",
-                                            this));
-
-  toggles.append(new ParamControl("IsLowSpeedFactor",
-                                            "Enable Low Speed Factor",
-                                            "",
-                                            "../assets/offroad/icon_shell.png",
-                                            this));
 
   toggles.append(new ParamControl("UseClusterSpeed",
                                             "Use Cluster Speed",
@@ -2153,11 +2167,7 @@ CommunityPanel::CommunityPanel(QWidget* parent) : QWidget(parent) {
                                             "../assets/offroad/icon_shell.png",
                                             this));
 
-  toggles.append(new ParamControl("OpkrBatteryChargingControl",
-                                            "Enable Battery Charging Control",
-                                            "It uses the battery charge control function.",
-                                            "../assets/offroad/icon_shell.png",
-                                            this));
+
 
   /*toggles.append(new ParamControl("CustomLeadMark",
                                             "Use custom lead mark",
@@ -2172,10 +2182,6 @@ CommunityPanel::CommunityPanel(QWidget* parent) : QWidget(parent) {
     toggleLayout->addWidget(toggle);
   }
 
-  toggleLayout->addWidget(horizontal_line());
-  toggleLayout->addWidget(new ChargingMin());
-  toggleLayout->addWidget(horizontal_line());
-  toggleLayout->addWidget(new ChargingMax());
   toggleLayout->addWidget(horizontal_line());
   toggleLayout->addWidget(new BrightnessControl());
   toggleLayout->addWidget(horizontal_line());

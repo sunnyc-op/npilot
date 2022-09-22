@@ -343,6 +343,18 @@ public:
   }
 };
 
+class UseNpilotManagerToggle : public ToggleControl {
+  Q_OBJECT
+
+public:
+  UseNpilotManagerToggle() : ToggleControl(tr("Use nPilot Manager"), tr("Use nPilot Manager instead of UI Screen touch."), "../assets/offroad/icon_shell.png", Params().getBool("UseNpilotManager")) {
+    QObject::connect(this, &UseNpilotManagerToggle::toggleFlipped, [=](int state) {
+      bool status = state ? true : false;
+      Params().putBool("UseNpilotManager", status);
+    });
+  }
+};
+
 class VariableSteerMaxToggle : public ToggleControl {
   Q_OBJECT
 
