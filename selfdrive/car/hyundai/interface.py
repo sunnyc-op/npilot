@@ -10,6 +10,7 @@ from selfdrive.car.interfaces import CarInterfaceBase
 from common.params import Params
 from selfdrive.controls.lib.desire_helper import LANE_CHANGE_SPEED_MIN
 from decimal import Decimal
+from selfdrive.ntune import ntune_common_get, ntune_lqr_get
 
 GearShifter = car.CarState.GearShifter
 EventName = car.CarEvent.EventName
@@ -81,8 +82,12 @@ class CarInterface(CarInterfaceBase):
     ret.steerLimitTimer = 0.4 # Default
 
     params = Params()
-    ret.steerActuatorDelay = float(Decimal(params.get("SteerActuatorDelayAdj", encoding="utf8")) * Decimal('0.01'))
-    ret.steerLimitTimer = float(Decimal(params.get("SteerLimitTimerAdj", encoding="utf8")) * Decimal('0.01'))
+    if params.get_bool("UseNpilotManager"):
+      ret.steerActuatorDelay = max(ntune_common_get('steerActuatorDelay'), 0.1)
+      ret.steerLimitTimer = max(ntune_lqr_get('steerLimitTimer'), 0.1)
+    else:
+      ret.steerActuatorDelay = float(Decimal(params.get("SteerActuatorDelayAdj", encoding="utf8")) * Decimal('0.01'))
+      ret.steerLimitTimer = float(Decimal(params.get("SteerLimitTimerAdj", encoding="utf8")) * Decimal('0.01'))
 
     # longitudinal
     ret.longitudinalTuning.kpBP = [0., 5.*CV.KPH_TO_MS, 10.*CV.KPH_TO_MS, 30.*CV.KPH_TO_MS, 130.*CV.KPH_TO_MS]
@@ -279,7 +284,10 @@ class CarInterface(CarInterfaceBase):
     if ret.centerToFront == 0:
       ret.centerToFront = ret.wheelbase * 0.4
 
-    ret.steerRatio = float(Decimal(params.get("SteerRatioAdj", encoding="utf8")) * Decimal('0.01'))
+    if params.get_bool("UseNpilotManager"):
+      ret.steerRatio = max(ntune_common_get('steerRatio'), 12.0)
+    else:
+      ret.steerRatio = float(Decimal(params.get("SteerRatioAdj", encoding="utf8")) * Decimal('0.01'))
 
     if ret.lateralTuning.which() == 'torque':
       #TORQUE ONLY
