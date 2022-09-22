@@ -204,6 +204,21 @@ void ui_update_params(UIState *s) {
   s->scene.is_metric = params.getBool("IsMetric");
   s->show_debug = params.getBool("ShowDebugUI");
   s->lat_control = std::string(Params().get("LateralControl"));
+  s->scene.brightness = std::stoi(params.get("OpkrUIBrightness"));
+  s->scene.autoScreenOff = std::stoi(params.get("OpkrAutoScreenOff"));
+  s->scene.brightness_off = std::stoi(params.get("OpkrUIBrightnessOff"));
+
+    if (s->scene.autoScreenOff > 0) {
+      s->scene.nTime = s->scene.autoScreenOff * 60 * UI_FREQ;
+    } else if (s->scene.autoScreenOff == 0) {
+      s->scene.nTime = 30 * UI_FREQ;
+    } else if (s->scene.autoScreenOff == -1) {
+      s->scene.nTime = 15 * UI_FREQ;
+    } else if (s->scene.autoScreenOff == -2) {
+      s->scene.nTime = 5 * UI_FREQ;
+    } else {
+      s->scene.nTime = -1;
+    }
 }
 
 void UIState::updateStatus() {
@@ -318,17 +333,29 @@ void Device::updateBrightness(const UIState &s) {
     clipped_brightness = std::clamp(100.0f * clipped_brightness, 10.0f, 100.0f);
   }
 
+  if (s.scene.autoScreenOff != -2 && s.scene.touched2) {
+    sleep_time = s.scene.nTime;
+  } else if (s.scene.controls_state.getAlertSize() != cereal::ControlsState::AlertSize::NONE && s.scene.autoScreenOff != -2) {
+    sleep_time = s.scene.nTime;
+  } else if (sleep_time > 0 && s.scene.autoScreenOff != -2) {
+    sleep_time--;
+  } else if (s.scene.started && sleep_time == -1 && s.scene.autoScreenOff != -2) {
+    sleep_time = s.scene.nTime;
+  }
+
   int brightness = brightness_filter.update(clipped_brightness);
   if (!awake) {
     brightness = 0;
+  } else if (s.scene.started && sleep_time == 0 && s.scene.autoScreenOff != -2) {
+    brightness = s.scene.brightness_off * 0.01 * brightness;
+  } else if( s.scene.brightness ) {
+    brightness = s.scene.brightness * 0.99;
   }
 
   if (brightness != last_brightness) {
-    if (!brightness_future.isRunning()) {
-      brightness_future = QtConcurrent::run(Hardware::set_brightness, brightness);
-      last_brightness = brightness;
-    }
+    std::thread{Hardware::set_brightness, brightness}.detach();
   }
+  last_brightness = brightness;
 }
 
 bool Device::motionTriggered(const UIState &s) {

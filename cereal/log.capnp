@@ -606,6 +606,12 @@ struct ControlsState @0x97ff69c53601abf1 {
   sccStockCamAct @73 :Float32;
   sccStockCamStatus @74 :Float32;
 
+  latAccelFactor @75 :Float32;
+  latAccelOffset @76 :Float32;
+  friction @77 :Float32;
+  
+  totalCameraOffset @78 :Float32;
+
   enum OpenpilotState @0xdbe58b96d2d1ac61 {
     disabled @0;
     preEnabled @1;
@@ -969,6 +975,7 @@ struct LateralPlan @0xe1e9318e2ae8b51e {
   
   autoLaneChangeEnabled @32 :Bool;
   autoLaneChangeTimer @33 :Int8;
+  totalCameraOffset @34 :Float32;
 
   enum Desire {
     none @0;
@@ -1703,6 +1710,24 @@ struct LiveParametersData {
   roll @14 :Float32;
 }
 
+
+struct LiveTorqueParametersData {
+  liveValid @0 :Bool;
+  latAccelFactorRaw @1 :Float32;
+  latAccelOffsetRaw @2 :Float32;
+  frictionCoefficientRaw @3 :Float32;
+  latAccelFactorFiltered @4 :Float32;
+  latAccelOffsetFiltered @5 :Float32;
+  frictionCoefficientFiltered @6 :Float32;
+  totalBucketPoints @7 :Float32;
+  decay @8 :Float32;
+  maxResets @9 :Float32;
+  points @10 :List(List(Float32));
+  version @11 :Int32;
+  useParams @12 :Bool;
+}
+
+
 struct LiveMapDataDEPRECATED {
   speedLimitValid @0 :Bool;
   speedLimit @1 :Float32;
@@ -1864,6 +1889,7 @@ struct Event {
     gpsLocationExternal @48 :GpsLocationData;
     driverState @59 :DriverState;
     liveParameters @61 :LiveParametersData;
+    liveTorqueParameters @90 :LiveTorqueParametersData;
     cameraOdometry @63 :CameraOdometry;
     thumbnail @66: Thumbnail;
     carEvents @68: List(Car.CarEvent);

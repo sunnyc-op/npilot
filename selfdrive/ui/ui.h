@@ -95,6 +95,12 @@ typedef struct {
 typedef struct UIScene {
   mat3 view_from_calib;
   cereal::PandaState::PandaType pandaType;
+  cereal::ControlsState::Reader controls_state;
+
+  int nTime, autoScreenOff, brightness, awake;
+  bool touched2 = false;
+  bool monitoring_mode;
+  int brightness_off;
 
   // modelV2
   float lane_line_probs[4];
@@ -176,6 +182,9 @@ private:
   int last_brightness = 0;
   FirstOrderFilter brightness_filter;
   QFuture<void> brightness_future;
+
+  QTimer *timer;
+  int sleep_time = -1;
 
   void updateBrightness(const UIState &s);
   void updateWakefulness(const UIState &s);

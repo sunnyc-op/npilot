@@ -32,6 +32,11 @@
 #include <QListView>
 #include <QListWidget>
 
+#include <QProcess> // opkr
+#include <QDateTime> // opkr
+#include <QTimer> // opkr
+#include <QFileInfo> // opkr
+
 TogglesPanel::TogglesPanel(SettingsWindow *parent) : ListWidget(parent) {
   // param, title, desc, icon
   std::vector<std::tuple<QString, QString, QString, QString>> toggles{
@@ -77,6 +82,7 @@ TogglesPanel::TogglesPanel(SettingsWindow *parent) : ListWidget(parent) {
       "When enabled, pressing the accelerator pedal will disengage openpilot.",
       "../assets/offroad/icon_disengage_on_accelerator.svg",
     },
+
 #ifdef ENABLE_MAPS
     {
       "NavSettingTime24h",
@@ -491,7 +497,7 @@ SettingsWindow::SettingsWindow(QWidget *parent) : QFrame(parent) {
         color: grey;
         border: none;
         background: none;
-        font-size: 60px;
+        font-size: 55px;
         font-weight: 500;
         padding-top: %1px;
         padding-bottom: %1px;
@@ -518,12 +524,12 @@ SettingsWindow::SettingsWindow(QWidget *parent) : QFrame(parent) {
       panel_widget->setCurrentWidget(w);
     });
   }
-  sidebar_layout->setContentsMargins(50, 50, 100, 50);
+  sidebar_layout->setContentsMargins(5, 50, 20, 50);
 
   // main settings layout, sidebar + main panel
   QHBoxLayout *main_layout = new QHBoxLayout(this);
 
-  sidebar_widget->setFixedWidth(500);
+  sidebar_widget->setFixedWidth(330);
   main_layout->addWidget(sidebar_widget);
   main_layout->addWidget(panel_widget);
 
@@ -711,6 +717,1232 @@ void ChargingMax::refresh() {
   label.setText(QString::fromStdString(params.get("OpkrBatteryChargingMax")));
 }
 
+BrightnessControl::BrightnessControl() : AbstractControl("EON Brightness Control(%)", "Manually adjust the brightness of the EON screen.", "../assets/offroad/icon_shell.png") {
+
+  label.setAlignment(Qt::AlignVCenter|Qt::AlignRight);
+  label.setStyleSheet("color: #e0e879");
+  hlayout->addWidget(&label);
+
+  btnminus.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 50px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #393939;
+  )");
+  btnplus.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 50px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #393939;
+  )");
+  btnminus.setFixedSize(150, 100);
+  btnplus.setFixedSize(150, 100);
+  btnminus.setText("－");
+  btnplus.setText("＋");
+  hlayout->addWidget(&btnminus);
+  hlayout->addWidget(&btnplus);
+
+  QObject::connect(&btnminus, &QPushButton::clicked, [=]() {
+    auto str = QString::fromStdString(params.get("OpkrUIBrightness"));
+    int value = str.toInt();
+    value = value - 5;
+    if (value <= 0) {
+      value = 0;
+    }
+    uiState()->scene.brightness = value;
+    QString values = QString::number(value);
+    params.put("OpkrUIBrightness", values.toStdString());
+    refresh();
+  });
+  
+  QObject::connect(&btnplus, &QPushButton::clicked, [=]() {
+    auto str = QString::fromStdString(params.get("OpkrUIBrightness"));
+    int value = str.toInt();
+    value = value + 5;
+    if (value >= 100) {
+      value = 100;
+    }
+    uiState()->scene.brightness = value;
+    QString values = QString::number(value);
+    params.put("OpkrUIBrightness", values.toStdString());
+    refresh();
+  });
+  refresh();
+}
+
+void BrightnessControl::refresh() {
+  QString option = QString::fromStdString(params.get("OpkrUIBrightness"));
+  if (option == "0") {
+    label.setText("Auto");
+  } else {
+    label.setText(QString::fromStdString(params.get("OpkrUIBrightness")));
+  }
+}
+
+BrightnessOffControl::BrightnessOffControl() : AbstractControl("Brightness at SCR Off(%)", "When using the EON screen off function, the brightness is reduced according to the automatic brightness ratio.", "../assets/offroad/icon_shell.png") {
+
+  label.setAlignment(Qt::AlignVCenter|Qt::AlignRight);
+  label.setStyleSheet("color: #e0e879");
+  hlayout->addWidget(&label);
+
+  btnminus.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 50px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #393939;
+  )");
+  btnplus.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 50px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #393939;
+  )");
+  btnminus.setFixedSize(150, 100);
+  btnplus.setFixedSize(150, 100);
+  btnminus.setText("－");
+  btnplus.setText("＋");
+  hlayout->addWidget(&btnminus);
+  hlayout->addWidget(&btnplus);
+
+  QObject::connect(&btnminus, &QPushButton::clicked, [=]() {
+    auto str = QString::fromStdString(params.get("OpkrUIBrightnessOff"));
+    int value = str.toInt();
+    value = value - 5;
+    if (value <= 0) {
+      value = 0;
+    }
+    uiState()->scene.brightness_off = value;
+    QString values = QString::number(value);
+    params.put("OpkrUIBrightnessOff", values.toStdString());
+    refresh();
+  });
+  
+  QObject::connect(&btnplus, &QPushButton::clicked, [=]() {
+    auto str = QString::fromStdString(params.get("OpkrUIBrightnessOff"));
+    int value = str.toInt();
+    value = value + 5;
+    if (value >= 100) {
+      value = 100;
+    }
+    uiState()->scene.brightness_off = value;
+    QString values = QString::number(value);
+    params.put("OpkrUIBrightnessOff", values.toStdString());
+    refresh();
+  });
+  refresh();
+}
+
+void BrightnessOffControl::refresh() {
+  QString option = QString::fromStdString(params.get("OpkrUIBrightnessOff"));
+  if (option == "0") {
+    label.setText("Dark");
+  } else if (option == "5") {
+     label.setText("MinBr");
+  } else {
+    label.setText(QString::fromStdString(params.get("OpkrUIBrightnessOff")));
+  }
+}
+
+AutoScreenOff::AutoScreenOff() : AbstractControl("EON SCR Off Timer", "Turn off the EON screen or reduce brightness to protect the screen after driving starts. It automatically brightens or turns on when a touch or event occurs.", "../assets/offroad/icon_shell.png") 
+{
+
+  label.setAlignment(Qt::AlignVCenter|Qt::AlignRight);
+  label.setStyleSheet("color: #e0e879");
+  hlayout->addWidget(&label);
+
+  btnminus.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 50px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #393939;
+  )");
+  btnplus.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 50px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #393939;
+  )");
+  btnminus.setFixedSize(150, 100);
+  btnplus.setFixedSize(150, 100);
+  btnminus.setText("－");
+  btnplus.setText("＋");
+  hlayout->addWidget(&btnminus);
+  hlayout->addWidget(&btnplus);
+
+  QObject::connect(&btnminus, &QPushButton::clicked, [=]() {
+    auto str = QString::fromStdString(params.get("OpkrAutoScreenOff"));
+    int value = str.toInt();
+    value = value - 1;
+    if (value <= -3) {
+      value = -3;
+    }
+    uiState()->scene.autoScreenOff = value;
+    QString values = QString::number(value);
+    params.put("OpkrAutoScreenOff", values.toStdString());
+    refresh();
+  });
+  
+  QObject::connect(&btnplus, &QPushButton::clicked, [=]() {
+    auto str = QString::fromStdString(params.get("OpkrAutoScreenOff"));
+    int value = str.toInt();
+    value = value + 1;
+    if (value >= 10) {
+      value = 10;
+    }
+    uiState()->scene.autoScreenOff = value;
+    QString values = QString::number(value);
+    params.put("OpkrAutoScreenOff", values.toStdString());
+    refresh();
+  });
+  refresh();
+}
+
+void AutoScreenOff::refresh() 
+{
+  QString option = QString::fromStdString(params.get("OpkrAutoScreenOff"));
+  if (option == "-3") {
+    label.setText("AlwaysOn");
+  } else if (option == "-2") {
+     label.setText("5secs");  
+  } else if (option == "-1") {
+    label.setText("15secs");
+  } else if (option == "0") {
+    label.setText("30secs");
+  } else {
+    label.setText(QString::fromStdString(params.get("OpkrAutoScreenOff")) + "min(s)");
+  }
+}
+
+OPKREdgeOffset::OPKREdgeOffset() : AbstractControl("", tr("+ value to move car to left, - value to move car to right on each lane."), "") {
+
+  labell1.setAlignment(Qt::AlignVCenter|Qt::AlignLeft);
+  labell1.setText(tr("LeftEdge: "));
+  hlayout->addWidget(&labell1);
+  labell.setAlignment(Qt::AlignVCenter|Qt::AlignLeft);
+  labell.setStyleSheet("color: #e0e879");
+  hlayout->addWidget(&labell);
+  btnminusl.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 50px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #393939;
+  )");
+  btnplusl.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 50px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #393939;
+  )");
+  btnminusl.setFixedSize(80, 100);
+  btnplusl.setFixedSize(80, 100);
+  hlayout->addWidget(&btnminusl);
+  hlayout->addWidget(&btnplusl);
+
+  labelr1.setAlignment(Qt::AlignVCenter|Qt::AlignRight);
+  labelr1.setText(tr("RightEdge: "));
+  hlayout->addWidget(&labelr1);
+  labelr.setAlignment(Qt::AlignVCenter|Qt::AlignLeft);
+  labelr.setStyleSheet("color: #e0e879");
+  hlayout->addWidget(&labelr);
+  btnminusr.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 50px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #393939;
+  )");
+  btnplusr.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 50px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #393939;
+  )");
+  btnminusr.setFixedSize(80, 100);
+  btnplusr.setFixedSize(80, 100);
+  hlayout->addWidget(&btnminusr);
+  hlayout->addWidget(&btnplusr);
+
+  btnminusl.setText("－");
+  btnplusl.setText("＋");
+  btnminusr.setText("－");
+  btnplusr.setText("＋");
+
+  QObject::connect(&btnminusl, &QPushButton::clicked, [=]() {
+    auto str = QString::fromStdString(params.get("LeftEdgeOffset"));
+    int value = str.toInt();
+    value = value - 1;
+    if (value <= -50) {
+      value = -50;
+    }
+    QString values = QString::number(value);
+    params.put("LeftEdgeOffset", values.toStdString());
+    refreshl();
+  });
+  
+  QObject::connect(&btnplusl, &QPushButton::clicked, [=]() {
+    auto str = QString::fromStdString(params.get("LeftEdgeOffset"));
+    int value = str.toInt();
+    value = value + 1;
+    if (value >= 50) {
+      value = 50;
+    }
+    QString values = QString::number(value);
+    params.put("LeftEdgeOffset", values.toStdString());
+    refreshl();
+  });
+  QObject::connect(&btnminusr, &QPushButton::clicked, [=]() {
+    auto str = QString::fromStdString(params.get("RightEdgeOffset"));
+    int value = str.toInt();
+    value = value - 1;
+    if (value <= -50) {
+      value = -50;
+    }
+    QString values = QString::number(value);
+    params.put("RightEdgeOffset", values.toStdString());
+    refreshr();
+  });
+  
+  QObject::connect(&btnplusr, &QPushButton::clicked, [=]() {
+    auto str = QString::fromStdString(params.get("RightEdgeOffset"));
+    int value = str.toInt();
+    value = value + 1;
+    if (value >= 50) {
+      value = 50;
+    }
+    QString values = QString::number(value);
+    params.put("RightEdgeOffset", values.toStdString());
+    refreshr();
+  });
+  refreshl();
+  refreshr();
+}
+
+void OPKREdgeOffset::refreshl() {
+  auto strs = QString::fromStdString(params.get("LeftEdgeOffset"));
+  int valuei = strs.toInt();
+  float valuef = valuei * 0.01;
+  QString valuefs = QString::number(valuef);
+  labell.setText(QString::fromStdString(valuefs.toStdString()));
+}
+
+void OPKREdgeOffset::refreshr() {
+  auto strs = QString::fromStdString(params.get("RightEdgeOffset"));
+  int valuei = strs.toInt();
+  float valuef = valuei * 0.01;
+  QString valuefs = QString::number(valuef);
+  labelr.setText(QString::fromStdString(valuefs.toStdString()));
+}
+
+CameraOffset::CameraOffset() : AbstractControl(tr("CameraOffset"), tr("Sets the CameraOffset value. (+value:Move Left, -value:Move Right)"), "../assets/offroad/icon_shell.png") {
+
+  label.setAlignment(Qt::AlignVCenter|Qt::AlignRight);
+  label.setStyleSheet("color: #e0e879");
+  hlayout->addWidget(&label);
+
+  btnminus.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 50px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #393939;
+  )");
+  btnplus.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 50px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #393939;
+  )");
+  btnminus.setFixedSize(150, 100);
+  btnplus.setFixedSize(150, 100);
+  btnminus.setText("－");
+  btnplus.setText("＋");
+  hlayout->addWidget(&btnminus);
+  hlayout->addWidget(&btnplus);
+
+  QObject::connect(&btnminus, &QPushButton::clicked, [=]() {
+    auto str = QString::fromStdString(params.get("CameraOffsetAdj"));
+    int value = str.toInt();
+    value = value - 5;
+    if (value <= -1000) {
+      value = -1000;
+    }
+    QString values = QString::number(value);
+    params.put("CameraOffsetAdj", values.toStdString());
+    refresh();
+  });
+  
+  QObject::connect(&btnplus, &QPushButton::clicked, [=]() {
+    auto str = QString::fromStdString(params.get("CameraOffsetAdj"));
+    int value = str.toInt();
+    value = value + 5;
+    if (value >= 1000) {
+      value = 1000;
+    }
+    QString values = QString::number(value);
+    params.put("CameraOffsetAdj", values.toStdString());
+    refresh();
+  });
+  refresh();
+}
+
+void CameraOffset::refresh() {
+  auto strs = QString::fromStdString(params.get("CameraOffsetAdj"));
+  int valuei = strs.toInt();
+  float valuef = valuei * 0.001;
+  QString valuefs = QString::number(valuef);
+  label.setText(QString::fromStdString(valuefs.toStdString()));
+}
+
+PathOffset::PathOffset() : AbstractControl(tr("PathOffset"), tr("Sets the PathOffset value. (+value:Move left, -value:Move right)"), "../assets/offroad/icon_shell.png") {
+
+  label.setAlignment(Qt::AlignVCenter|Qt::AlignRight);
+  label.setStyleSheet("color: #e0e879");
+  hlayout->addWidget(&label);
+
+  btnminus.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 50px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #393939;
+  )");
+  btnplus.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 50px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #393939;
+  )");
+  btnminus.setFixedSize(150, 100);
+  btnplus.setFixedSize(150, 100);
+  btnminus.setText("－");
+  btnplus.setText("＋");
+  hlayout->addWidget(&btnminus);
+  hlayout->addWidget(&btnplus);
+
+  QObject::connect(&btnminus, &QPushButton::clicked, [=]() {
+    auto str = QString::fromStdString(params.get("PathOffsetAdj"));
+    int value = str.toInt();
+    value = value - 5;
+    if (value <= -1000) {
+      value = -1000;
+    }
+    QString values = QString::number(value);
+    params.put("PathOffsetAdj", values.toStdString());
+    refresh();
+  });
+  
+  QObject::connect(&btnplus, &QPushButton::clicked, [=]() {
+    auto str = QString::fromStdString(params.get("PathOffsetAdj"));
+    int value = str.toInt();
+    value = value + 5;
+    if (value >= 1000) {
+      value = 1000;
+    }
+    QString values = QString::number(value);
+    params.put("PathOffsetAdj", values.toStdString());
+    refresh();
+  });
+  refresh();
+}
+
+void PathOffset::refresh() {
+  auto strs = QString::fromStdString(params.get("PathOffsetAdj"));
+  int valuei = strs.toInt();
+  float valuef = valuei * 0.001;
+  QString valuefs = QString::number(valuef);
+  label.setText(QString::fromStdString(valuefs.toStdString()));
+}
+
+
+SteerActuatorDelay::SteerActuatorDelay() : AbstractControl(tr("SteerActuatorDelay"), tr("Adjust the SteerActuatorDelay value."), "../assets/offroad/icon_shell.png") {
+
+  label.setAlignment(Qt::AlignVCenter|Qt::AlignRight);
+  label.setStyleSheet("color: #e0e879");
+  hlayout->addWidget(&label);
+
+  btnminus.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 50px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #393939;
+  )");
+  btnplus.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 50px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #393939;
+  )");
+  btnminus.setFixedSize(150, 100);
+  btnplus.setFixedSize(150, 100);
+  btnminus.setText("－");
+  btnplus.setText("＋");
+  hlayout->addWidget(&btnminus);
+  hlayout->addWidget(&btnplus);
+
+  QObject::connect(&btnminus, &QPushButton::clicked, [=]() {
+    auto str = QString::fromStdString(params.get("SteerActuatorDelayAdj"));
+    int value = str.toInt();
+    value = value - 1;
+    if (value <= 1) {
+      value = 1;
+    }
+    QString values = QString::number(value);
+    params.put("SteerActuatorDelayAdj", values.toStdString());
+    refresh();
+  });
+  
+  QObject::connect(&btnplus, &QPushButton::clicked, [=]() {
+    auto str = QString::fromStdString(params.get("SteerActuatorDelayAdj"));
+    int value = str.toInt();
+    value = value + 1;
+    if (value >= 100) {
+      value = 100;
+    }
+    QString values = QString::number(value);
+    params.put("SteerActuatorDelayAdj", values.toStdString());
+    refresh();
+  });
+  refresh();
+}
+
+void SteerActuatorDelay::refresh() {
+  auto strs = QString::fromStdString(params.get("SteerActuatorDelayAdj"));
+  int valuei = strs.toInt();
+  float valuef = valuei * 0.01;
+  QString valuefs = QString::number(valuef);
+  label.setText(QString::fromStdString(valuefs.toStdString()));
+}
+
+
+SteerLimitTimer::SteerLimitTimer() : AbstractControl(tr("SteerLimitTimer"), tr("Adjust the SteerLimitTimer value."), "../assets/offroad/icon_shell.png") {
+
+  label.setAlignment(Qt::AlignVCenter|Qt::AlignRight);
+  label.setStyleSheet("color: #e0e879");
+  hlayout->addWidget(&label);
+
+  btnminus.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 50px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #393939;
+  )");
+  btnplus.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 50px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #393939;
+  )");
+  btnminus.setFixedSize(150, 100);
+  btnplus.setFixedSize(150, 100);
+  btnminus.setText("－");
+  btnplus.setText("＋");
+  hlayout->addWidget(&btnminus);
+  hlayout->addWidget(&btnplus);
+
+  QObject::connect(&btnminus, &QPushButton::clicked, [=]() {
+    auto str = QString::fromStdString(params.get("SteerLimitTimerAdj"));
+    int value = str.toInt();
+    value = value - 5;
+    if (value <= 0) {
+      value = 0;
+    }
+    QString values = QString::number(value);
+    params.put("SteerLimitTimerAdj", values.toStdString());
+    refresh();
+  });
+  
+  QObject::connect(&btnplus, &QPushButton::clicked, [=]() {
+    auto str = QString::fromStdString(params.get("SteerLimitTimerAdj"));
+    int value = str.toInt();
+    value = value + 5;
+    if (value >= 300) {
+      value = 300;
+    }
+    QString values = QString::number(value);
+    params.put("SteerLimitTimerAdj", values.toStdString());
+    refresh();
+  });
+  refresh();
+}
+
+void SteerLimitTimer::refresh() {
+  auto strs = QString::fromStdString(params.get("SteerLimitTimerAdj"));
+  int valuei = strs.toInt();
+  float valuef = valuei * 0.01;
+  QString valuefs = QString::number(valuef);
+  label.setText(QString::fromStdString(valuefs.toStdString()));
+}
+
+SRBaseControl::SRBaseControl() : AbstractControl(tr("SteerRatio"), tr("Sets the SteerRatio default value."), "../assets/offroad/icon_shell.png") {
+
+  label.setAlignment(Qt::AlignVCenter|Qt::AlignRight);
+  label.setStyleSheet("color: #e0e879");
+  hlayout->addWidget(&label);
+
+  btndigit.setStyleSheet(R"(
+    QPushButton {
+      padding: 0;
+      border-radius: 50px;
+      font-size: 35px;
+      font-weight: 500;
+      color: #E4E4E4;
+      background-color: #393939;
+    }
+    QPushButton:pressed {
+      background-color: #ababab;
+    }
+  )");
+  btnminus.setStyleSheet(R"(
+    QPushButton {
+      padding: 0;
+      border-radius: 50px;
+      font-size: 35px;
+      font-weight: 500;
+      color: #E4E4E4;
+      background-color: #393939;
+    }
+    QPushButton:pressed {
+      background-color: #ababab;
+    }
+  )");
+  btnplus.setStyleSheet(R"(
+    QPushButton {
+      padding: 0;
+      border-radius: 50px;
+      font-size: 35px;
+      font-weight: 500;
+      color: #E4E4E4;
+      background-color: #393939;
+    }
+    QPushButton:pressed {
+      background-color: #ababab;
+    }
+  )");
+  btndigit.setFixedSize(100, 100);
+  btnminus.setFixedSize(100, 100);
+  btnplus.setFixedSize(100, 100);
+  hlayout->addWidget(&btndigit);
+  hlayout->addWidget(&btnminus);
+  hlayout->addWidget(&btnplus);
+  btndigit.setText("0.01");
+  btnminus.setText("-");
+  btnplus.setText("+");
+
+  QObject::connect(&btndigit, &QPushButton::clicked, [=]() {
+    digit = digit * 10;
+    if (digit >= 11) {
+      digit = 0.01;
+    }
+    QString level = QString::number(digit);
+    btndigit.setText(level);
+  });
+
+  QObject::connect(&btnminus, &QPushButton::clicked, [=]() {
+    auto str = QString::fromStdString(params.get("SteerRatioAdj"));
+    int value = str.toInt();
+    value = value - (digit*100);
+    if (value <= 800) {
+      value = 800;
+    }
+    QString values = QString::number(value);
+    params.put("SteerRatioAdj", values.toStdString());
+    refresh();
+  });
+  
+  QObject::connect(&btnplus, &QPushButton::clicked, [=]() {
+    auto str = QString::fromStdString(params.get("SteerRatioAdj"));
+    int value = str.toInt();
+    value = value + (digit*100);
+    if (value >= 2000) {
+      value = 2000;
+    }
+    QString values = QString::number(value);
+    params.put("SteerRatioAdj", values.toStdString());
+    refresh();
+  });
+  refresh();
+}
+
+void SRBaseControl::refresh() {
+  auto strs = QString::fromStdString(params.get("SteerRatioAdj"));
+  int valuei = strs.toInt();
+  float valuef = valuei * 0.01;
+  QString valuefs = QString::number(valuef);
+  label.setText(QString::fromStdString(valuefs.toStdString()));
+}
+
+SRMaxControl::SRMaxControl() : AbstractControl(tr("SteerRatioMax"), tr("Sets the SteerRatio maximum value."), "../assets/offroad/icon_shell.png") {
+
+  label.setAlignment(Qt::AlignVCenter|Qt::AlignRight);
+  label.setStyleSheet("color: #e0e879");
+  hlayout->addWidget(&label);
+
+  btndigit.setStyleSheet(R"(
+    QPushButton {
+      padding: 0;
+      border-radius: 50px;
+      font-size: 35px;
+      font-weight: 500;
+      color: #E4E4E4;
+      background-color: #393939;
+    }
+    QPushButton:pressed {
+      background-color: #ababab;
+    }
+  )");
+  btnminus.setStyleSheet(R"(
+    QPushButton {
+      padding: 0;
+      border-radius: 50px;
+      font-size: 35px;
+      font-weight: 500;
+      color: #E4E4E4;
+      background-color: #393939;
+    }
+    QPushButton:pressed {
+      background-color: #ababab;
+    }
+  )");
+  btnplus.setStyleSheet(R"(
+    QPushButton {
+      padding: 0;
+      border-radius: 50px;
+      font-size: 35px;
+      font-weight: 500;
+      color: #E4E4E4;
+      background-color: #393939;
+    }
+    QPushButton:pressed {
+      background-color: #ababab;
+    }
+  )");
+  btndigit.setFixedSize(100, 100);
+  btnminus.setFixedSize(100, 100);
+  btnplus.setFixedSize(100, 100);
+  hlayout->addWidget(&btndigit);
+  hlayout->addWidget(&btnminus);
+  hlayout->addWidget(&btnplus);
+  btndigit.setText("0.01");
+  btnminus.setText("-");
+  btnplus.setText("+");
+
+  QObject::connect(&btndigit, &QPushButton::clicked, [=]() {
+    digit = digit * 10;
+    if (digit >= 11) {
+      digit = 0.01;
+    }
+    QString level = QString::number(digit);
+    btndigit.setText(level);
+  });
+
+  QObject::connect(&btnminus, &QPushButton::clicked, [=]() {
+    auto str = QString::fromStdString(params.get("SteerRatioMaxAdj"));
+    int value = str.toInt();
+    value = value - (digit*100);
+    if (value <= 800) {
+      value = 800;
+    }
+    QString values = QString::number(value);
+    params.put("SteerRatioMaxAdj", values.toStdString());
+    refresh();
+  });
+  
+  QObject::connect(&btnplus, &QPushButton::clicked, [=]() {
+    auto str = QString::fromStdString(params.get("SteerRatioMaxAdj"));
+    int value = str.toInt();
+    value = value + (digit*100);
+    if (value >= 2000) {
+      value = 2000;
+    }
+    QString values = QString::number(value);
+    params.put("SteerRatioMaxAdj", values.toStdString());
+    refresh();
+  });
+  refresh();
+}
+
+void SRMaxControl::refresh() {
+  auto strs = QString::fromStdString(params.get("SteerRatioMaxAdj"));
+  int valuei = strs.toInt();
+  float valuef = valuei * 0.01;
+  QString valuefs = QString::number(valuef);
+  label.setText(QString::fromStdString(valuefs.toStdString()));
+}
+
+LiveSRPercent::LiveSRPercent() : AbstractControl(tr("LiveSR Adjust(%)"), tr("When using LiveSR, the learned value is arbitrarily adjusted (%) and used. -Value:Lower from learned value, +Value:Lower from learned value"), "../assets/offroad/icon_shell.png") {
+
+  label.setAlignment(Qt::AlignVCenter|Qt::AlignRight);
+  label.setStyleSheet("color: #e0e879");
+  hlayout->addWidget(&label);
+
+  btnminus.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 50px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #393939;
+  )");
+  btnplus.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 50px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #393939;
+  )");
+  btnminus.setFixedSize(150, 100);
+  btnplus.setFixedSize(150, 100);
+  hlayout->addWidget(&btnminus);
+  hlayout->addWidget(&btnplus);
+
+  QObject::connect(&btnminus, &QPushButton::clicked, [=]() {
+    auto str = QString::fromStdString(params.get("LiveSteerRatioPercent"));
+    int value = str.toInt();
+    value = value - 1;
+    if (value <= -50) {
+      value = -50;
+    }
+    QString values = QString::number(value);
+    params.put("LiveSteerRatioPercent", values.toStdString());
+    refresh();
+  });
+  
+  QObject::connect(&btnplus, &QPushButton::clicked, [=]() {
+    auto str = QString::fromStdString(params.get("LiveSteerRatioPercent"));
+    int value = str.toInt();
+    value = value + 1;
+    if (value >= 50) {
+      value = 50;
+    }
+    QString values = QString::number(value);
+    params.put("LiveSteerRatioPercent", values.toStdString());
+    refresh();
+  });
+  refresh();
+}
+
+void LiveSRPercent::refresh() {
+  QString option = QString::fromStdString(params.get("LiveSteerRatioPercent"));
+  if (option == "0") {
+    label.setText(tr("Default"));
+  } else {
+    label.setText(QString::fromStdString(params.get("LiveSteerRatioPercent")));
+  }
+  btnminus.setText("-");
+  btnplus.setText("+");
+}
+
+TorqueFriction::TorqueFriction() : AbstractControl(tr("Friction"), tr("Adjust Friction"), "../assets/offroad/icon_shell.png") {
+
+  label.setAlignment(Qt::AlignVCenter|Qt::AlignRight);
+  label.setStyleSheet("color: #e0e879");
+  hlayout->addWidget(&label);
+
+  btnminus.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 50px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #393939;
+  )");
+  btnplus.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 50px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #393939;
+  )");
+  btnminus.setFixedSize(150, 100);
+  btnplus.setFixedSize(150, 100);
+  btnminus.setText("－");
+  btnplus.setText("＋");
+  hlayout->addWidget(&btnminus);
+  hlayout->addWidget(&btnplus);
+
+  QObject::connect(&btnminus, &QPushButton::clicked, [=]() {
+    auto str = QString::fromStdString(params.get("TorqueFriction"));
+    int value = str.toInt();
+    value = value - 5;
+    if (value <= 0) {
+      value = 0;
+    }
+    QString values = QString::number(value);
+    params.put("TorqueFriction", values.toStdString());
+    refresh();
+  });
+  
+ QObject::connect(&btnplus, &QPushButton::clicked, [=]() {
+    auto str = QString::fromStdString(params.get("TorqueFriction"));
+    int value = str.toInt();
+    value = value + 5;
+    if (value >= 300) {
+      value = 300;
+    }
+    QString values = QString::number(value);
+    params.put("TorqueFriction", values.toStdString());
+    refresh();
+  });
+  refresh();
+}
+
+void TorqueFriction::refresh() {
+  auto strs = QString::fromStdString(params.get("TorqueFriction"));
+  int valuei = strs.toInt();
+  float valuef = valuei * 0.001;
+  QString valuefs = QString::number(valuef);
+  label.setText(QString::fromStdString(valuefs.toStdString()));
+}
+
+TorqueMaxLatAccel::TorqueMaxLatAccel() : AbstractControl(tr("MaxLatAccel"), tr("Adjust MaxLatAccel"), "../assets/offroad/icon_shell.png") {
+
+  label.setAlignment(Qt::AlignVCenter|Qt::AlignRight);
+  label.setStyleSheet("color: #e0e879");
+  hlayout->addWidget(&label);
+
+  btnminus.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 50px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #393939;
+  )");
+  btnplus.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 50px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #393939;
+  )");
+  btnminus.setFixedSize(150, 100);
+  btnplus.setFixedSize(150, 100);
+  btnminus.setText("－");
+  btnplus.setText("＋");
+  hlayout->addWidget(&btnminus);
+  hlayout->addWidget(&btnplus);
+
+  QObject::connect(&btnminus, &QPushButton::clicked, [=]() {
+    auto str = QString::fromStdString(params.get("TorqueMaxLatAccel"));
+    int value = str.toInt();
+    value = value - 1;
+    if (value <= 1) {
+      value = 1;
+    }
+    QString values = QString::number(value);
+    params.put("TorqueMaxLatAccel", values.toStdString());
+    refresh();
+  });
+  
+  QObject::connect(&btnplus, &QPushButton::clicked, [=]() {
+    auto str = QString::fromStdString(params.get("TorqueMaxLatAccel"));
+    int value = str.toInt();
+    value = value + 1;
+    if (value >= 50) {
+      value = 50;
+    }
+    QString values = QString::number(value);
+    params.put("TorqueMaxLatAccel", values.toStdString());
+    refresh();
+  });
+  refresh();
+}
+
+void TorqueMaxLatAccel::refresh() {
+  auto strs = QString::fromStdString(params.get("TorqueMaxLatAccel"));
+  int valuei = strs.toInt();
+  float valuef = valuei * 0.1;
+  QString valuefs = QString::number(valuef);
+  label.setText(QString::fromStdString(valuefs.toStdString()));
+}
+
+AutoEnableSpeed::AutoEnableSpeed() : AbstractControl(tr("Auto Engage Spd(kph)"), tr("Set the automatic engage speed."), "../assets/offroad/icon_shell.png") {
+
+  label.setAlignment(Qt::AlignVCenter|Qt::AlignRight);
+  label.setStyleSheet("color: #e0e879");
+  hlayout->addWidget(&label);
+
+  btnminus.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 50px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #393939;
+  )");
+  btnplus.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 50px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #393939;
+  )");
+  btnminus.setFixedSize(150, 100);
+  btnplus.setFixedSize(150, 100);
+  hlayout->addWidget(&btnminus);
+  hlayout->addWidget(&btnplus);
+
+  QObject::connect(&btnminus, &QPushButton::clicked, [=]() {
+    auto str = QString::fromStdString(params.get("AutoEnableSpeed"));
+    int value = str.toInt();
+    value = value - 3;
+    if (value <= -3) {
+      value = -3;
+    }
+    QString values = QString::number(value);
+    params.put("AutoEnableSpeed", values.toStdString());
+    refresh();
+  });
+  
+  QObject::connect(&btnplus, &QPushButton::clicked, [=]() {
+    auto str = QString::fromStdString(params.get("AutoEnableSpeed"));
+    int value = str.toInt();
+    value = value + 3;
+    if (value >= 30) {
+      value = 30;
+    }
+    QString values = QString::number(value);
+    params.put("AutoEnableSpeed", values.toStdString());
+    refresh();
+  });
+  refresh();
+}
+
+void AutoEnableSpeed::refresh() {
+  QString option = QString::fromStdString(params.get("AutoEnableSpeed"));
+  if (option == "-3") {
+    label.setText(tr("atDGear"));
+  } else if (option == "0") {
+    label.setText(tr("atDepart"));
+  } else {
+    label.setText(QString::fromStdString(params.get("AutoEnableSpeed")));
+  }
+  btnminus.setText("-");
+  btnplus.setText("+");
+}
+
+OPKRServerSelect::OPKRServerSelect() : AbstractControl(tr("API Server"), tr("Set API server to OPKR/Comma/User's"), "../assets/offroad/icon_shell.png") {
+  btn1.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 50px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #393939;
+  )");
+  btn1.setFixedSize(250, 100);
+  btn2.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 50px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #393939;
+  )");
+  btn2.setFixedSize(250, 100);
+  btn3.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 50px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #393939;
+  )");
+  btn3.setFixedSize(250, 100);
+  hlayout->addWidget(&btn1);
+  hlayout->addWidget(&btn2);
+  hlayout->addWidget(&btn3);
+  btn1.setText(tr("OPKR"));
+  btn2.setText(tr("Comma"));
+  btn3.setText(tr("User's"));
+
+  QObject::connect(&btn1, &QPushButton::clicked, [=]() {
+    params.put("OPKRServer", "0");
+    refresh();
+  });
+  QObject::connect(&btn2, &QPushButton::clicked, [=]() {
+    params.put("OPKRServer", "1");
+    if (ConfirmationDialog::alert(tr("You've chosen comma server. Your uploads might be ignored if you upload your data. I highly recommend you should reset the device to avoid be banned."), this)) {}
+    refresh();
+  });
+  QObject::connect(&btn3, &QPushButton::clicked, [=]() {
+    params.put("OPKRServer", "2");
+    if (ConfirmationDialog::alert(tr("You've chosen own server. Please set your api host at the menu below."), this)) {}
+    refresh();
+  });
+  refresh();
+}
+
+void OPKRServerSelect::refresh() {
+  QString option = QString::fromStdString(params.get("OPKRServer"));
+  if (option == "0") {
+    btn1.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 50px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #00A12E;
+    )");
+    btn2.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 50px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #393939;
+    )");
+    btn3.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 50px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #393939;
+    )");
+  } else if (option == "1") {
+    btn1.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 50px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #393939;
+    )");
+    btn2.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 50px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #00A12E;
+    )");
+    btn3.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 50px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #393939;
+    )");
+  } else {
+    btn1.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 50px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #393939;
+    )");
+    btn2.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 50px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #393939;
+    )");
+    btn3.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 50px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #00A12E;
+    )");
+  }
+}
+
+OPKRServerAPI::OPKRServerAPI() : AbstractControl(tr("User's API"), tr("Set Your API server URL or IP"), "") {
+  label.setAlignment(Qt::AlignVCenter|Qt::AlignRight);
+  label.setStyleSheet("color: #e0e879");
+  hlayout->addWidget(&label);
+  btn.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 50px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #393939;
+  )");
+  btn.setFixedSize(150, 100);
+  hlayout->addWidget(&btn);
+
+  QObject::connect(&btn, &QPushButton::clicked, [=]() {
+    if (btn.text() == tr("SET")) {
+      QString users_api_host = InputDialog::getText(tr("Input Your API without http://"), this);
+      if (users_api_host.length() > 0) {
+        QString cmd0 = tr("Your Input is") + "\n" + users_api_host + "\n" + tr("Press OK to apply&reboot");
+        if (ConfirmationDialog::confirm(cmd0, this)) {
+          params.put("OPKRServerAPI", users_api_host.toStdString());
+          params.put("OPKRServer", "2");
+          QProcess::execute("rm -f /data/params/d/DongleId");
+          QProcess::execute("rm -f /data/params/d/IMEI");
+          QProcess::execute("rm -f /data/params/d/HardwareSerial");
+          QProcess::execute("reboot");
+        }
+      }
+    } else if (btn.text() == tr("UNSET")) {
+      if (ConfirmationDialog::confirm(tr("Do you want to unset? the API server gets back to OPKR server and Device will be rebooted now."), this)) {
+        params.remove("OPKRServerAPI");
+        params.put("OPKRServer", "0");
+        QProcess::execute("rm -f /data/params/d/DongleId");
+        QProcess::execute("rm -f /data/params/d/IMEI");
+        QProcess::execute("rm -f /data/params/d/HardwareSerial");
+        QProcess::execute("reboot");
+      }
+    }
+  });
+  refresh();
+}
+
+void OPKRServerAPI::refresh() {
+  auto str = QString::fromStdString(params.get("OPKRServerAPI"));
+  if (str.length() > 0) {
+    label.setText(QString::fromStdString(params.get("OPKRServerAPI")));
+    btn.setText(tr("UNSET"));
+  } else {
+    btn.setText(tr("SET"));
+  }
+}
+
 
 /////////////////////////////////////////////////////////////////////////
 
@@ -803,6 +2035,41 @@ CommunityPanel::CommunityPanel(QWidget* parent) : QWidget(parent) {
 
   QList<ParamControl*> toggles;
 
+  toggleLayout->addWidget(new LabelControl(tr("〓〓〓〓〓〓〓〓〓〓【 TUNING 】〓〓〓〓〓〓〓〓〓〓"), ""));
+  toggleLayout->addWidget(new CameraOffset());
+  toggleLayout->addWidget(new PathOffset());
+  toggleLayout->addWidget(horizontal_line());
+  toggleLayout->addWidget(new CloseToRoadEdgeToggle());
+  toggleLayout->addWidget(new OPKREdgeOffset());
+  toggleLayout->addWidget(horizontal_line());
+  toggleLayout->addWidget(new LiveSteerRatioToggle());
+  toggleLayout->addWidget(new LiveSRPercent());
+  toggleLayout->addWidget(new SRBaseControl());
+  toggleLayout->addWidget(new SRMaxControl());
+  toggleLayout->addWidget(horizontal_line());
+  toggleLayout->addWidget(new SteerActuatorDelay());
+  toggleLayout->addWidget(horizontal_line());
+  toggleLayout->addWidget(new SteerLimitTimer());
+  toggleLayout->addWidget(horizontal_line());
+  toggleLayout->addWidget(new TorqueMaxLatAccel());
+  toggleLayout->addWidget(horizontal_line());
+  toggleLayout->addWidget(new TorqueFriction());
+  toggleLayout->addWidget(horizontal_line());
+  toggleLayout->addWidget(new AutoEnabledToggle());
+  toggleLayout->addWidget(new AutoEnableSpeed());
+
+  toggles.append(new ParamControl("IsLiveTorque",
+                                            "Enable Live Torque",
+                                            "",
+                                            "../assets/offroad/icon_shell.png",
+                                            this));
+
+  toggles.append(new ParamControl("IsLowSpeedFactor",
+                                            "Enable Low Speed Factor",
+                                            "",
+                                            "../assets/offroad/icon_shell.png",
+                                            this));
+
   toggles.append(new ParamControl("UseClusterSpeed",
                                             "Use Cluster Speed",
                                             "Use cluster speed instead of wheel speed.",
@@ -885,8 +2152,7 @@ CommunityPanel::CommunityPanel(QWidget* parent) : QWidget(parent) {
                                             "",
                                             "../assets/offroad/icon_shell.png",
                                             this));
-  
-  
+
   toggles.append(new ParamControl("OpkrBatteryChargingControl",
                                             "Enable Battery Charging Control",
                                             "It uses the battery charge control function.",
@@ -905,11 +2171,21 @@ CommunityPanel::CommunityPanel(QWidget* parent) : QWidget(parent) {
     }
     toggleLayout->addWidget(toggle);
   }
-  
+
   toggleLayout->addWidget(horizontal_line());
   toggleLayout->addWidget(new ChargingMin());
   toggleLayout->addWidget(horizontal_line());
   toggleLayout->addWidget(new ChargingMax());
+  toggleLayout->addWidget(horizontal_line());
+  toggleLayout->addWidget(new BrightnessControl());
+  toggleLayout->addWidget(horizontal_line());
+  toggleLayout->addWidget(new AutoScreenOff());
+  toggleLayout->addWidget(horizontal_line());
+  toggleLayout->addWidget(new BrightnessOffControl());
+  toggleLayout->addWidget(horizontal_line());
+  toggleLayout->addWidget(new OPKRServerSelect());
+  toggleLayout->addWidget(horizontal_line());
+  toggleLayout->addWidget(new OPKRServerAPI());
 }
 
 SelectCar::SelectCar(QWidget* parent): QWidget(parent) {
@@ -981,7 +2257,7 @@ LateralControl::LateralControl(QWidget* parent): QWidget(parent) {
   QScroller::grabGesture(list->viewport(), QScroller::LeftMouseButtonGesture);
   list->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
 
-  QStringList items = {"TORQUE", "INDI"};
+  QStringList items = {"TORQUE", "LQR", "INDI"};
   list->addItems(items);
   list->setCurrentRow(0);
 

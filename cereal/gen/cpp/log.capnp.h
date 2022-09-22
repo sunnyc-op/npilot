@@ -373,6 +373,7 @@ CAPNP_DECLARE_SCHEMA(b83c6cc593ed0a00);
 CAPNP_DECLARE_SCHEMA(b83cda094a1da284);
 CAPNP_DECLARE_SCHEMA(a12e8670927a2549);
 CAPNP_DECLARE_SCHEMA(d9058dcb967c2753);
+CAPNP_DECLARE_SCHEMA(e61690eb0b091692);
 CAPNP_DECLARE_SCHEMA(943e268f93f711a6);
 CAPNP_DECLARE_SCHEMA(fa9a296b9fd41a96);
 CAPNP_DECLARE_SCHEMA(ef0382d244f56e38);
@@ -862,7 +863,7 @@ struct ControlsState {
   struct LateralControlState;
 
   struct _capnpPrivate {
-    CAPNP_DECLARE_STRUCT_HEADER(97ff69c53601abf1, 29, 6)
+    CAPNP_DECLARE_STRUCT_HEADER(97ff69c53601abf1, 31, 6)
     #if !CAPNP_LITE
     static constexpr ::capnp::_::RawBrandedSchema const* brand() { return &schema->defaultBrand; }
     #endif  // !CAPNP_LITE
@@ -975,7 +976,7 @@ struct ControlsState::LateralControlState {
   };
 
   struct _capnpPrivate {
-    CAPNP_DECLARE_STRUCT_HEADER(fd5b914d6b444695, 29, 6)
+    CAPNP_DECLARE_STRUCT_HEADER(fd5b914d6b444695, 31, 6)
     #if !CAPNP_LITE
     static constexpr ::capnp::_::RawBrandedSchema const* brand() { return &schema->defaultBrand; }
     #endif  // !CAPNP_LITE
@@ -1677,6 +1678,21 @@ struct LiveParametersData {
   };
 };
 
+struct LiveTorqueParametersData {
+  LiveTorqueParametersData() = delete;
+
+  class Reader;
+  class Builder;
+  class Pipeline;
+
+  struct _capnpPrivate {
+    CAPNP_DECLARE_STRUCT_HEADER(e61690eb0b091692, 6, 1)
+    #if !CAPNP_LITE
+    static constexpr ::capnp::_::RawBrandedSchema const* brand() { return &schema->defaultBrand; }
+    #endif  // !CAPNP_LITE
+  };
+};
+
 struct LiveMapDataDEPRECATED {
   LiveMapDataDEPRECATED() = delete;
 
@@ -1975,6 +1991,7 @@ struct Event {
     DRIVER_ENCODE_DATA,
     WIDE_ROAD_ENCODE_DATA,
     ROAD_LIMIT_SPEED,
+    LIVE_TORQUE_PARAMETERS,
   };
 
   struct _capnpPrivate {
@@ -5853,6 +5870,14 @@ public:
 
   inline float getSccStockCamStatus() const;
 
+  inline float getLatAccelFactor() const;
+
+  inline float getLatAccelOffset() const;
+
+  inline float getFriction() const;
+
+  inline float getTotalCameraOffset() const;
+
 private:
   ::capnp::_::StructReader _reader;
   template <typename, ::capnp::Kind>
@@ -6111,6 +6136,18 @@ public:
 
   inline float getSccStockCamStatus();
   inline void setSccStockCamStatus(float value);
+
+  inline float getLatAccelFactor();
+  inline void setLatAccelFactor(float value);
+
+  inline float getLatAccelOffset();
+  inline void setLatAccelOffset(float value);
+
+  inline float getFriction();
+  inline void setFriction(float value);
+
+  inline float getTotalCameraOffset();
+  inline void setTotalCameraOffset(float value);
 
 private:
   ::capnp::_::StructBuilder _builder;
@@ -8677,6 +8714,8 @@ public:
 
   inline  ::int8_t getAutoLaneChangeTimer() const;
 
+  inline float getTotalCameraOffset() const;
+
 private:
   ::capnp::_::StructReader _reader;
   template <typename, ::capnp::Kind>
@@ -8846,6 +8885,9 @@ public:
 
   inline  ::int8_t getAutoLaneChangeTimer();
   inline void setAutoLaneChangeTimer( ::int8_t value);
+
+  inline float getTotalCameraOffset();
+  inline void setTotalCameraOffset(float value);
 
 private:
   ::capnp::_::StructBuilder _builder;
@@ -13769,6 +13811,148 @@ private:
 };
 #endif  // !CAPNP_LITE
 
+class LiveTorqueParametersData::Reader {
+public:
+  typedef LiveTorqueParametersData Reads;
+
+  Reader() = default;
+  inline explicit Reader(::capnp::_::StructReader base): _reader(base) {}
+
+  inline ::capnp::MessageSize totalSize() const {
+    return _reader.totalSize().asPublic();
+  }
+
+#if !CAPNP_LITE
+  inline ::kj::StringTree toString() const {
+    return ::capnp::_::structString(_reader, *_capnpPrivate::brand());
+  }
+#endif  // !CAPNP_LITE
+
+  inline bool getLiveValid() const;
+
+  inline float getLatAccelFactorRaw() const;
+
+  inline float getLatAccelOffsetRaw() const;
+
+  inline float getFrictionCoefficientRaw() const;
+
+  inline float getLatAccelFactorFiltered() const;
+
+  inline float getLatAccelOffsetFiltered() const;
+
+  inline float getFrictionCoefficientFiltered() const;
+
+  inline float getTotalBucketPoints() const;
+
+  inline float getDecay() const;
+
+  inline float getMaxResets() const;
+
+  inline bool hasPoints() const;
+  inline  ::capnp::List< ::capnp::List<float,  ::capnp::Kind::PRIMITIVE>,  ::capnp::Kind::LIST>::Reader getPoints() const;
+
+  inline  ::int32_t getVersion() const;
+
+  inline bool getUseParams() const;
+
+private:
+  ::capnp::_::StructReader _reader;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::_::PointerHelpers;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::List;
+  friend class ::capnp::MessageBuilder;
+  friend class ::capnp::Orphanage;
+};
+
+class LiveTorqueParametersData::Builder {
+public:
+  typedef LiveTorqueParametersData Builds;
+
+  Builder() = delete;  // Deleted to discourage incorrect usage.
+                       // You can explicitly initialize to nullptr instead.
+  inline Builder(decltype(nullptr)) {}
+  inline explicit Builder(::capnp::_::StructBuilder base): _builder(base) {}
+  inline operator Reader() const { return Reader(_builder.asReader()); }
+  inline Reader asReader() const { return *this; }
+
+  inline ::capnp::MessageSize totalSize() const { return asReader().totalSize(); }
+#if !CAPNP_LITE
+  inline ::kj::StringTree toString() const { return asReader().toString(); }
+#endif  // !CAPNP_LITE
+
+  inline bool getLiveValid();
+  inline void setLiveValid(bool value);
+
+  inline float getLatAccelFactorRaw();
+  inline void setLatAccelFactorRaw(float value);
+
+  inline float getLatAccelOffsetRaw();
+  inline void setLatAccelOffsetRaw(float value);
+
+  inline float getFrictionCoefficientRaw();
+  inline void setFrictionCoefficientRaw(float value);
+
+  inline float getLatAccelFactorFiltered();
+  inline void setLatAccelFactorFiltered(float value);
+
+  inline float getLatAccelOffsetFiltered();
+  inline void setLatAccelOffsetFiltered(float value);
+
+  inline float getFrictionCoefficientFiltered();
+  inline void setFrictionCoefficientFiltered(float value);
+
+  inline float getTotalBucketPoints();
+  inline void setTotalBucketPoints(float value);
+
+  inline float getDecay();
+  inline void setDecay(float value);
+
+  inline float getMaxResets();
+  inline void setMaxResets(float value);
+
+  inline bool hasPoints();
+  inline  ::capnp::List< ::capnp::List<float,  ::capnp::Kind::PRIMITIVE>,  ::capnp::Kind::LIST>::Builder getPoints();
+  inline void setPoints( ::capnp::List< ::capnp::List<float,  ::capnp::Kind::PRIMITIVE>,  ::capnp::Kind::LIST>::Reader value);
+  inline void setPoints(::kj::ArrayPtr<const  ::capnp::List<float,  ::capnp::Kind::PRIMITIVE>::Reader> value);
+  inline  ::capnp::List< ::capnp::List<float,  ::capnp::Kind::PRIMITIVE>,  ::capnp::Kind::LIST>::Builder initPoints(unsigned int size);
+  inline void adoptPoints(::capnp::Orphan< ::capnp::List< ::capnp::List<float,  ::capnp::Kind::PRIMITIVE>,  ::capnp::Kind::LIST>>&& value);
+  inline ::capnp::Orphan< ::capnp::List< ::capnp::List<float,  ::capnp::Kind::PRIMITIVE>,  ::capnp::Kind::LIST>> disownPoints();
+
+  inline  ::int32_t getVersion();
+  inline void setVersion( ::int32_t value);
+
+  inline bool getUseParams();
+  inline void setUseParams(bool value);
+
+private:
+  ::capnp::_::StructBuilder _builder;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+  friend class ::capnp::Orphanage;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::_::PointerHelpers;
+};
+
+#if !CAPNP_LITE
+class LiveTorqueParametersData::Pipeline {
+public:
+  typedef LiveTorqueParametersData Pipelines;
+
+  inline Pipeline(decltype(nullptr)): _typeless(nullptr) {}
+  inline explicit Pipeline(::capnp::AnyPointer::Pipeline&& typeless)
+      : _typeless(kj::mv(typeless)) {}
+
+private:
+  ::capnp::AnyPointer::Pipeline _typeless;
+  friend class ::capnp::PipelineHook;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+};
+#endif  // !CAPNP_LITE
+
 class LiveMapDataDEPRECATED::Reader {
 public:
   typedef LiveMapDataDEPRECATED Reads;
@@ -15556,6 +15740,10 @@ public:
   inline bool hasRoadLimitSpeed() const;
   inline  ::cereal::RoadLimitSpeed::Reader getRoadLimitSpeed() const;
 
+  inline bool isLiveTorqueParameters() const;
+  inline bool hasLiveTorqueParameters() const;
+  inline  ::cereal::LiveTorqueParametersData::Reader getLiveTorqueParameters() const;
+
 private:
   ::capnp::_::StructReader _reader;
   template <typename, ::capnp::Kind>
@@ -16294,6 +16482,14 @@ public:
   inline  ::cereal::RoadLimitSpeed::Builder initRoadLimitSpeed();
   inline void adoptRoadLimitSpeed(::capnp::Orphan< ::cereal::RoadLimitSpeed>&& value);
   inline ::capnp::Orphan< ::cereal::RoadLimitSpeed> disownRoadLimitSpeed();
+
+  inline bool isLiveTorqueParameters();
+  inline bool hasLiveTorqueParameters();
+  inline  ::cereal::LiveTorqueParametersData::Builder getLiveTorqueParameters();
+  inline void setLiveTorqueParameters( ::cereal::LiveTorqueParametersData::Reader value);
+  inline  ::cereal::LiveTorqueParametersData::Builder initLiveTorqueParameters();
+  inline void adoptLiveTorqueParameters(::capnp::Orphan< ::cereal::LiveTorqueParametersData>&& value);
+  inline ::capnp::Orphan< ::cereal::LiveTorqueParametersData> disownLiveTorqueParameters();
 
 private:
   ::capnp::_::StructBuilder _builder;
@@ -23595,6 +23791,62 @@ inline void ControlsState::Builder::setSccStockCamStatus(float value) {
       ::capnp::bounded<57>() * ::capnp::ELEMENTS, value);
 }
 
+inline float ControlsState::Reader::getLatAccelFactor() const {
+  return _reader.getDataField<float>(
+      ::capnp::bounded<58>() * ::capnp::ELEMENTS);
+}
+
+inline float ControlsState::Builder::getLatAccelFactor() {
+  return _builder.getDataField<float>(
+      ::capnp::bounded<58>() * ::capnp::ELEMENTS);
+}
+inline void ControlsState::Builder::setLatAccelFactor(float value) {
+  _builder.setDataField<float>(
+      ::capnp::bounded<58>() * ::capnp::ELEMENTS, value);
+}
+
+inline float ControlsState::Reader::getLatAccelOffset() const {
+  return _reader.getDataField<float>(
+      ::capnp::bounded<59>() * ::capnp::ELEMENTS);
+}
+
+inline float ControlsState::Builder::getLatAccelOffset() {
+  return _builder.getDataField<float>(
+      ::capnp::bounded<59>() * ::capnp::ELEMENTS);
+}
+inline void ControlsState::Builder::setLatAccelOffset(float value) {
+  _builder.setDataField<float>(
+      ::capnp::bounded<59>() * ::capnp::ELEMENTS, value);
+}
+
+inline float ControlsState::Reader::getFriction() const {
+  return _reader.getDataField<float>(
+      ::capnp::bounded<60>() * ::capnp::ELEMENTS);
+}
+
+inline float ControlsState::Builder::getFriction() {
+  return _builder.getDataField<float>(
+      ::capnp::bounded<60>() * ::capnp::ELEMENTS);
+}
+inline void ControlsState::Builder::setFriction(float value) {
+  _builder.setDataField<float>(
+      ::capnp::bounded<60>() * ::capnp::ELEMENTS, value);
+}
+
+inline float ControlsState::Reader::getTotalCameraOffset() const {
+  return _reader.getDataField<float>(
+      ::capnp::bounded<61>() * ::capnp::ELEMENTS);
+}
+
+inline float ControlsState::Builder::getTotalCameraOffset() {
+  return _builder.getDataField<float>(
+      ::capnp::bounded<61>() * ::capnp::ELEMENTS);
+}
+inline void ControlsState::Builder::setTotalCameraOffset(float value) {
+  _builder.setDataField<float>(
+      ::capnp::bounded<61>() * ::capnp::ELEMENTS, value);
+}
+
 inline bool ControlsState::LateralINDIState::Reader::getActive() const {
   return _reader.getDataField<bool>(
       ::capnp::bounded<0>() * ::capnp::ELEMENTS);
@@ -28226,6 +28478,20 @@ inline  ::int8_t LateralPlan::Builder::getAutoLaneChangeTimer() {
 inline void LateralPlan::Builder::setAutoLaneChangeTimer( ::int8_t value) {
   _builder.setDataField< ::int8_t>(
       ::capnp::bounded<21>() * ::capnp::ELEMENTS, value);
+}
+
+inline float LateralPlan::Reader::getTotalCameraOffset() const {
+  return _reader.getDataField<float>(
+      ::capnp::bounded<15>() * ::capnp::ELEMENTS);
+}
+
+inline float LateralPlan::Builder::getTotalCameraOffset() {
+  return _builder.getDataField<float>(
+      ::capnp::bounded<15>() * ::capnp::ELEMENTS);
+}
+inline void LateralPlan::Builder::setTotalCameraOffset(float value) {
+  _builder.setDataField<float>(
+      ::capnp::bounded<15>() * ::capnp::ELEMENTS, value);
 }
 
 inline bool LiveLocationKalman::Reader::hasPositionECEF() const {
@@ -36445,6 +36711,212 @@ inline void LiveParametersData::Builder::setRoll(float value) {
       ::capnp::bounded<12>() * ::capnp::ELEMENTS, value);
 }
 
+inline bool LiveTorqueParametersData::Reader::getLiveValid() const {
+  return _reader.getDataField<bool>(
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
+}
+
+inline bool LiveTorqueParametersData::Builder::getLiveValid() {
+  return _builder.getDataField<bool>(
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
+}
+inline void LiveTorqueParametersData::Builder::setLiveValid(bool value) {
+  _builder.setDataField<bool>(
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, value);
+}
+
+inline float LiveTorqueParametersData::Reader::getLatAccelFactorRaw() const {
+  return _reader.getDataField<float>(
+      ::capnp::bounded<1>() * ::capnp::ELEMENTS);
+}
+
+inline float LiveTorqueParametersData::Builder::getLatAccelFactorRaw() {
+  return _builder.getDataField<float>(
+      ::capnp::bounded<1>() * ::capnp::ELEMENTS);
+}
+inline void LiveTorqueParametersData::Builder::setLatAccelFactorRaw(float value) {
+  _builder.setDataField<float>(
+      ::capnp::bounded<1>() * ::capnp::ELEMENTS, value);
+}
+
+inline float LiveTorqueParametersData::Reader::getLatAccelOffsetRaw() const {
+  return _reader.getDataField<float>(
+      ::capnp::bounded<2>() * ::capnp::ELEMENTS);
+}
+
+inline float LiveTorqueParametersData::Builder::getLatAccelOffsetRaw() {
+  return _builder.getDataField<float>(
+      ::capnp::bounded<2>() * ::capnp::ELEMENTS);
+}
+inline void LiveTorqueParametersData::Builder::setLatAccelOffsetRaw(float value) {
+  _builder.setDataField<float>(
+      ::capnp::bounded<2>() * ::capnp::ELEMENTS, value);
+}
+
+inline float LiveTorqueParametersData::Reader::getFrictionCoefficientRaw() const {
+  return _reader.getDataField<float>(
+      ::capnp::bounded<3>() * ::capnp::ELEMENTS);
+}
+
+inline float LiveTorqueParametersData::Builder::getFrictionCoefficientRaw() {
+  return _builder.getDataField<float>(
+      ::capnp::bounded<3>() * ::capnp::ELEMENTS);
+}
+inline void LiveTorqueParametersData::Builder::setFrictionCoefficientRaw(float value) {
+  _builder.setDataField<float>(
+      ::capnp::bounded<3>() * ::capnp::ELEMENTS, value);
+}
+
+inline float LiveTorqueParametersData::Reader::getLatAccelFactorFiltered() const {
+  return _reader.getDataField<float>(
+      ::capnp::bounded<4>() * ::capnp::ELEMENTS);
+}
+
+inline float LiveTorqueParametersData::Builder::getLatAccelFactorFiltered() {
+  return _builder.getDataField<float>(
+      ::capnp::bounded<4>() * ::capnp::ELEMENTS);
+}
+inline void LiveTorqueParametersData::Builder::setLatAccelFactorFiltered(float value) {
+  _builder.setDataField<float>(
+      ::capnp::bounded<4>() * ::capnp::ELEMENTS, value);
+}
+
+inline float LiveTorqueParametersData::Reader::getLatAccelOffsetFiltered() const {
+  return _reader.getDataField<float>(
+      ::capnp::bounded<5>() * ::capnp::ELEMENTS);
+}
+
+inline float LiveTorqueParametersData::Builder::getLatAccelOffsetFiltered() {
+  return _builder.getDataField<float>(
+      ::capnp::bounded<5>() * ::capnp::ELEMENTS);
+}
+inline void LiveTorqueParametersData::Builder::setLatAccelOffsetFiltered(float value) {
+  _builder.setDataField<float>(
+      ::capnp::bounded<5>() * ::capnp::ELEMENTS, value);
+}
+
+inline float LiveTorqueParametersData::Reader::getFrictionCoefficientFiltered() const {
+  return _reader.getDataField<float>(
+      ::capnp::bounded<6>() * ::capnp::ELEMENTS);
+}
+
+inline float LiveTorqueParametersData::Builder::getFrictionCoefficientFiltered() {
+  return _builder.getDataField<float>(
+      ::capnp::bounded<6>() * ::capnp::ELEMENTS);
+}
+inline void LiveTorqueParametersData::Builder::setFrictionCoefficientFiltered(float value) {
+  _builder.setDataField<float>(
+      ::capnp::bounded<6>() * ::capnp::ELEMENTS, value);
+}
+
+inline float LiveTorqueParametersData::Reader::getTotalBucketPoints() const {
+  return _reader.getDataField<float>(
+      ::capnp::bounded<7>() * ::capnp::ELEMENTS);
+}
+
+inline float LiveTorqueParametersData::Builder::getTotalBucketPoints() {
+  return _builder.getDataField<float>(
+      ::capnp::bounded<7>() * ::capnp::ELEMENTS);
+}
+inline void LiveTorqueParametersData::Builder::setTotalBucketPoints(float value) {
+  _builder.setDataField<float>(
+      ::capnp::bounded<7>() * ::capnp::ELEMENTS, value);
+}
+
+inline float LiveTorqueParametersData::Reader::getDecay() const {
+  return _reader.getDataField<float>(
+      ::capnp::bounded<8>() * ::capnp::ELEMENTS);
+}
+
+inline float LiveTorqueParametersData::Builder::getDecay() {
+  return _builder.getDataField<float>(
+      ::capnp::bounded<8>() * ::capnp::ELEMENTS);
+}
+inline void LiveTorqueParametersData::Builder::setDecay(float value) {
+  _builder.setDataField<float>(
+      ::capnp::bounded<8>() * ::capnp::ELEMENTS, value);
+}
+
+inline float LiveTorqueParametersData::Reader::getMaxResets() const {
+  return _reader.getDataField<float>(
+      ::capnp::bounded<9>() * ::capnp::ELEMENTS);
+}
+
+inline float LiveTorqueParametersData::Builder::getMaxResets() {
+  return _builder.getDataField<float>(
+      ::capnp::bounded<9>() * ::capnp::ELEMENTS);
+}
+inline void LiveTorqueParametersData::Builder::setMaxResets(float value) {
+  _builder.setDataField<float>(
+      ::capnp::bounded<9>() * ::capnp::ELEMENTS, value);
+}
+
+inline bool LiveTorqueParametersData::Reader::hasPoints() const {
+  return !_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
+}
+inline bool LiveTorqueParametersData::Builder::hasPoints() {
+  return !_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
+}
+inline  ::capnp::List< ::capnp::List<float,  ::capnp::Kind::PRIMITIVE>,  ::capnp::Kind::LIST>::Reader LiveTorqueParametersData::Reader::getPoints() const {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float,  ::capnp::Kind::PRIMITIVE>,  ::capnp::Kind::LIST>>::get(_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
+}
+inline  ::capnp::List< ::capnp::List<float,  ::capnp::Kind::PRIMITIVE>,  ::capnp::Kind::LIST>::Builder LiveTorqueParametersData::Builder::getPoints() {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float,  ::capnp::Kind::PRIMITIVE>,  ::capnp::Kind::LIST>>::get(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
+}
+inline void LiveTorqueParametersData::Builder::setPoints( ::capnp::List< ::capnp::List<float,  ::capnp::Kind::PRIMITIVE>,  ::capnp::Kind::LIST>::Reader value) {
+  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float,  ::capnp::Kind::PRIMITIVE>,  ::capnp::Kind::LIST>>::set(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), value);
+}
+inline void LiveTorqueParametersData::Builder::setPoints(::kj::ArrayPtr<const  ::capnp::List<float,  ::capnp::Kind::PRIMITIVE>::Reader> value) {
+  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float,  ::capnp::Kind::PRIMITIVE>,  ::capnp::Kind::LIST>>::set(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), value);
+}
+inline  ::capnp::List< ::capnp::List<float,  ::capnp::Kind::PRIMITIVE>,  ::capnp::Kind::LIST>::Builder LiveTorqueParametersData::Builder::initPoints(unsigned int size) {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float,  ::capnp::Kind::PRIMITIVE>,  ::capnp::Kind::LIST>>::init(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), size);
+}
+inline void LiveTorqueParametersData::Builder::adoptPoints(
+    ::capnp::Orphan< ::capnp::List< ::capnp::List<float,  ::capnp::Kind::PRIMITIVE>,  ::capnp::Kind::LIST>>&& value) {
+  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float,  ::capnp::Kind::PRIMITIVE>,  ::capnp::Kind::LIST>>::adopt(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::capnp::List< ::capnp::List<float,  ::capnp::Kind::PRIMITIVE>,  ::capnp::Kind::LIST>> LiveTorqueParametersData::Builder::disownPoints() {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float,  ::capnp::Kind::PRIMITIVE>,  ::capnp::Kind::LIST>>::disown(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
+}
+
+inline  ::int32_t LiveTorqueParametersData::Reader::getVersion() const {
+  return _reader.getDataField< ::int32_t>(
+      ::capnp::bounded<10>() * ::capnp::ELEMENTS);
+}
+
+inline  ::int32_t LiveTorqueParametersData::Builder::getVersion() {
+  return _builder.getDataField< ::int32_t>(
+      ::capnp::bounded<10>() * ::capnp::ELEMENTS);
+}
+inline void LiveTorqueParametersData::Builder::setVersion( ::int32_t value) {
+  _builder.setDataField< ::int32_t>(
+      ::capnp::bounded<10>() * ::capnp::ELEMENTS, value);
+}
+
+inline bool LiveTorqueParametersData::Reader::getUseParams() const {
+  return _reader.getDataField<bool>(
+      ::capnp::bounded<1>() * ::capnp::ELEMENTS);
+}
+
+inline bool LiveTorqueParametersData::Builder::getUseParams() {
+  return _builder.getDataField<bool>(
+      ::capnp::bounded<1>() * ::capnp::ELEMENTS);
+}
+inline void LiveTorqueParametersData::Builder::setUseParams(bool value) {
+  _builder.setDataField<bool>(
+      ::capnp::bounded<1>() * ::capnp::ELEMENTS, value);
+}
+
 inline bool LiveMapDataDEPRECATED::Reader::getSpeedLimitValid() const {
   return _reader.getDataField<bool>(
       ::capnp::bounded<0>() * ::capnp::ELEMENTS);
@@ -42766,6 +43238,60 @@ inline ::capnp::Orphan< ::cereal::RoadLimitSpeed> Event::Builder::disownRoadLimi
   KJ_IREQUIRE((which() == Event::ROAD_LIMIT_SPEED),
               "Must check which() before get()ing a union member.");
   return ::capnp::_::PointerHelpers< ::cereal::RoadLimitSpeed>::disown(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
+}
+
+inline bool Event::Reader::isLiveTorqueParameters() const {
+  return which() == Event::LIVE_TORQUE_PARAMETERS;
+}
+inline bool Event::Builder::isLiveTorqueParameters() {
+  return which() == Event::LIVE_TORQUE_PARAMETERS;
+}
+inline bool Event::Reader::hasLiveTorqueParameters() const {
+  if (which() != Event::LIVE_TORQUE_PARAMETERS) return false;
+  return !_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
+}
+inline bool Event::Builder::hasLiveTorqueParameters() {
+  if (which() != Event::LIVE_TORQUE_PARAMETERS) return false;
+  return !_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
+}
+inline  ::cereal::LiveTorqueParametersData::Reader Event::Reader::getLiveTorqueParameters() const {
+  KJ_IREQUIRE((which() == Event::LIVE_TORQUE_PARAMETERS),
+              "Must check which() before get()ing a union member.");
+  return ::capnp::_::PointerHelpers< ::cereal::LiveTorqueParametersData>::get(_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
+}
+inline  ::cereal::LiveTorqueParametersData::Builder Event::Builder::getLiveTorqueParameters() {
+  KJ_IREQUIRE((which() == Event::LIVE_TORQUE_PARAMETERS),
+              "Must check which() before get()ing a union member.");
+  return ::capnp::_::PointerHelpers< ::cereal::LiveTorqueParametersData>::get(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
+}
+inline void Event::Builder::setLiveTorqueParameters( ::cereal::LiveTorqueParametersData::Reader value) {
+  _builder.setDataField<Event::Which>(
+      ::capnp::bounded<4>() * ::capnp::ELEMENTS, Event::LIVE_TORQUE_PARAMETERS);
+  ::capnp::_::PointerHelpers< ::cereal::LiveTorqueParametersData>::set(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), value);
+}
+inline  ::cereal::LiveTorqueParametersData::Builder Event::Builder::initLiveTorqueParameters() {
+  _builder.setDataField<Event::Which>(
+      ::capnp::bounded<4>() * ::capnp::ELEMENTS, Event::LIVE_TORQUE_PARAMETERS);
+  return ::capnp::_::PointerHelpers< ::cereal::LiveTorqueParametersData>::init(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
+}
+inline void Event::Builder::adoptLiveTorqueParameters(
+    ::capnp::Orphan< ::cereal::LiveTorqueParametersData>&& value) {
+  _builder.setDataField<Event::Which>(
+      ::capnp::bounded<4>() * ::capnp::ELEMENTS, Event::LIVE_TORQUE_PARAMETERS);
+  ::capnp::_::PointerHelpers< ::cereal::LiveTorqueParametersData>::adopt(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::cereal::LiveTorqueParametersData> Event::Builder::disownLiveTorqueParameters() {
+  KJ_IREQUIRE((which() == Event::LIVE_TORQUE_PARAMETERS),
+              "Must check which() before get()ing a union member.");
+  return ::capnp::_::PointerHelpers< ::cereal::LiveTorqueParametersData>::disown(_builder.getPointerField(
       ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 

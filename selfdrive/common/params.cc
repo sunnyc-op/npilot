@@ -138,6 +138,8 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"LastUpdateException", PERSISTENT},
     {"LastUpdateTime", PERSISTENT},
     {"LiveParameters", PERSISTENT},
+    {"LiveTorqueCarParams", PERSISTENT | DONT_LOG},
+    {"LiveTorqueParameters", PERSISTENT | DONT_LOG},
     {"MapboxToken", PERSISTENT | DONT_LOG},
     {"NavDestination", CLEAR_ON_MANAGER_START | CLEAR_ON_IGNITION_OFF},
     {"NavSettingTime24h", PERSISTENT},
@@ -202,13 +204,36 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"HapticFeedbackWhenSpeedCamera", PERSISTENT},
 
     {"SoftRestartTriggered", CLEAR_ON_MANAGER_START},
-  
+
     //OPKR
     {"OpkrBatteryChargingControl", PERSISTENT},
     {"OpkrBatteryChargingMin", PERSISTENT},
     {"OpkrBatteryChargingMax", PERSISTENT},
     {"IsOpenpilotViewEnabled", CLEAR_ON_MANAGER_START},
     {"OpkrForceShutdown", PERSISTENT},
+    {"OpkrAutoScreenOff", PERSISTENT},
+    {"OpkrUIBrightnessOff", PERSISTENT},
+    {"OpkrUIBrightness", PERSISTENT},
+    {"CloseToRoadEdge", PERSISTENT},
+    {"LeftEdgeOffset", PERSISTENT},
+    {"RightEdgeOffset", PERSISTENT},
+    {"CameraOffsetAdj", PERSISTENT},
+    {"SteerActuatorDelayAdj", PERSISTENT},
+    {"SteerLimitTimerAdj", PERSISTENT},
+    {"PathOffsetAdj", PERSISTENT},
+    {"OpkrLiveSteerRatio", PERSISTENT},
+    {"OpkrVariableSteerMax", PERSISTENT},
+    {"LiveSteerRatioPercent", PERSISTENT},
+    {"SteerRatioAdj", PERSISTENT},
+    {"SteerRatioMaxAdj", PERSISTENT},
+    {"TorqueFriction", PERSISTENT},
+    {"TorqueMaxLatAccel", PERSISTENT},
+    {"IsLiveTorque", PERSISTENT},
+    {"IsLowSpeedFactor", PERSISTENT},
+    {"AutoEnable", PERSISTENT},
+    {"AutoEnableSpeed", PERSISTENT},
+    {"OPKRServer", PERSISTENT},
+    {"OPKRServerAPI", PERSISTENT},
 };
 
 } // namespace

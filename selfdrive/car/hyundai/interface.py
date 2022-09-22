@@ -9,7 +9,7 @@ from selfdrive.car import STD_CARGO_KG, scale_rot_inertia, scale_tire_stiffness,
 from selfdrive.car.interfaces import CarInterfaceBase
 from common.params import Params
 from selfdrive.controls.lib.desire_helper import LANE_CHANGE_SPEED_MIN
-from selfdrive.controls.lib.latcontrol_torque import set_torque_tune
+from decimal import Decimal
 
 GearShifter = car.CarState.GearShifter
 EventName = car.CarEvent.EventName
@@ -74,20 +74,15 @@ class CarInterface(CarInterfaceBase):
       ret.lateralTuning.lqr.l = [0.33, 0.318]
     else:
       ret.lateralTuning.init('torque')
-      ret.lateralTuning.torque.useSteeringAngle = True
-      max_lat_accel = 2.0
-      ret.lateralTuning.torque.kp = 1.0 / max_lat_accel
-      ret.lateralTuning.torque.kf = 1.0 / max_lat_accel
-      ret.lateralTuning.torque.ki = 0.1 / max_lat_accel
-      ret.lateralTuning.torque.friction = 0.01
-
 
     ret.steerRatio = 16.5
-    ret.lateralTuning.torque.kd = 0.0 #Default = 0.0
-    ret.lateralTuning.torque.steeringAngleDeadzoneDeg = 1.0
 
     ret.steerActuatorDelay = 0.1  # Default delay
     ret.steerLimitTimer = 0.4 # Default
+
+    params = Params()
+    ret.steerActuatorDelay = float(Decimal(params.get("SteerActuatorDelayAdj", encoding="utf8")) * Decimal('0.01'))
+    ret.steerLimitTimer = float(Decimal(params.get("SteerLimitTimerAdj", encoding="utf8")) * Decimal('0.01'))
 
     # longitudinal
     ret.longitudinalTuning.kpBP = [0., 5.*CV.KPH_TO_MS, 10.*CV.KPH_TO_MS, 30.*CV.KPH_TO_MS, 130.*CV.KPH_TO_MS]
@@ -154,10 +149,11 @@ class CarInterface(CarInterfaceBase):
       tire_stiffness_factor = 0.65
       ret.centerToFront = ret.wheelbase * 0.4
     elif candidate == CAR.PALISADE:
+      #ret.lateralTuning.pid.kf = 0.00005
       ret.mass = 1999. + STD_CARGO_KG
       ret.wheelbase = 2.90
-      ret.centerToFront = ret.wheelbase * 0.4
-      ret.steerRatio = 17.9
+      ret.steerRatio = 15.6 * 1.15
+      tire_stiffness_factor = 0.63
 
     elif candidate in [CAR.ELANTRA, CAR.ELANTRA_GT_I30]:
       ret.mass = 1275. + STD_CARGO_KG
@@ -283,14 +279,17 @@ class CarInterface(CarInterfaceBase):
     if ret.centerToFront == 0:
       ret.centerToFront = ret.wheelbase * 0.4
 
-    #TORQUE ONLY
-    #selfdrive/car/torque_data/params.yaml 참조해서 값 입력 https://codebeautify.org/jsonviewer/y220b1623
-    torque_lat_accel_factor = 2.5250855675875634 #LAT_ACCEL_FACTOR		
-    torque_friction = 0.13391574986922777 #FRICTION
-    ret.maxLateralAccel = 1.8303582523301922 #MAX_LAT_ACCEL_MEASURED		
-    #토크
-    set_torque_tune(ret.lateralTuning, torque_lat_accel_factor, torque_friction)
+    ret.steerRatio = float(Decimal(params.get("SteerRatioAdj", encoding="utf8")) * Decimal('0.01'))
 
+    if ret.lateralTuning.which() == 'torque':
+      #TORQUE ONLY
+      #selfdrive/car/torque_data/params.yaml 참조해서 값 입력 https://codebeautify.org/jsonviewer/y220b1623
+      torque_lat_accel_factor = float(Decimal(params.get("TorqueMaxLatAccel", encoding="utf8")) * Decimal('0.1')) #2.544642494803999 #LAT_ACCEL_FACTOR
+      torque_friction = float(Decimal(params.get("TorqueFriction", encoding="utf8")) * Decimal('0.001')) #0.05 #FRICTION
+      ret.maxLateralAccel = 1.8721703683337008 #MAX_LAT_ACCEL_MEASURED
+
+      #토크
+      CarInterfaceBase.configure_torque_tune(ret.lateralTuning, torque_lat_accel_factor, torque_friction)
 
     # TODO: get actual value, for now starting with reasonable value for
     # civic and scaling by mass and wheelbase

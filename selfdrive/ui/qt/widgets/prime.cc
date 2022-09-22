@@ -14,6 +14,7 @@
 #include "selfdrive/ui/qt/request_repeater.h"
 #include "selfdrive/ui/qt/util.h"
 #include "selfdrive/ui/qt/qt_window.h"
+#include "selfdrive/common/params.h"
 
 using qrcodegen::QrCode;
 
@@ -28,9 +29,22 @@ void PairingQRWidget::showEvent(QShowEvent *event) {
 }
 
 void PairingQRWidget::refresh() {
+ // set up API requests
+  QString OPKR_SERVER = QString::fromStdString(Params().get("OPKRServer"));
+  QString TARGET_SERVER = "";
+  if (OPKR_SERVER == "0") {
+    TARGET_SERVER = util::getenv("API_HOST", "http://opkr.tk:3000").c_str();
+  } else if (OPKR_SERVER == "1") {
+    TARGET_SERVER = util::getenv("API_HOST", "https://api.commadotai.com").c_str();
+  } else if (OPKR_SERVER == "2") {
+    TARGET_SERVER = "http://" + QString::fromStdString(Params().get("OPKRServerAPI"));
+  } else {
+    TARGET_SERVER = util::getenv("API_HOST", "http://opkr.tk:3000").c_str();
+  }
+
   if (isVisible()) {
     QString pairToken = CommaApi::create_jwt({{"pair", true}});
-    QString qrString = "https://connect.comma.ai/?pair=" + pairToken;
+    QString qrString = TARGET_SERVER + "/?pair=" + pairToken;
     this->updateQrCode(qrString);
   }
 }
@@ -90,7 +104,7 @@ PairingPopup::PairingPopup(QWidget *parent) : QDialogBase(parent) {
 
     QLabel *instructions = new QLabel(R"(
       <ol type='1' style='margin-left: 15px;'>
-        <li style='margin-bottom: 50px;'>Go to https://connect.comma.ai on your phone</li>
+        <li style='margin-bottom: 50px;'>Go to on your phone</li>
         <li style='margin-bottom: 50px;'>Click "add new device" and scan the QR code on the right</li>
         <li style='margin-bottom: 50px;'>Bookmark connect.comma.ai to your home screen to use it like an app</li>
       </ol>
@@ -158,8 +172,20 @@ PrimeUserWidget::PrimeUserWidget(QWidget* parent) : QWidget(parent) {
   mainLayout->addStretch();
 
   // set up API requests
+  QString OPKR_SERVER = QString::fromStdString(Params().get("OPKRServer"));
+  QString TARGET_SERVER = "";
+  if (OPKR_SERVER == "0") {
+    TARGET_SERVER = util::getenv("API_HOST", "http://opkr.tk:3000").c_str();
+  } else if (OPKR_SERVER == "1") {
+    TARGET_SERVER = util::getenv("API_HOST", "https://api.commadotai.com").c_str();
+  } else if (OPKR_SERVER == "2") {
+    TARGET_SERVER = "http://" + QString::fromStdString(Params().get("OPKRServerAPI"));
+  } else {
+    TARGET_SERVER = util::getenv("API_HOST", "http://opkr.tk:3000").c_str();
+  }
+
   if (auto dongleId = getDongleId()) {
-    QString url = CommaApi::BASE_URL + "/v1/devices/" + *dongleId + "/owner";
+    QString url = TARGET_SERVER + "/v1/devices/" + *dongleId + "/owner";
     RequestRepeater *repeater = new RequestRepeater(this, url, "ApiCache_Owner", 6);
     QObject::connect(repeater, &RequestRepeater::requestDone, this, &PrimeUserWidget::replyFinished);
   }
@@ -296,6 +322,7 @@ SetupWidget::SetupWidget(QWidget* parent) : QFrame(parent) {
   hide(); // Only show when first request comes back
 }
 
+
 void SetupWidget::replyFinished(const QString &response, bool success) {
   show();
   if (!success) return;
@@ -326,3 +353,4 @@ void SetupWidget::replyFinished(const QString &response, bool success) {
     }
   }
 }
+

@@ -3249,9 +3249,11 @@ public:
 
   inline float getKf() const;
 
-  inline float getKd() const;
-
   inline float getSteeringAngleDeadzoneDeg() const;
+
+  inline float getLatAccelFactor() const;
+
+  inline float getLatAccelOffset() const;
 
 private:
   ::capnp::_::StructReader _reader;
@@ -3296,11 +3298,14 @@ public:
   inline float getKf();
   inline void setKf(float value);
 
-  inline float getKd();
-  inline void setKd(float value);
-
   inline float getSteeringAngleDeadzoneDeg();
   inline void setSteeringAngleDeadzoneDeg(float value);
+
+  inline float getLatAccelFactor();
+  inline void setLatAccelFactor(float value);
+
+  inline float getLatAccelOffset();
+  inline void setLatAccelOffset(float value);
 
 private:
   ::capnp::_::StructBuilder _builder;
@@ -7987,32 +7992,46 @@ inline void CarParams::LateralTorqueTuning::Builder::setKf(float value) {
       ::capnp::bounded<4>() * ::capnp::ELEMENTS, value);
 }
 
-inline float CarParams::LateralTorqueTuning::Reader::getKd() const {
-  return _reader.getDataField<float>(
-      ::capnp::bounded<5>() * ::capnp::ELEMENTS);
-}
-
-inline float CarParams::LateralTorqueTuning::Builder::getKd() {
-  return _builder.getDataField<float>(
-      ::capnp::bounded<5>() * ::capnp::ELEMENTS);
-}
-inline void CarParams::LateralTorqueTuning::Builder::setKd(float value) {
-  _builder.setDataField<float>(
-      ::capnp::bounded<5>() * ::capnp::ELEMENTS, value);
-}
-
 inline float CarParams::LateralTorqueTuning::Reader::getSteeringAngleDeadzoneDeg() const {
   return _reader.getDataField<float>(
-      ::capnp::bounded<6>() * ::capnp::ELEMENTS);
+      ::capnp::bounded<5>() * ::capnp::ELEMENTS);
 }
 
 inline float CarParams::LateralTorqueTuning::Builder::getSteeringAngleDeadzoneDeg() {
   return _builder.getDataField<float>(
-      ::capnp::bounded<6>() * ::capnp::ELEMENTS);
+      ::capnp::bounded<5>() * ::capnp::ELEMENTS);
 }
 inline void CarParams::LateralTorqueTuning::Builder::setSteeringAngleDeadzoneDeg(float value) {
   _builder.setDataField<float>(
+      ::capnp::bounded<5>() * ::capnp::ELEMENTS, value);
+}
+
+inline float CarParams::LateralTorqueTuning::Reader::getLatAccelFactor() const {
+  return _reader.getDataField<float>(
+      ::capnp::bounded<6>() * ::capnp::ELEMENTS);
+}
+
+inline float CarParams::LateralTorqueTuning::Builder::getLatAccelFactor() {
+  return _builder.getDataField<float>(
+      ::capnp::bounded<6>() * ::capnp::ELEMENTS);
+}
+inline void CarParams::LateralTorqueTuning::Builder::setLatAccelFactor(float value) {
+  _builder.setDataField<float>(
       ::capnp::bounded<6>() * ::capnp::ELEMENTS, value);
+}
+
+inline float CarParams::LateralTorqueTuning::Reader::getLatAccelOffset() const {
+  return _reader.getDataField<float>(
+      ::capnp::bounded<7>() * ::capnp::ELEMENTS);
+}
+
+inline float CarParams::LateralTorqueTuning::Builder::getLatAccelOffset() {
+  return _builder.getDataField<float>(
+      ::capnp::bounded<7>() * ::capnp::ELEMENTS);
+}
+inline void CarParams::LateralTorqueTuning::Builder::setLatAccelOffset(float value) {
+  _builder.setDataField<float>(
+      ::capnp::bounded<7>() * ::capnp::ELEMENTS, value);
 }
 
 inline bool CarParams::LongitudinalPIDTuning::Reader::hasKpBP() const {

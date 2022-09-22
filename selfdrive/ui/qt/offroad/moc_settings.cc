@@ -787,6 +787,216 @@ void LateralControl::selected()
 {
     QMetaObject::activate(this, &staticMetaObject, 1, nullptr);
 }
+struct qt_meta_stringdata_BrightnessControl_t {
+    QByteArrayData data[1];
+    char stringdata0[18];
+};
+#define QT_MOC_LITERAL(idx, ofs, len) \
+    Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
+    qptrdiff(offsetof(qt_meta_stringdata_BrightnessControl_t, stringdata0) + ofs \
+        - idx * sizeof(QByteArrayData)) \
+    )
+static const qt_meta_stringdata_BrightnessControl_t qt_meta_stringdata_BrightnessControl = {
+    {
+QT_MOC_LITERAL(0, 0, 17) // "BrightnessControl"
+
+    },
+    "BrightnessControl"
+};
+#undef QT_MOC_LITERAL
+
+static const uint qt_meta_data_BrightnessControl[] = {
+
+ // content:
+       8,       // revision
+       0,       // classname
+       0,    0, // classinfo
+       0,    0, // methods
+       0,    0, // properties
+       0,    0, // enums/sets
+       0,    0, // constructors
+       0,       // flags
+       0,       // signalCount
+
+       0        // eod
+};
+
+void BrightnessControl::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+{
+    Q_UNUSED(_o);
+    Q_UNUSED(_id);
+    Q_UNUSED(_c);
+    Q_UNUSED(_a);
+}
+
+QT_INIT_METAOBJECT const QMetaObject BrightnessControl::staticMetaObject = { {
+    &AbstractControl::staticMetaObject,
+    qt_meta_stringdata_BrightnessControl.data,
+    qt_meta_data_BrightnessControl,
+    qt_static_metacall,
+    nullptr,
+    nullptr
+} };
+
+
+const QMetaObject *BrightnessControl::metaObject() const
+{
+    return QObject::d_ptr->metaObject ? QObject::d_ptr->dynamicMetaObject() : &staticMetaObject;
+}
+
+void *BrightnessControl::qt_metacast(const char *_clname)
+{
+    if (!_clname) return nullptr;
+    if (!strcmp(_clname, qt_meta_stringdata_BrightnessControl.stringdata0))
+        return static_cast<void*>(this);
+    return AbstractControl::qt_metacast(_clname);
+}
+
+int BrightnessControl::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+{
+    _id = AbstractControl::qt_metacall(_c, _id, _a);
+    return _id;
+}
+struct qt_meta_stringdata_BrightnessOffControl_t {
+    QByteArrayData data[1];
+    char stringdata0[21];
+};
+#define QT_MOC_LITERAL(idx, ofs, len) \
+    Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
+    qptrdiff(offsetof(qt_meta_stringdata_BrightnessOffControl_t, stringdata0) + ofs \
+        - idx * sizeof(QByteArrayData)) \
+    )
+static const qt_meta_stringdata_BrightnessOffControl_t qt_meta_stringdata_BrightnessOffControl = {
+    {
+QT_MOC_LITERAL(0, 0, 20) // "BrightnessOffControl"
+
+    },
+    "BrightnessOffControl"
+};
+#undef QT_MOC_LITERAL
+
+static const uint qt_meta_data_BrightnessOffControl[] = {
+
+ // content:
+       8,       // revision
+       0,       // classname
+       0,    0, // classinfo
+       0,    0, // methods
+       0,    0, // properties
+       0,    0, // enums/sets
+       0,    0, // constructors
+       0,       // flags
+       0,       // signalCount
+
+       0        // eod
+};
+
+void BrightnessOffControl::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+{
+    Q_UNUSED(_o);
+    Q_UNUSED(_id);
+    Q_UNUSED(_c);
+    Q_UNUSED(_a);
+}
+
+QT_INIT_METAOBJECT const QMetaObject BrightnessOffControl::staticMetaObject = { {
+    &AbstractControl::staticMetaObject,
+    qt_meta_stringdata_BrightnessOffControl.data,
+    qt_meta_data_BrightnessOffControl,
+    qt_static_metacall,
+    nullptr,
+    nullptr
+} };
+
+
+const QMetaObject *BrightnessOffControl::metaObject() const
+{
+    return QObject::d_ptr->metaObject ? QObject::d_ptr->dynamicMetaObject() : &staticMetaObject;
+}
+
+void *BrightnessOffControl::qt_metacast(const char *_clname)
+{
+    if (!_clname) return nullptr;
+    if (!strcmp(_clname, qt_meta_stringdata_BrightnessOffControl.stringdata0))
+        return static_cast<void*>(this);
+    return AbstractControl::qt_metacast(_clname);
+}
+
+int BrightnessOffControl::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+{
+    _id = AbstractControl::qt_metacall(_c, _id, _a);
+    return _id;
+}
+struct qt_meta_stringdata_AutoScreenOff_t {
+    QByteArrayData data[1];
+    char stringdata0[14];
+};
+#define QT_MOC_LITERAL(idx, ofs, len) \
+    Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
+    qptrdiff(offsetof(qt_meta_stringdata_AutoScreenOff_t, stringdata0) + ofs \
+        - idx * sizeof(QByteArrayData)) \
+    )
+static const qt_meta_stringdata_AutoScreenOff_t qt_meta_stringdata_AutoScreenOff = {
+    {
+QT_MOC_LITERAL(0, 0, 13) // "AutoScreenOff"
+
+    },
+    "AutoScreenOff"
+};
+#undef QT_MOC_LITERAL
+
+static const uint qt_meta_data_AutoScreenOff[] = {
+
+ // content:
+       8,       // revision
+       0,       // classname
+       0,    0, // classinfo
+       0,    0, // methods
+       0,    0, // properties
+       0,    0, // enums/sets
+       0,    0, // constructors
+       0,       // flags
+       0,       // signalCount
+
+       0        // eod
+};
+
+void AutoScreenOff::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+{
+    Q_UNUSED(_o);
+    Q_UNUSED(_id);
+    Q_UNUSED(_c);
+    Q_UNUSED(_a);
+}
+
+QT_INIT_METAOBJECT const QMetaObject AutoScreenOff::staticMetaObject = { {
+    &AbstractControl::staticMetaObject,
+    qt_meta_stringdata_AutoScreenOff.data,
+    qt_meta_data_AutoScreenOff,
+    qt_static_metacall,
+    nullptr,
+    nullptr
+} };
+
+
+const QMetaObject *AutoScreenOff::metaObject() const
+{
+    return QObject::d_ptr->metaObject ? QObject::d_ptr->dynamicMetaObject() : &staticMetaObject;
+}
+
+void *AutoScreenOff::qt_metacast(const char *_clname)
+{
+    if (!_clname) return nullptr;
+    if (!strcmp(_clname, qt_meta_stringdata_AutoScreenOff.stringdata0))
+        return static_cast<void*>(this);
+    return AbstractControl::qt_metacast(_clname);
+}
+
+int AutoScreenOff::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+{
+    _id = AbstractControl::qt_metacall(_c, _id, _a);
+    return _id;
+}
 struct qt_meta_stringdata_ChargingMin_t {
     QByteArrayData data[1];
     char stringdata0[12];
@@ -1135,6 +1345,1196 @@ void *CommunityPanel::qt_metacast(const char *_clname)
 int CommunityPanel::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 {
     _id = QWidget::qt_metacall(_c, _id, _a);
+    return _id;
+}
+struct qt_meta_stringdata_CloseToRoadEdgeToggle_t {
+    QByteArrayData data[1];
+    char stringdata0[22];
+};
+#define QT_MOC_LITERAL(idx, ofs, len) \
+    Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
+    qptrdiff(offsetof(qt_meta_stringdata_CloseToRoadEdgeToggle_t, stringdata0) + ofs \
+        - idx * sizeof(QByteArrayData)) \
+    )
+static const qt_meta_stringdata_CloseToRoadEdgeToggle_t qt_meta_stringdata_CloseToRoadEdgeToggle = {
+    {
+QT_MOC_LITERAL(0, 0, 21) // "CloseToRoadEdgeToggle"
+
+    },
+    "CloseToRoadEdgeToggle"
+};
+#undef QT_MOC_LITERAL
+
+static const uint qt_meta_data_CloseToRoadEdgeToggle[] = {
+
+ // content:
+       8,       // revision
+       0,       // classname
+       0,    0, // classinfo
+       0,    0, // methods
+       0,    0, // properties
+       0,    0, // enums/sets
+       0,    0, // constructors
+       0,       // flags
+       0,       // signalCount
+
+       0        // eod
+};
+
+void CloseToRoadEdgeToggle::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+{
+    Q_UNUSED(_o);
+    Q_UNUSED(_id);
+    Q_UNUSED(_c);
+    Q_UNUSED(_a);
+}
+
+QT_INIT_METAOBJECT const QMetaObject CloseToRoadEdgeToggle::staticMetaObject = { {
+    &ToggleControl::staticMetaObject,
+    qt_meta_stringdata_CloseToRoadEdgeToggle.data,
+    qt_meta_data_CloseToRoadEdgeToggle,
+    qt_static_metacall,
+    nullptr,
+    nullptr
+} };
+
+
+const QMetaObject *CloseToRoadEdgeToggle::metaObject() const
+{
+    return QObject::d_ptr->metaObject ? QObject::d_ptr->dynamicMetaObject() : &staticMetaObject;
+}
+
+void *CloseToRoadEdgeToggle::qt_metacast(const char *_clname)
+{
+    if (!_clname) return nullptr;
+    if (!strcmp(_clname, qt_meta_stringdata_CloseToRoadEdgeToggle.stringdata0))
+        return static_cast<void*>(this);
+    return ToggleControl::qt_metacast(_clname);
+}
+
+int CloseToRoadEdgeToggle::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+{
+    _id = ToggleControl::qt_metacall(_c, _id, _a);
+    return _id;
+}
+struct qt_meta_stringdata_OPKREdgeOffset_t {
+    QByteArrayData data[1];
+    char stringdata0[15];
+};
+#define QT_MOC_LITERAL(idx, ofs, len) \
+    Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
+    qptrdiff(offsetof(qt_meta_stringdata_OPKREdgeOffset_t, stringdata0) + ofs \
+        - idx * sizeof(QByteArrayData)) \
+    )
+static const qt_meta_stringdata_OPKREdgeOffset_t qt_meta_stringdata_OPKREdgeOffset = {
+    {
+QT_MOC_LITERAL(0, 0, 14) // "OPKREdgeOffset"
+
+    },
+    "OPKREdgeOffset"
+};
+#undef QT_MOC_LITERAL
+
+static const uint qt_meta_data_OPKREdgeOffset[] = {
+
+ // content:
+       8,       // revision
+       0,       // classname
+       0,    0, // classinfo
+       0,    0, // methods
+       0,    0, // properties
+       0,    0, // enums/sets
+       0,    0, // constructors
+       0,       // flags
+       0,       // signalCount
+
+       0        // eod
+};
+
+void OPKREdgeOffset::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+{
+    Q_UNUSED(_o);
+    Q_UNUSED(_id);
+    Q_UNUSED(_c);
+    Q_UNUSED(_a);
+}
+
+QT_INIT_METAOBJECT const QMetaObject OPKREdgeOffset::staticMetaObject = { {
+    &AbstractControl::staticMetaObject,
+    qt_meta_stringdata_OPKREdgeOffset.data,
+    qt_meta_data_OPKREdgeOffset,
+    qt_static_metacall,
+    nullptr,
+    nullptr
+} };
+
+
+const QMetaObject *OPKREdgeOffset::metaObject() const
+{
+    return QObject::d_ptr->metaObject ? QObject::d_ptr->dynamicMetaObject() : &staticMetaObject;
+}
+
+void *OPKREdgeOffset::qt_metacast(const char *_clname)
+{
+    if (!_clname) return nullptr;
+    if (!strcmp(_clname, qt_meta_stringdata_OPKREdgeOffset.stringdata0))
+        return static_cast<void*>(this);
+    return AbstractControl::qt_metacast(_clname);
+}
+
+int OPKREdgeOffset::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+{
+    _id = AbstractControl::qt_metacall(_c, _id, _a);
+    return _id;
+}
+struct qt_meta_stringdata_CameraOffset_t {
+    QByteArrayData data[1];
+    char stringdata0[13];
+};
+#define QT_MOC_LITERAL(idx, ofs, len) \
+    Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
+    qptrdiff(offsetof(qt_meta_stringdata_CameraOffset_t, stringdata0) + ofs \
+        - idx * sizeof(QByteArrayData)) \
+    )
+static const qt_meta_stringdata_CameraOffset_t qt_meta_stringdata_CameraOffset = {
+    {
+QT_MOC_LITERAL(0, 0, 12) // "CameraOffset"
+
+    },
+    "CameraOffset"
+};
+#undef QT_MOC_LITERAL
+
+static const uint qt_meta_data_CameraOffset[] = {
+
+ // content:
+       8,       // revision
+       0,       // classname
+       0,    0, // classinfo
+       0,    0, // methods
+       0,    0, // properties
+       0,    0, // enums/sets
+       0,    0, // constructors
+       0,       // flags
+       0,       // signalCount
+
+       0        // eod
+};
+
+void CameraOffset::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+{
+    Q_UNUSED(_o);
+    Q_UNUSED(_id);
+    Q_UNUSED(_c);
+    Q_UNUSED(_a);
+}
+
+QT_INIT_METAOBJECT const QMetaObject CameraOffset::staticMetaObject = { {
+    &AbstractControl::staticMetaObject,
+    qt_meta_stringdata_CameraOffset.data,
+    qt_meta_data_CameraOffset,
+    qt_static_metacall,
+    nullptr,
+    nullptr
+} };
+
+
+const QMetaObject *CameraOffset::metaObject() const
+{
+    return QObject::d_ptr->metaObject ? QObject::d_ptr->dynamicMetaObject() : &staticMetaObject;
+}
+
+void *CameraOffset::qt_metacast(const char *_clname)
+{
+    if (!_clname) return nullptr;
+    if (!strcmp(_clname, qt_meta_stringdata_CameraOffset.stringdata0))
+        return static_cast<void*>(this);
+    return AbstractControl::qt_metacast(_clname);
+}
+
+int CameraOffset::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+{
+    _id = AbstractControl::qt_metacall(_c, _id, _a);
+    return _id;
+}
+struct qt_meta_stringdata_SteerActuatorDelay_t {
+    QByteArrayData data[1];
+    char stringdata0[19];
+};
+#define QT_MOC_LITERAL(idx, ofs, len) \
+    Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
+    qptrdiff(offsetof(qt_meta_stringdata_SteerActuatorDelay_t, stringdata0) + ofs \
+        - idx * sizeof(QByteArrayData)) \
+    )
+static const qt_meta_stringdata_SteerActuatorDelay_t qt_meta_stringdata_SteerActuatorDelay = {
+    {
+QT_MOC_LITERAL(0, 0, 18) // "SteerActuatorDelay"
+
+    },
+    "SteerActuatorDelay"
+};
+#undef QT_MOC_LITERAL
+
+static const uint qt_meta_data_SteerActuatorDelay[] = {
+
+ // content:
+       8,       // revision
+       0,       // classname
+       0,    0, // classinfo
+       0,    0, // methods
+       0,    0, // properties
+       0,    0, // enums/sets
+       0,    0, // constructors
+       0,       // flags
+       0,       // signalCount
+
+       0        // eod
+};
+
+void SteerActuatorDelay::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+{
+    Q_UNUSED(_o);
+    Q_UNUSED(_id);
+    Q_UNUSED(_c);
+    Q_UNUSED(_a);
+}
+
+QT_INIT_METAOBJECT const QMetaObject SteerActuatorDelay::staticMetaObject = { {
+    &AbstractControl::staticMetaObject,
+    qt_meta_stringdata_SteerActuatorDelay.data,
+    qt_meta_data_SteerActuatorDelay,
+    qt_static_metacall,
+    nullptr,
+    nullptr
+} };
+
+
+const QMetaObject *SteerActuatorDelay::metaObject() const
+{
+    return QObject::d_ptr->metaObject ? QObject::d_ptr->dynamicMetaObject() : &staticMetaObject;
+}
+
+void *SteerActuatorDelay::qt_metacast(const char *_clname)
+{
+    if (!_clname) return nullptr;
+    if (!strcmp(_clname, qt_meta_stringdata_SteerActuatorDelay.stringdata0))
+        return static_cast<void*>(this);
+    return AbstractControl::qt_metacast(_clname);
+}
+
+int SteerActuatorDelay::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+{
+    _id = AbstractControl::qt_metacall(_c, _id, _a);
+    return _id;
+}
+struct qt_meta_stringdata_SteerLimitTimer_t {
+    QByteArrayData data[1];
+    char stringdata0[16];
+};
+#define QT_MOC_LITERAL(idx, ofs, len) \
+    Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
+    qptrdiff(offsetof(qt_meta_stringdata_SteerLimitTimer_t, stringdata0) + ofs \
+        - idx * sizeof(QByteArrayData)) \
+    )
+static const qt_meta_stringdata_SteerLimitTimer_t qt_meta_stringdata_SteerLimitTimer = {
+    {
+QT_MOC_LITERAL(0, 0, 15) // "SteerLimitTimer"
+
+    },
+    "SteerLimitTimer"
+};
+#undef QT_MOC_LITERAL
+
+static const uint qt_meta_data_SteerLimitTimer[] = {
+
+ // content:
+       8,       // revision
+       0,       // classname
+       0,    0, // classinfo
+       0,    0, // methods
+       0,    0, // properties
+       0,    0, // enums/sets
+       0,    0, // constructors
+       0,       // flags
+       0,       // signalCount
+
+       0        // eod
+};
+
+void SteerLimitTimer::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+{
+    Q_UNUSED(_o);
+    Q_UNUSED(_id);
+    Q_UNUSED(_c);
+    Q_UNUSED(_a);
+}
+
+QT_INIT_METAOBJECT const QMetaObject SteerLimitTimer::staticMetaObject = { {
+    &AbstractControl::staticMetaObject,
+    qt_meta_stringdata_SteerLimitTimer.data,
+    qt_meta_data_SteerLimitTimer,
+    qt_static_metacall,
+    nullptr,
+    nullptr
+} };
+
+
+const QMetaObject *SteerLimitTimer::metaObject() const
+{
+    return QObject::d_ptr->metaObject ? QObject::d_ptr->dynamicMetaObject() : &staticMetaObject;
+}
+
+void *SteerLimitTimer::qt_metacast(const char *_clname)
+{
+    if (!_clname) return nullptr;
+    if (!strcmp(_clname, qt_meta_stringdata_SteerLimitTimer.stringdata0))
+        return static_cast<void*>(this);
+    return AbstractControl::qt_metacast(_clname);
+}
+
+int SteerLimitTimer::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+{
+    _id = AbstractControl::qt_metacall(_c, _id, _a);
+    return _id;
+}
+struct qt_meta_stringdata_PathOffset_t {
+    QByteArrayData data[1];
+    char stringdata0[11];
+};
+#define QT_MOC_LITERAL(idx, ofs, len) \
+    Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
+    qptrdiff(offsetof(qt_meta_stringdata_PathOffset_t, stringdata0) + ofs \
+        - idx * sizeof(QByteArrayData)) \
+    )
+static const qt_meta_stringdata_PathOffset_t qt_meta_stringdata_PathOffset = {
+    {
+QT_MOC_LITERAL(0, 0, 10) // "PathOffset"
+
+    },
+    "PathOffset"
+};
+#undef QT_MOC_LITERAL
+
+static const uint qt_meta_data_PathOffset[] = {
+
+ // content:
+       8,       // revision
+       0,       // classname
+       0,    0, // classinfo
+       0,    0, // methods
+       0,    0, // properties
+       0,    0, // enums/sets
+       0,    0, // constructors
+       0,       // flags
+       0,       // signalCount
+
+       0        // eod
+};
+
+void PathOffset::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+{
+    Q_UNUSED(_o);
+    Q_UNUSED(_id);
+    Q_UNUSED(_c);
+    Q_UNUSED(_a);
+}
+
+QT_INIT_METAOBJECT const QMetaObject PathOffset::staticMetaObject = { {
+    &AbstractControl::staticMetaObject,
+    qt_meta_stringdata_PathOffset.data,
+    qt_meta_data_PathOffset,
+    qt_static_metacall,
+    nullptr,
+    nullptr
+} };
+
+
+const QMetaObject *PathOffset::metaObject() const
+{
+    return QObject::d_ptr->metaObject ? QObject::d_ptr->dynamicMetaObject() : &staticMetaObject;
+}
+
+void *PathOffset::qt_metacast(const char *_clname)
+{
+    if (!_clname) return nullptr;
+    if (!strcmp(_clname, qt_meta_stringdata_PathOffset.stringdata0))
+        return static_cast<void*>(this);
+    return AbstractControl::qt_metacast(_clname);
+}
+
+int PathOffset::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+{
+    _id = AbstractControl::qt_metacall(_c, _id, _a);
+    return _id;
+}
+struct qt_meta_stringdata_LiveSteerRatioToggle_t {
+    QByteArrayData data[1];
+    char stringdata0[21];
+};
+#define QT_MOC_LITERAL(idx, ofs, len) \
+    Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
+    qptrdiff(offsetof(qt_meta_stringdata_LiveSteerRatioToggle_t, stringdata0) + ofs \
+        - idx * sizeof(QByteArrayData)) \
+    )
+static const qt_meta_stringdata_LiveSteerRatioToggle_t qt_meta_stringdata_LiveSteerRatioToggle = {
+    {
+QT_MOC_LITERAL(0, 0, 20) // "LiveSteerRatioToggle"
+
+    },
+    "LiveSteerRatioToggle"
+};
+#undef QT_MOC_LITERAL
+
+static const uint qt_meta_data_LiveSteerRatioToggle[] = {
+
+ // content:
+       8,       // revision
+       0,       // classname
+       0,    0, // classinfo
+       0,    0, // methods
+       0,    0, // properties
+       0,    0, // enums/sets
+       0,    0, // constructors
+       0,       // flags
+       0,       // signalCount
+
+       0        // eod
+};
+
+void LiveSteerRatioToggle::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+{
+    Q_UNUSED(_o);
+    Q_UNUSED(_id);
+    Q_UNUSED(_c);
+    Q_UNUSED(_a);
+}
+
+QT_INIT_METAOBJECT const QMetaObject LiveSteerRatioToggle::staticMetaObject = { {
+    &ToggleControl::staticMetaObject,
+    qt_meta_stringdata_LiveSteerRatioToggle.data,
+    qt_meta_data_LiveSteerRatioToggle,
+    qt_static_metacall,
+    nullptr,
+    nullptr
+} };
+
+
+const QMetaObject *LiveSteerRatioToggle::metaObject() const
+{
+    return QObject::d_ptr->metaObject ? QObject::d_ptr->dynamicMetaObject() : &staticMetaObject;
+}
+
+void *LiveSteerRatioToggle::qt_metacast(const char *_clname)
+{
+    if (!_clname) return nullptr;
+    if (!strcmp(_clname, qt_meta_stringdata_LiveSteerRatioToggle.stringdata0))
+        return static_cast<void*>(this);
+    return ToggleControl::qt_metacast(_clname);
+}
+
+int LiveSteerRatioToggle::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+{
+    _id = ToggleControl::qt_metacall(_c, _id, _a);
+    return _id;
+}
+struct qt_meta_stringdata_VariableSteerMaxToggle_t {
+    QByteArrayData data[1];
+    char stringdata0[23];
+};
+#define QT_MOC_LITERAL(idx, ofs, len) \
+    Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
+    qptrdiff(offsetof(qt_meta_stringdata_VariableSteerMaxToggle_t, stringdata0) + ofs \
+        - idx * sizeof(QByteArrayData)) \
+    )
+static const qt_meta_stringdata_VariableSteerMaxToggle_t qt_meta_stringdata_VariableSteerMaxToggle = {
+    {
+QT_MOC_LITERAL(0, 0, 22) // "VariableSteerMaxToggle"
+
+    },
+    "VariableSteerMaxToggle"
+};
+#undef QT_MOC_LITERAL
+
+static const uint qt_meta_data_VariableSteerMaxToggle[] = {
+
+ // content:
+       8,       // revision
+       0,       // classname
+       0,    0, // classinfo
+       0,    0, // methods
+       0,    0, // properties
+       0,    0, // enums/sets
+       0,    0, // constructors
+       0,       // flags
+       0,       // signalCount
+
+       0        // eod
+};
+
+void VariableSteerMaxToggle::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+{
+    Q_UNUSED(_o);
+    Q_UNUSED(_id);
+    Q_UNUSED(_c);
+    Q_UNUSED(_a);
+}
+
+QT_INIT_METAOBJECT const QMetaObject VariableSteerMaxToggle::staticMetaObject = { {
+    &ToggleControl::staticMetaObject,
+    qt_meta_stringdata_VariableSteerMaxToggle.data,
+    qt_meta_data_VariableSteerMaxToggle,
+    qt_static_metacall,
+    nullptr,
+    nullptr
+} };
+
+
+const QMetaObject *VariableSteerMaxToggle::metaObject() const
+{
+    return QObject::d_ptr->metaObject ? QObject::d_ptr->dynamicMetaObject() : &staticMetaObject;
+}
+
+void *VariableSteerMaxToggle::qt_metacast(const char *_clname)
+{
+    if (!_clname) return nullptr;
+    if (!strcmp(_clname, qt_meta_stringdata_VariableSteerMaxToggle.stringdata0))
+        return static_cast<void*>(this);
+    return ToggleControl::qt_metacast(_clname);
+}
+
+int VariableSteerMaxToggle::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+{
+    _id = ToggleControl::qt_metacall(_c, _id, _a);
+    return _id;
+}
+struct qt_meta_stringdata_SRBaseControl_t {
+    QByteArrayData data[1];
+    char stringdata0[14];
+};
+#define QT_MOC_LITERAL(idx, ofs, len) \
+    Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
+    qptrdiff(offsetof(qt_meta_stringdata_SRBaseControl_t, stringdata0) + ofs \
+        - idx * sizeof(QByteArrayData)) \
+    )
+static const qt_meta_stringdata_SRBaseControl_t qt_meta_stringdata_SRBaseControl = {
+    {
+QT_MOC_LITERAL(0, 0, 13) // "SRBaseControl"
+
+    },
+    "SRBaseControl"
+};
+#undef QT_MOC_LITERAL
+
+static const uint qt_meta_data_SRBaseControl[] = {
+
+ // content:
+       8,       // revision
+       0,       // classname
+       0,    0, // classinfo
+       0,    0, // methods
+       0,    0, // properties
+       0,    0, // enums/sets
+       0,    0, // constructors
+       0,       // flags
+       0,       // signalCount
+
+       0        // eod
+};
+
+void SRBaseControl::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+{
+    Q_UNUSED(_o);
+    Q_UNUSED(_id);
+    Q_UNUSED(_c);
+    Q_UNUSED(_a);
+}
+
+QT_INIT_METAOBJECT const QMetaObject SRBaseControl::staticMetaObject = { {
+    &AbstractControl::staticMetaObject,
+    qt_meta_stringdata_SRBaseControl.data,
+    qt_meta_data_SRBaseControl,
+    qt_static_metacall,
+    nullptr,
+    nullptr
+} };
+
+
+const QMetaObject *SRBaseControl::metaObject() const
+{
+    return QObject::d_ptr->metaObject ? QObject::d_ptr->dynamicMetaObject() : &staticMetaObject;
+}
+
+void *SRBaseControl::qt_metacast(const char *_clname)
+{
+    if (!_clname) return nullptr;
+    if (!strcmp(_clname, qt_meta_stringdata_SRBaseControl.stringdata0))
+        return static_cast<void*>(this);
+    return AbstractControl::qt_metacast(_clname);
+}
+
+int SRBaseControl::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+{
+    _id = AbstractControl::qt_metacall(_c, _id, _a);
+    return _id;
+}
+struct qt_meta_stringdata_SRMaxControl_t {
+    QByteArrayData data[1];
+    char stringdata0[13];
+};
+#define QT_MOC_LITERAL(idx, ofs, len) \
+    Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
+    qptrdiff(offsetof(qt_meta_stringdata_SRMaxControl_t, stringdata0) + ofs \
+        - idx * sizeof(QByteArrayData)) \
+    )
+static const qt_meta_stringdata_SRMaxControl_t qt_meta_stringdata_SRMaxControl = {
+    {
+QT_MOC_LITERAL(0, 0, 12) // "SRMaxControl"
+
+    },
+    "SRMaxControl"
+};
+#undef QT_MOC_LITERAL
+
+static const uint qt_meta_data_SRMaxControl[] = {
+
+ // content:
+       8,       // revision
+       0,       // classname
+       0,    0, // classinfo
+       0,    0, // methods
+       0,    0, // properties
+       0,    0, // enums/sets
+       0,    0, // constructors
+       0,       // flags
+       0,       // signalCount
+
+       0        // eod
+};
+
+void SRMaxControl::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+{
+    Q_UNUSED(_o);
+    Q_UNUSED(_id);
+    Q_UNUSED(_c);
+    Q_UNUSED(_a);
+}
+
+QT_INIT_METAOBJECT const QMetaObject SRMaxControl::staticMetaObject = { {
+    &AbstractControl::staticMetaObject,
+    qt_meta_stringdata_SRMaxControl.data,
+    qt_meta_data_SRMaxControl,
+    qt_static_metacall,
+    nullptr,
+    nullptr
+} };
+
+
+const QMetaObject *SRMaxControl::metaObject() const
+{
+    return QObject::d_ptr->metaObject ? QObject::d_ptr->dynamicMetaObject() : &staticMetaObject;
+}
+
+void *SRMaxControl::qt_metacast(const char *_clname)
+{
+    if (!_clname) return nullptr;
+    if (!strcmp(_clname, qt_meta_stringdata_SRMaxControl.stringdata0))
+        return static_cast<void*>(this);
+    return AbstractControl::qt_metacast(_clname);
+}
+
+int SRMaxControl::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+{
+    _id = AbstractControl::qt_metacall(_c, _id, _a);
+    return _id;
+}
+struct qt_meta_stringdata_LiveSRPercent_t {
+    QByteArrayData data[1];
+    char stringdata0[14];
+};
+#define QT_MOC_LITERAL(idx, ofs, len) \
+    Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
+    qptrdiff(offsetof(qt_meta_stringdata_LiveSRPercent_t, stringdata0) + ofs \
+        - idx * sizeof(QByteArrayData)) \
+    )
+static const qt_meta_stringdata_LiveSRPercent_t qt_meta_stringdata_LiveSRPercent = {
+    {
+QT_MOC_LITERAL(0, 0, 13) // "LiveSRPercent"
+
+    },
+    "LiveSRPercent"
+};
+#undef QT_MOC_LITERAL
+
+static const uint qt_meta_data_LiveSRPercent[] = {
+
+ // content:
+       8,       // revision
+       0,       // classname
+       0,    0, // classinfo
+       0,    0, // methods
+       0,    0, // properties
+       0,    0, // enums/sets
+       0,    0, // constructors
+       0,       // flags
+       0,       // signalCount
+
+       0        // eod
+};
+
+void LiveSRPercent::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+{
+    Q_UNUSED(_o);
+    Q_UNUSED(_id);
+    Q_UNUSED(_c);
+    Q_UNUSED(_a);
+}
+
+QT_INIT_METAOBJECT const QMetaObject LiveSRPercent::staticMetaObject = { {
+    &AbstractControl::staticMetaObject,
+    qt_meta_stringdata_LiveSRPercent.data,
+    qt_meta_data_LiveSRPercent,
+    qt_static_metacall,
+    nullptr,
+    nullptr
+} };
+
+
+const QMetaObject *LiveSRPercent::metaObject() const
+{
+    return QObject::d_ptr->metaObject ? QObject::d_ptr->dynamicMetaObject() : &staticMetaObject;
+}
+
+void *LiveSRPercent::qt_metacast(const char *_clname)
+{
+    if (!_clname) return nullptr;
+    if (!strcmp(_clname, qt_meta_stringdata_LiveSRPercent.stringdata0))
+        return static_cast<void*>(this);
+    return AbstractControl::qt_metacast(_clname);
+}
+
+int LiveSRPercent::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+{
+    _id = AbstractControl::qt_metacall(_c, _id, _a);
+    return _id;
+}
+struct qt_meta_stringdata_TorqueMaxLatAccel_t {
+    QByteArrayData data[1];
+    char stringdata0[18];
+};
+#define QT_MOC_LITERAL(idx, ofs, len) \
+    Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
+    qptrdiff(offsetof(qt_meta_stringdata_TorqueMaxLatAccel_t, stringdata0) + ofs \
+        - idx * sizeof(QByteArrayData)) \
+    )
+static const qt_meta_stringdata_TorqueMaxLatAccel_t qt_meta_stringdata_TorqueMaxLatAccel = {
+    {
+QT_MOC_LITERAL(0, 0, 17) // "TorqueMaxLatAccel"
+
+    },
+    "TorqueMaxLatAccel"
+};
+#undef QT_MOC_LITERAL
+
+static const uint qt_meta_data_TorqueMaxLatAccel[] = {
+
+ // content:
+       8,       // revision
+       0,       // classname
+       0,    0, // classinfo
+       0,    0, // methods
+       0,    0, // properties
+       0,    0, // enums/sets
+       0,    0, // constructors
+       0,       // flags
+       0,       // signalCount
+
+       0        // eod
+};
+
+void TorqueMaxLatAccel::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+{
+    Q_UNUSED(_o);
+    Q_UNUSED(_id);
+    Q_UNUSED(_c);
+    Q_UNUSED(_a);
+}
+
+QT_INIT_METAOBJECT const QMetaObject TorqueMaxLatAccel::staticMetaObject = { {
+    &AbstractControl::staticMetaObject,
+    qt_meta_stringdata_TorqueMaxLatAccel.data,
+    qt_meta_data_TorqueMaxLatAccel,
+    qt_static_metacall,
+    nullptr,
+    nullptr
+} };
+
+
+const QMetaObject *TorqueMaxLatAccel::metaObject() const
+{
+    return QObject::d_ptr->metaObject ? QObject::d_ptr->dynamicMetaObject() : &staticMetaObject;
+}
+
+void *TorqueMaxLatAccel::qt_metacast(const char *_clname)
+{
+    if (!_clname) return nullptr;
+    if (!strcmp(_clname, qt_meta_stringdata_TorqueMaxLatAccel.stringdata0))
+        return static_cast<void*>(this);
+    return AbstractControl::qt_metacast(_clname);
+}
+
+int TorqueMaxLatAccel::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+{
+    _id = AbstractControl::qt_metacall(_c, _id, _a);
+    return _id;
+}
+struct qt_meta_stringdata_TorqueFriction_t {
+    QByteArrayData data[1];
+    char stringdata0[15];
+};
+#define QT_MOC_LITERAL(idx, ofs, len) \
+    Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
+    qptrdiff(offsetof(qt_meta_stringdata_TorqueFriction_t, stringdata0) + ofs \
+        - idx * sizeof(QByteArrayData)) \
+    )
+static const qt_meta_stringdata_TorqueFriction_t qt_meta_stringdata_TorqueFriction = {
+    {
+QT_MOC_LITERAL(0, 0, 14) // "TorqueFriction"
+
+    },
+    "TorqueFriction"
+};
+#undef QT_MOC_LITERAL
+
+static const uint qt_meta_data_TorqueFriction[] = {
+
+ // content:
+       8,       // revision
+       0,       // classname
+       0,    0, // classinfo
+       0,    0, // methods
+       0,    0, // properties
+       0,    0, // enums/sets
+       0,    0, // constructors
+       0,       // flags
+       0,       // signalCount
+
+       0        // eod
+};
+
+void TorqueFriction::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+{
+    Q_UNUSED(_o);
+    Q_UNUSED(_id);
+    Q_UNUSED(_c);
+    Q_UNUSED(_a);
+}
+
+QT_INIT_METAOBJECT const QMetaObject TorqueFriction::staticMetaObject = { {
+    &AbstractControl::staticMetaObject,
+    qt_meta_stringdata_TorqueFriction.data,
+    qt_meta_data_TorqueFriction,
+    qt_static_metacall,
+    nullptr,
+    nullptr
+} };
+
+
+const QMetaObject *TorqueFriction::metaObject() const
+{
+    return QObject::d_ptr->metaObject ? QObject::d_ptr->dynamicMetaObject() : &staticMetaObject;
+}
+
+void *TorqueFriction::qt_metacast(const char *_clname)
+{
+    if (!_clname) return nullptr;
+    if (!strcmp(_clname, qt_meta_stringdata_TorqueFriction.stringdata0))
+        return static_cast<void*>(this);
+    return AbstractControl::qt_metacast(_clname);
+}
+
+int TorqueFriction::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+{
+    _id = AbstractControl::qt_metacall(_c, _id, _a);
+    return _id;
+}
+struct qt_meta_stringdata_AutoEnabledToggle_t {
+    QByteArrayData data[1];
+    char stringdata0[18];
+};
+#define QT_MOC_LITERAL(idx, ofs, len) \
+    Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
+    qptrdiff(offsetof(qt_meta_stringdata_AutoEnabledToggle_t, stringdata0) + ofs \
+        - idx * sizeof(QByteArrayData)) \
+    )
+static const qt_meta_stringdata_AutoEnabledToggle_t qt_meta_stringdata_AutoEnabledToggle = {
+    {
+QT_MOC_LITERAL(0, 0, 17) // "AutoEnabledToggle"
+
+    },
+    "AutoEnabledToggle"
+};
+#undef QT_MOC_LITERAL
+
+static const uint qt_meta_data_AutoEnabledToggle[] = {
+
+ // content:
+       8,       // revision
+       0,       // classname
+       0,    0, // classinfo
+       0,    0, // methods
+       0,    0, // properties
+       0,    0, // enums/sets
+       0,    0, // constructors
+       0,       // flags
+       0,       // signalCount
+
+       0        // eod
+};
+
+void AutoEnabledToggle::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+{
+    Q_UNUSED(_o);
+    Q_UNUSED(_id);
+    Q_UNUSED(_c);
+    Q_UNUSED(_a);
+}
+
+QT_INIT_METAOBJECT const QMetaObject AutoEnabledToggle::staticMetaObject = { {
+    &ToggleControl::staticMetaObject,
+    qt_meta_stringdata_AutoEnabledToggle.data,
+    qt_meta_data_AutoEnabledToggle,
+    qt_static_metacall,
+    nullptr,
+    nullptr
+} };
+
+
+const QMetaObject *AutoEnabledToggle::metaObject() const
+{
+    return QObject::d_ptr->metaObject ? QObject::d_ptr->dynamicMetaObject() : &staticMetaObject;
+}
+
+void *AutoEnabledToggle::qt_metacast(const char *_clname)
+{
+    if (!_clname) return nullptr;
+    if (!strcmp(_clname, qt_meta_stringdata_AutoEnabledToggle.stringdata0))
+        return static_cast<void*>(this);
+    return ToggleControl::qt_metacast(_clname);
+}
+
+int AutoEnabledToggle::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+{
+    _id = ToggleControl::qt_metacall(_c, _id, _a);
+    return _id;
+}
+struct qt_meta_stringdata_AutoEnableSpeed_t {
+    QByteArrayData data[1];
+    char stringdata0[16];
+};
+#define QT_MOC_LITERAL(idx, ofs, len) \
+    Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
+    qptrdiff(offsetof(qt_meta_stringdata_AutoEnableSpeed_t, stringdata0) + ofs \
+        - idx * sizeof(QByteArrayData)) \
+    )
+static const qt_meta_stringdata_AutoEnableSpeed_t qt_meta_stringdata_AutoEnableSpeed = {
+    {
+QT_MOC_LITERAL(0, 0, 15) // "AutoEnableSpeed"
+
+    },
+    "AutoEnableSpeed"
+};
+#undef QT_MOC_LITERAL
+
+static const uint qt_meta_data_AutoEnableSpeed[] = {
+
+ // content:
+       8,       // revision
+       0,       // classname
+       0,    0, // classinfo
+       0,    0, // methods
+       0,    0, // properties
+       0,    0, // enums/sets
+       0,    0, // constructors
+       0,       // flags
+       0,       // signalCount
+
+       0        // eod
+};
+
+void AutoEnableSpeed::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+{
+    Q_UNUSED(_o);
+    Q_UNUSED(_id);
+    Q_UNUSED(_c);
+    Q_UNUSED(_a);
+}
+
+QT_INIT_METAOBJECT const QMetaObject AutoEnableSpeed::staticMetaObject = { {
+    &AbstractControl::staticMetaObject,
+    qt_meta_stringdata_AutoEnableSpeed.data,
+    qt_meta_data_AutoEnableSpeed,
+    qt_static_metacall,
+    nullptr,
+    nullptr
+} };
+
+
+const QMetaObject *AutoEnableSpeed::metaObject() const
+{
+    return QObject::d_ptr->metaObject ? QObject::d_ptr->dynamicMetaObject() : &staticMetaObject;
+}
+
+void *AutoEnableSpeed::qt_metacast(const char *_clname)
+{
+    if (!_clname) return nullptr;
+    if (!strcmp(_clname, qt_meta_stringdata_AutoEnableSpeed.stringdata0))
+        return static_cast<void*>(this);
+    return AbstractControl::qt_metacast(_clname);
+}
+
+int AutoEnableSpeed::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+{
+    _id = AbstractControl::qt_metacall(_c, _id, _a);
+    return _id;
+}
+struct qt_meta_stringdata_OPKRServerSelect_t {
+    QByteArrayData data[1];
+    char stringdata0[17];
+};
+#define QT_MOC_LITERAL(idx, ofs, len) \
+    Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
+    qptrdiff(offsetof(qt_meta_stringdata_OPKRServerSelect_t, stringdata0) + ofs \
+        - idx * sizeof(QByteArrayData)) \
+    )
+static const qt_meta_stringdata_OPKRServerSelect_t qt_meta_stringdata_OPKRServerSelect = {
+    {
+QT_MOC_LITERAL(0, 0, 16) // "OPKRServerSelect"
+
+    },
+    "OPKRServerSelect"
+};
+#undef QT_MOC_LITERAL
+
+static const uint qt_meta_data_OPKRServerSelect[] = {
+
+ // content:
+       8,       // revision
+       0,       // classname
+       0,    0, // classinfo
+       0,    0, // methods
+       0,    0, // properties
+       0,    0, // enums/sets
+       0,    0, // constructors
+       0,       // flags
+       0,       // signalCount
+
+       0        // eod
+};
+
+void OPKRServerSelect::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+{
+    Q_UNUSED(_o);
+    Q_UNUSED(_id);
+    Q_UNUSED(_c);
+    Q_UNUSED(_a);
+}
+
+QT_INIT_METAOBJECT const QMetaObject OPKRServerSelect::staticMetaObject = { {
+    &AbstractControl::staticMetaObject,
+    qt_meta_stringdata_OPKRServerSelect.data,
+    qt_meta_data_OPKRServerSelect,
+    qt_static_metacall,
+    nullptr,
+    nullptr
+} };
+
+
+const QMetaObject *OPKRServerSelect::metaObject() const
+{
+    return QObject::d_ptr->metaObject ? QObject::d_ptr->dynamicMetaObject() : &staticMetaObject;
+}
+
+void *OPKRServerSelect::qt_metacast(const char *_clname)
+{
+    if (!_clname) return nullptr;
+    if (!strcmp(_clname, qt_meta_stringdata_OPKRServerSelect.stringdata0))
+        return static_cast<void*>(this);
+    return AbstractControl::qt_metacast(_clname);
+}
+
+int OPKRServerSelect::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+{
+    _id = AbstractControl::qt_metacall(_c, _id, _a);
+    return _id;
+}
+struct qt_meta_stringdata_OPKRServerAPI_t {
+    QByteArrayData data[1];
+    char stringdata0[14];
+};
+#define QT_MOC_LITERAL(idx, ofs, len) \
+    Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
+    qptrdiff(offsetof(qt_meta_stringdata_OPKRServerAPI_t, stringdata0) + ofs \
+        - idx * sizeof(QByteArrayData)) \
+    )
+static const qt_meta_stringdata_OPKRServerAPI_t qt_meta_stringdata_OPKRServerAPI = {
+    {
+QT_MOC_LITERAL(0, 0, 13) // "OPKRServerAPI"
+
+    },
+    "OPKRServerAPI"
+};
+#undef QT_MOC_LITERAL
+
+static const uint qt_meta_data_OPKRServerAPI[] = {
+
+ // content:
+       8,       // revision
+       0,       // classname
+       0,    0, // classinfo
+       0,    0, // methods
+       0,    0, // properties
+       0,    0, // enums/sets
+       0,    0, // constructors
+       0,       // flags
+       0,       // signalCount
+
+       0        // eod
+};
+
+void OPKRServerAPI::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+{
+    Q_UNUSED(_o);
+    Q_UNUSED(_id);
+    Q_UNUSED(_c);
+    Q_UNUSED(_a);
+}
+
+QT_INIT_METAOBJECT const QMetaObject OPKRServerAPI::staticMetaObject = { {
+    &AbstractControl::staticMetaObject,
+    qt_meta_stringdata_OPKRServerAPI.data,
+    qt_meta_data_OPKRServerAPI,
+    qt_static_metacall,
+    nullptr,
+    nullptr
+} };
+
+
+const QMetaObject *OPKRServerAPI::metaObject() const
+{
+    return QObject::d_ptr->metaObject ? QObject::d_ptr->dynamicMetaObject() : &staticMetaObject;
+}
+
+void *OPKRServerAPI::qt_metacast(const char *_clname)
+{
+    if (!_clname) return nullptr;
+    if (!strcmp(_clname, qt_meta_stringdata_OPKRServerAPI.stringdata0))
+        return static_cast<void*>(this);
+    return AbstractControl::qt_metacast(_clname);
+}
+
+int OPKRServerAPI::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+{
+    _id = AbstractControl::qt_metacall(_c, _id, _a);
     return _id;
 }
 QT_WARNING_POP

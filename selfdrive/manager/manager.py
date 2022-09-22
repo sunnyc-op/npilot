@@ -61,13 +61,34 @@ def manager_init() -> None:
     ("DisableOpFcw", "0"),
     ("ShowDebugUI", "0"),
     ("NewRadarInterface", "0"),
-    
+
     #OPKR
     ("OpkrBatteryChargingControl", "0"),
     ("OpkrBatteryChargingMin", "70"),
     ("OpkrBatteryChargingMax", "80"),
     ("IsOpenpilotViewEnabled", "0"),
     ("OpkrForceShutdown", "5"),
+    ("OpkrAutoScreenOff", "0"),
+    ("OpkrUIBrightness", "0"),
+    ("OpkrUIBrightnessOff", "10"),
+    ("CloseToRoadEdge", "0"),
+    ("LeftEdgeOffset", "0"),
+    ("RightEdgeOffset", "0"),
+    ("CameraOffsetAdj", "60"),
+    ("SteerActuatorDelayAdj", "10"),
+    ("SteerLimitTimerAdj", "400"),
+    ("PathOffsetAdj", "0"),
+    ("SteerRatioAdj", "1550"),
+    ("SteerRatioMaxAdj", "1790"),
+    ("OpkrLiveSteerRatio", "1"),
+    ("OpkrVariableSteerMax", "0"),
+    ("TorqueFriction", "5"),
+    ("TorqueMaxLatAccel", "28"),
+    ("IsLiveTorque", "0"),
+    ("IsLowSpeedFactor", "0"),
+    ("AutoEnable", "0"),
+    ("AutoEnableSpeed", "3"),
+    ("OPKRServer", "0"),
   ]
   if not PC:
     default_params.append(("LastUpdateTime", datetime.datetime.utcnow().isoformat().encode('utf8')))
