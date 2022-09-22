@@ -30,7 +30,7 @@ from selfdrive.locationd.calibrationd import Calibration
 from selfdrive.hardware import HARDWARE, TICI, EON
 from selfdrive.manager.process_config import managed_processes
 from selfdrive.car.hyundai.scc_smoother import SccSmoother
-from selfdrive.ntune import ntune_common_get, ntune_common_enabled, ntune_scc_get, ntune_option_enabled
+from selfdrive.ntune import ntune_common_get, ntune_common_enabled, ntune_scc_get, ntune_option_enabled, ntune_option_get
 from decimal import Decimal
 
 SOFT_DISABLE_TIME = 3  # seconds
@@ -119,11 +119,17 @@ class Controls:
     self.is_ldw_enabled = params.get_bool("IsLdwEnabled")
     openpilot_enabled_toggle = params.get_bool("OpenpilotEnabledToggle")
     passive = params.get_bool("Passive") or not openpilot_enabled_toggle
+    
+    # npilot_manager
+    if params.get_bool("UseNpilotManager"):
+      self.auto_enabled = ntune_option_enabled('autoEnable')
+      self.auto_enable_speed = max(1, int(ntune_option_get('autoEnableSpeed')))
     #opkr
-    self.auto_enabled = params.get_bool("AutoEnable")
-    self.auto_enable_speed = max(1, int(Params().get("AutoEnableSpeed", encoding="utf8"))) if int(Params().get("AutoEnableSpeed", encoding="utf8")) > -1 else int(Params().get("AutoEnableSpeed", encoding="utf8"))
-    self.ready_timer = 0
+    else:      
+      self.auto_enabled = params.get_bool("AutoEnable")
+      self.auto_enable_speed = max(1, int(Params().get("AutoEnableSpeed", encoding="utf8"))) if int(Params().get("AutoEnableSpeed", encoding="utf8")) > -1 else int(Params().get("AutoEnableSpeed", encoding="utf8"))
 
+    self.ready_timer = 0
     # detect sound card presence and ensure successful init
     sounds_available = HARDWARE.get_sound_card_online()
 

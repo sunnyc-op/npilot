@@ -252,7 +252,10 @@ class nTune():
   def checkValidOption(self):
     updated = False
 
-    if self.checkValue("autoEngage", 0., 1., 1.):
+    if self.checkValue("autoEnable", 0., 1., 1.):
+      updated = True
+
+    if self.checkValue("autoEnableSpeed", 0., 60., 15.):
       updated = True
 
     if self.checkValue("autoCruiseSet", 0., 1., 1.):

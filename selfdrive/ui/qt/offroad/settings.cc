@@ -2039,6 +2039,11 @@ CommunityPanel::CommunityPanel(QWidget* parent) : QWidget(parent) {
 
   toggleLayout->addWidget(new UseNpilotManagerToggle());
   if(!QVariant(useNpilotManager).toBool()){
+    toggleLayout->addWidget(horizontal_line());
+    toggleLayout->addWidget(new AutoEnabledToggle());
+    toggleLayout->addWidget(new AutoEnableSpeed());
+    
+    toggleLayout->addWidget(horizontal_line());
     toggles.append(new ParamControl("IsLiveTorque",
                                               "Enable Live Torque",
                                               "",
@@ -2049,15 +2054,14 @@ CommunityPanel::CommunityPanel(QWidget* parent) : QWidget(parent) {
                                           "",
                                           "../assets/offroad/icon_shell.png",
                                           this));
+    toggleLayout->addWidget(horizontal_line());
     toggleLayout->addWidget(new ParamControl("OpkrBatteryChargingControl",
                                           "Enable Battery Charging Control",
                                           "It uses the battery charge control function.",
                                           "../assets/offroad/icon_shell.png",
                                           this));
     toggleLayout->addWidget(new ChargingMin());
-    toggleLayout->addWidget(horizontal_line());
     toggleLayout->addWidget(new ChargingMax());
-    toggleLayout->addWidget(horizontal_line());
   }
   toggleLayout->addWidget(new LabelControl(tr("〓〓〓〓〓〓〓〓〓〓【 TUNING 】〓〓〓〓〓〓〓〓〓〓"), ""));
   toggleLayout->addWidget(new CameraOffset());
@@ -2078,9 +2082,7 @@ CommunityPanel::CommunityPanel(QWidget* parent) : QWidget(parent) {
   toggleLayout->addWidget(new TorqueMaxLatAccel());
   toggleLayout->addWidget(horizontal_line());
   toggleLayout->addWidget(new TorqueFriction());
-  toggleLayout->addWidget(horizontal_line());
-  toggleLayout->addWidget(new AutoEnabledToggle());
-  toggleLayout->addWidget(new AutoEnableSpeed());
+
 
   toggles.append(new ParamControl("UseClusterSpeed",
                                             "Use Cluster Speed",
