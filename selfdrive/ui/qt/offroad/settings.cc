@@ -2043,7 +2043,6 @@ CommunityPanel::CommunityPanel(QWidget* parent) : QWidget(parent) {
     toggleLayout->addWidget(new AutoEnabledToggle());
     toggleLayout->addWidget(new AutoEnableSpeed());
     
-    toggleLayout->addWidget(horizontal_line());
     toggles.append(new ParamControl("IsLiveTorque",
                                               "Enable Live Torque",
                                               "",
