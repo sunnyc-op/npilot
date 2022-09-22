@@ -446,4 +446,61 @@ private:
   void refresh();
 };
 
+class AutoEnabledToggle : public ToggleControl {
+  Q_OBJECT
+
+public:
+  AutoEnabledToggle() : ToggleControl(tr("Use Auto Engagement"), tr("If the cruise button status is standby (CRUISE indication only and speed is not specified) in the Disengagement state, activate the automatic Engagement."), "../assets/offroad/icon_shell.png", Params().getBool("AutoEnable")) {
+    QObject::connect(this, &AutoEnabledToggle::toggleFlipped, [=](int state) {
+      bool status = state ? true : false;
+      Params().putBool("AutoEnable", status);
+    });
+  }
+};
+
+
+class AutoEnableSpeed : public AbstractControl {
+  Q_OBJECT
+
+public:
+  AutoEnableSpeed();
+
+private:
+  QPushButton btnplus;
+  QPushButton btnminus;
+  QLabel label;
+  Params params;
+  
+  void refresh();
+};
+
+class OPKRServerSelect : public AbstractControl {
+  Q_OBJECT
+
+public:
+  OPKRServerSelect();
+
+private:
+  QPushButton btn1;
+  QPushButton btn2;
+  QPushButton btn3;
+  Params params;
+  
+  void refresh();
+};
+
+class OPKRServerAPI : public AbstractControl {
+  Q_OBJECT
+
+public:
+  OPKRServerAPI();
+
+private:
+  QLabel label;
+  QPushButton btn;
+  Params params;
+
+  void refresh();
+};
+
 

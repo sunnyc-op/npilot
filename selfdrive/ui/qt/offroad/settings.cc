@@ -32,6 +32,11 @@
 #include <QListView>
 #include <QListWidget>
 
+#include <QProcess> // opkr
+#include <QDateTime> // opkr
+#include <QTimer> // opkr
+#include <QFileInfo> // opkr
+
 TogglesPanel::TogglesPanel(SettingsWindow *parent) : ListWidget(parent) {
   // param, title, desc, icon
   std::vector<std::tuple<QString, QString, QString, QString>> toggles{
@@ -1687,6 +1692,258 @@ void TorqueMaxLatAccel::refresh() {
   label.setText(QString::fromStdString(valuefs.toStdString()));
 }
 
+AutoEnableSpeed::AutoEnableSpeed() : AbstractControl(tr("Auto Engage Spd(kph)"), tr("Set the automatic engage speed."), "../assets/offroad/icon_shell.png") {
+
+  label.setAlignment(Qt::AlignVCenter|Qt::AlignRight);
+  label.setStyleSheet("color: #e0e879");
+  hlayout->addWidget(&label);
+
+  btnminus.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 50px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #393939;
+  )");
+  btnplus.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 50px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #393939;
+  )");
+  btnminus.setFixedSize(150, 100);
+  btnplus.setFixedSize(150, 100);
+  hlayout->addWidget(&btnminus);
+  hlayout->addWidget(&btnplus);
+
+  QObject::connect(&btnminus, &QPushButton::clicked, [=]() {
+    auto str = QString::fromStdString(params.get("AutoEnableSpeed"));
+    int value = str.toInt();
+    value = value - 3;
+    if (value <= -3) {
+      value = -3;
+    }
+    QString values = QString::number(value);
+    params.put("AutoEnableSpeed", values.toStdString());
+    refresh();
+  });
+  
+  QObject::connect(&btnplus, &QPushButton::clicked, [=]() {
+    auto str = QString::fromStdString(params.get("AutoEnableSpeed"));
+    int value = str.toInt();
+    value = value + 3;
+    if (value >= 30) {
+      value = 30;
+    }
+    QString values = QString::number(value);
+    params.put("AutoEnableSpeed", values.toStdString());
+    refresh();
+  });
+  refresh();
+}
+
+void AutoEnableSpeed::refresh() {
+  QString option = QString::fromStdString(params.get("AutoEnableSpeed"));
+  if (option == "-3") {
+    label.setText(tr("atDGear"));
+  } else if (option == "0") {
+    label.setText(tr("atDepart"));
+  } else {
+    label.setText(QString::fromStdString(params.get("AutoEnableSpeed")));
+  }
+  btnminus.setText("-");
+  btnplus.setText("+");
+}
+
+OPKRServerSelect::OPKRServerSelect() : AbstractControl(tr("API Server"), tr("Set API server to OPKR/Comma/User's"), "../assets/offroad/icon_shell.png") {
+  btn1.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 50px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #393939;
+  )");
+  btn1.setFixedSize(250, 100);
+  btn2.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 50px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #393939;
+  )");
+  btn2.setFixedSize(250, 100);
+  btn3.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 50px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #393939;
+  )");
+  btn3.setFixedSize(250, 100);
+  hlayout->addWidget(&btn1);
+  hlayout->addWidget(&btn2);
+  hlayout->addWidget(&btn3);
+  btn1.setText(tr("OPKR"));
+  btn2.setText(tr("Comma"));
+  btn3.setText(tr("User's"));
+
+  QObject::connect(&btn1, &QPushButton::clicked, [=]() {
+    params.put("OPKRServer", "0");
+    refresh();
+  });
+  QObject::connect(&btn2, &QPushButton::clicked, [=]() {
+    params.put("OPKRServer", "1");
+    if (ConfirmationDialog::alert(tr("You've chosen comma server. Your uploads might be ignored if you upload your data. I highly recommend you should reset the device to avoid be banned."), this)) {}
+    refresh();
+  });
+  QObject::connect(&btn3, &QPushButton::clicked, [=]() {
+    params.put("OPKRServer", "2");
+    if (ConfirmationDialog::alert(tr("You've chosen own server. Please set your api host at the menu below."), this)) {}
+    refresh();
+  });
+  refresh();
+}
+
+void OPKRServerSelect::refresh() {
+  QString option = QString::fromStdString(params.get("OPKRServer"));
+  if (option == "0") {
+    btn1.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 50px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #00A12E;
+    )");
+    btn2.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 50px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #393939;
+    )");
+    btn3.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 50px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #393939;
+    )");
+  } else if (option == "1") {
+    btn1.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 50px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #393939;
+    )");
+    btn2.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 50px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #00A12E;
+    )");
+    btn3.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 50px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #393939;
+    )");
+  } else {
+    btn1.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 50px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #393939;
+    )");
+    btn2.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 50px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #393939;
+    )");
+    btn3.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 50px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #00A12E;
+    )");
+  }
+}
+
+OPKRServerAPI::OPKRServerAPI() : AbstractControl(tr("User's API"), tr("Set Your API server URL or IP"), "") {
+  label.setAlignment(Qt::AlignVCenter|Qt::AlignRight);
+  label.setStyleSheet("color: #e0e879");
+  hlayout->addWidget(&label);
+  btn.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 50px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #393939;
+  )");
+  btn.setFixedSize(150, 100);
+  hlayout->addWidget(&btn);
+
+  QObject::connect(&btn, &QPushButton::clicked, [=]() {
+    if (btn.text() == tr("SET")) {
+      QString users_api_host = InputDialog::getText(tr("Input Your API without http://"), this);
+      if (users_api_host.length() > 0) {
+        QString cmd0 = tr("Your Input is") + "\n" + users_api_host + "\n" + tr("Press OK to apply&reboot");
+        if (ConfirmationDialog::confirm(cmd0, this)) {
+          params.put("OPKRServerAPI", users_api_host.toStdString());
+          params.put("OPKRServer", "2");
+          QProcess::execute("rm -f /data/params/d/DongleId");
+          QProcess::execute("rm -f /data/params/d/IMEI");
+          QProcess::execute("rm -f /data/params/d/HardwareSerial");
+          QProcess::execute("reboot");
+        }
+      }
+    } else if (btn.text() == tr("UNSET")) {
+      if (ConfirmationDialog::confirm(tr("Do you want to unset? the API server gets back to OPKR server and Device will be rebooted now."), this)) {
+        params.remove("OPKRServerAPI");
+        params.put("OPKRServer", "0");
+        QProcess::execute("rm -f /data/params/d/DongleId");
+        QProcess::execute("rm -f /data/params/d/IMEI");
+        QProcess::execute("rm -f /data/params/d/HardwareSerial");
+        QProcess::execute("reboot");
+      }
+    }
+  });
+  refresh();
+}
+
+void OPKRServerAPI::refresh() {
+  auto str = QString::fromStdString(params.get("OPKRServerAPI"));
+  if (str.length() > 0) {
+    label.setText(QString::fromStdString(params.get("OPKRServerAPI")));
+    btn.setText(tr("UNSET"));
+  } else {
+    btn.setText(tr("SET"));
+  }
+}
+
+
 /////////////////////////////////////////////////////////////////////////
 
 CommunityPanel::CommunityPanel(QWidget* parent) : QWidget(parent) {
@@ -1821,6 +2078,9 @@ CommunityPanel::CommunityPanel(QWidget* parent) : QWidget(parent) {
   toggleLayout->addWidget(new TorqueMaxLatAccel());
   toggleLayout->addWidget(horizontal_line());
   toggleLayout->addWidget(new TorqueFriction());
+  toggleLayout->addWidget(horizontal_line());
+  toggleLayout->addWidget(new AutoEnabledToggle());
+  toggleLayout->addWidget(new AutoEnableSpeed());
 
   toggles.append(new ParamControl("UseClusterSpeed",
                                             "Use Cluster Speed",
@@ -1926,6 +2186,10 @@ CommunityPanel::CommunityPanel(QWidget* parent) : QWidget(parent) {
   toggleLayout->addWidget(new AutoScreenOff());
   toggleLayout->addWidget(horizontal_line());
   toggleLayout->addWidget(new BrightnessOffControl());
+  toggleLayout->addWidget(horizontal_line());
+  toggleLayout->addWidget(new OPKRServerSelect());
+  toggleLayout->addWidget(horizontal_line());
+  toggleLayout->addWidget(new OPKRServerAPI());
 }
 
 SelectCar::SelectCar(QWidget* parent): QWidget(parent) {

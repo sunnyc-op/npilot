@@ -2257,5 +2257,285 @@ int TorqueFriction::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     _id = AbstractControl::qt_metacall(_c, _id, _a);
     return _id;
 }
+struct qt_meta_stringdata_AutoEnabledToggle_t {
+    QByteArrayData data[1];
+    char stringdata0[18];
+};
+#define QT_MOC_LITERAL(idx, ofs, len) \
+    Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
+    qptrdiff(offsetof(qt_meta_stringdata_AutoEnabledToggle_t, stringdata0) + ofs \
+        - idx * sizeof(QByteArrayData)) \
+    )
+static const qt_meta_stringdata_AutoEnabledToggle_t qt_meta_stringdata_AutoEnabledToggle = {
+    {
+QT_MOC_LITERAL(0, 0, 17) // "AutoEnabledToggle"
+
+    },
+    "AutoEnabledToggle"
+};
+#undef QT_MOC_LITERAL
+
+static const uint qt_meta_data_AutoEnabledToggle[] = {
+
+ // content:
+       8,       // revision
+       0,       // classname
+       0,    0, // classinfo
+       0,    0, // methods
+       0,    0, // properties
+       0,    0, // enums/sets
+       0,    0, // constructors
+       0,       // flags
+       0,       // signalCount
+
+       0        // eod
+};
+
+void AutoEnabledToggle::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+{
+    Q_UNUSED(_o);
+    Q_UNUSED(_id);
+    Q_UNUSED(_c);
+    Q_UNUSED(_a);
+}
+
+QT_INIT_METAOBJECT const QMetaObject AutoEnabledToggle::staticMetaObject = { {
+    &ToggleControl::staticMetaObject,
+    qt_meta_stringdata_AutoEnabledToggle.data,
+    qt_meta_data_AutoEnabledToggle,
+    qt_static_metacall,
+    nullptr,
+    nullptr
+} };
+
+
+const QMetaObject *AutoEnabledToggle::metaObject() const
+{
+    return QObject::d_ptr->metaObject ? QObject::d_ptr->dynamicMetaObject() : &staticMetaObject;
+}
+
+void *AutoEnabledToggle::qt_metacast(const char *_clname)
+{
+    if (!_clname) return nullptr;
+    if (!strcmp(_clname, qt_meta_stringdata_AutoEnabledToggle.stringdata0))
+        return static_cast<void*>(this);
+    return ToggleControl::qt_metacast(_clname);
+}
+
+int AutoEnabledToggle::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+{
+    _id = ToggleControl::qt_metacall(_c, _id, _a);
+    return _id;
+}
+struct qt_meta_stringdata_AutoEnableSpeed_t {
+    QByteArrayData data[1];
+    char stringdata0[16];
+};
+#define QT_MOC_LITERAL(idx, ofs, len) \
+    Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
+    qptrdiff(offsetof(qt_meta_stringdata_AutoEnableSpeed_t, stringdata0) + ofs \
+        - idx * sizeof(QByteArrayData)) \
+    )
+static const qt_meta_stringdata_AutoEnableSpeed_t qt_meta_stringdata_AutoEnableSpeed = {
+    {
+QT_MOC_LITERAL(0, 0, 15) // "AutoEnableSpeed"
+
+    },
+    "AutoEnableSpeed"
+};
+#undef QT_MOC_LITERAL
+
+static const uint qt_meta_data_AutoEnableSpeed[] = {
+
+ // content:
+       8,       // revision
+       0,       // classname
+       0,    0, // classinfo
+       0,    0, // methods
+       0,    0, // properties
+       0,    0, // enums/sets
+       0,    0, // constructors
+       0,       // flags
+       0,       // signalCount
+
+       0        // eod
+};
+
+void AutoEnableSpeed::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+{
+    Q_UNUSED(_o);
+    Q_UNUSED(_id);
+    Q_UNUSED(_c);
+    Q_UNUSED(_a);
+}
+
+QT_INIT_METAOBJECT const QMetaObject AutoEnableSpeed::staticMetaObject = { {
+    &AbstractControl::staticMetaObject,
+    qt_meta_stringdata_AutoEnableSpeed.data,
+    qt_meta_data_AutoEnableSpeed,
+    qt_static_metacall,
+    nullptr,
+    nullptr
+} };
+
+
+const QMetaObject *AutoEnableSpeed::metaObject() const
+{
+    return QObject::d_ptr->metaObject ? QObject::d_ptr->dynamicMetaObject() : &staticMetaObject;
+}
+
+void *AutoEnableSpeed::qt_metacast(const char *_clname)
+{
+    if (!_clname) return nullptr;
+    if (!strcmp(_clname, qt_meta_stringdata_AutoEnableSpeed.stringdata0))
+        return static_cast<void*>(this);
+    return AbstractControl::qt_metacast(_clname);
+}
+
+int AutoEnableSpeed::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+{
+    _id = AbstractControl::qt_metacall(_c, _id, _a);
+    return _id;
+}
+struct qt_meta_stringdata_OPKRServerSelect_t {
+    QByteArrayData data[1];
+    char stringdata0[17];
+};
+#define QT_MOC_LITERAL(idx, ofs, len) \
+    Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
+    qptrdiff(offsetof(qt_meta_stringdata_OPKRServerSelect_t, stringdata0) + ofs \
+        - idx * sizeof(QByteArrayData)) \
+    )
+static const qt_meta_stringdata_OPKRServerSelect_t qt_meta_stringdata_OPKRServerSelect = {
+    {
+QT_MOC_LITERAL(0, 0, 16) // "OPKRServerSelect"
+
+    },
+    "OPKRServerSelect"
+};
+#undef QT_MOC_LITERAL
+
+static const uint qt_meta_data_OPKRServerSelect[] = {
+
+ // content:
+       8,       // revision
+       0,       // classname
+       0,    0, // classinfo
+       0,    0, // methods
+       0,    0, // properties
+       0,    0, // enums/sets
+       0,    0, // constructors
+       0,       // flags
+       0,       // signalCount
+
+       0        // eod
+};
+
+void OPKRServerSelect::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+{
+    Q_UNUSED(_o);
+    Q_UNUSED(_id);
+    Q_UNUSED(_c);
+    Q_UNUSED(_a);
+}
+
+QT_INIT_METAOBJECT const QMetaObject OPKRServerSelect::staticMetaObject = { {
+    &AbstractControl::staticMetaObject,
+    qt_meta_stringdata_OPKRServerSelect.data,
+    qt_meta_data_OPKRServerSelect,
+    qt_static_metacall,
+    nullptr,
+    nullptr
+} };
+
+
+const QMetaObject *OPKRServerSelect::metaObject() const
+{
+    return QObject::d_ptr->metaObject ? QObject::d_ptr->dynamicMetaObject() : &staticMetaObject;
+}
+
+void *OPKRServerSelect::qt_metacast(const char *_clname)
+{
+    if (!_clname) return nullptr;
+    if (!strcmp(_clname, qt_meta_stringdata_OPKRServerSelect.stringdata0))
+        return static_cast<void*>(this);
+    return AbstractControl::qt_metacast(_clname);
+}
+
+int OPKRServerSelect::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+{
+    _id = AbstractControl::qt_metacall(_c, _id, _a);
+    return _id;
+}
+struct qt_meta_stringdata_OPKRServerAPI_t {
+    QByteArrayData data[1];
+    char stringdata0[14];
+};
+#define QT_MOC_LITERAL(idx, ofs, len) \
+    Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
+    qptrdiff(offsetof(qt_meta_stringdata_OPKRServerAPI_t, stringdata0) + ofs \
+        - idx * sizeof(QByteArrayData)) \
+    )
+static const qt_meta_stringdata_OPKRServerAPI_t qt_meta_stringdata_OPKRServerAPI = {
+    {
+QT_MOC_LITERAL(0, 0, 13) // "OPKRServerAPI"
+
+    },
+    "OPKRServerAPI"
+};
+#undef QT_MOC_LITERAL
+
+static const uint qt_meta_data_OPKRServerAPI[] = {
+
+ // content:
+       8,       // revision
+       0,       // classname
+       0,    0, // classinfo
+       0,    0, // methods
+       0,    0, // properties
+       0,    0, // enums/sets
+       0,    0, // constructors
+       0,       // flags
+       0,       // signalCount
+
+       0        // eod
+};
+
+void OPKRServerAPI::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+{
+    Q_UNUSED(_o);
+    Q_UNUSED(_id);
+    Q_UNUSED(_c);
+    Q_UNUSED(_a);
+}
+
+QT_INIT_METAOBJECT const QMetaObject OPKRServerAPI::staticMetaObject = { {
+    &AbstractControl::staticMetaObject,
+    qt_meta_stringdata_OPKRServerAPI.data,
+    qt_meta_data_OPKRServerAPI,
+    qt_static_metacall,
+    nullptr,
+    nullptr
+} };
+
+
+const QMetaObject *OPKRServerAPI::metaObject() const
+{
+    return QObject::d_ptr->metaObject ? QObject::d_ptr->dynamicMetaObject() : &staticMetaObject;
+}
+
+void *OPKRServerAPI::qt_metacast(const char *_clname)
+{
+    if (!_clname) return nullptr;
+    if (!strcmp(_clname, qt_meta_stringdata_OPKRServerAPI.stringdata0))
+        return static_cast<void*>(this);
+    return AbstractControl::qt_metacast(_clname);
+}
+
+int OPKRServerAPI::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+{
+    _id = AbstractControl::qt_metacall(_c, _id, _a);
+    return _id;
+}
 QT_WARNING_POP
 QT_END_MOC_NAMESPACE

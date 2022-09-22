@@ -54,6 +54,7 @@ LaneChangeDirection = log.LateralPlan.LaneChangeDirection
 EventName = car.CarEvent.EventName
 ButtonEvent = car.CarState.ButtonEvent
 SafetyModel = car.CarParams.SafetyModel
+GearShifter = car.CarState.GearShifter
 
 IGNORED_SAFETY_MODES = (SafetyModel.silent, SafetyModel.noOutput)
 CSID_MAP = {"1": EventName.roadCameraError, "2": EventName.wideRoadCameraError, "0": EventName.driverCameraError}
@@ -118,6 +119,10 @@ class Controls:
     self.is_ldw_enabled = params.get_bool("IsLdwEnabled")
     openpilot_enabled_toggle = params.get_bool("OpenpilotEnabledToggle")
     passive = params.get_bool("Passive") or not openpilot_enabled_toggle
+    #opkr
+    self.auto_enabled = params.get_bool("AutoEnable")
+    self.auto_enable_speed = max(1, int(Params().get("AutoEnableSpeed", encoding="utf8"))) if int(Params().get("AutoEnableSpeed", encoding="utf8")) > -1 else int(Params().get("AutoEnableSpeed", encoding="utf8"))
+    self.ready_timer = 0
 
     # detect sound card presence and ensure successful init
     sounds_available = HARDWARE.get_sound_card_online()
@@ -233,6 +238,13 @@ class Controls:
     # controlsd is driven by can recv, expected at 100Hz
     self.rk = Ratekeeper(100, print_delay_threshold=None)
     self.prof = Profiler(False)  # off by default
+
+  #opkr
+  def auto_enable(self, CS):
+    if self.state != State.enabled:
+      if CS.cruiseState.available and CS.vEgo >= self.auto_enable_speed * CV.KPH_TO_MS and CS.gearShifter == GearShifter.drive and \
+       self.sm['liveCalibration'].calStatus != Calibration.UNCALIBRATED and self.initialized and self.ready_timer > 300:
+        self.events.add( EventName.pcmEnable )
 
   def update_events(self, CS):
     """Compute carEvents from carState"""
@@ -435,6 +447,11 @@ class Controls:
     #if CS.brakePressed and v_future >= self.CP.vEgoStarting \
     #  and self.CP.openpilotLongitudinalControl and CS.vEgo < 0.3:
     #  self.events.add(EventName.noTarget)
+
+    # atom
+    if self.auto_enabled:
+      self.ready_timer += 1 if self.ready_timer < 350 else 350
+      self.auto_enable( CS )
 
   def data_sample(self):
     """Receive data from sockets and update carState"""
