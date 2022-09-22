@@ -231,6 +231,10 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"IsLiveTorque", PERSISTENT},
     {"IsLowSpeedFactor", PERSISTENT},
 
+    //npilot_manager
+    {"UseNpilotManager", PERSISTENT},
+
+
 };
 
 } // namespace

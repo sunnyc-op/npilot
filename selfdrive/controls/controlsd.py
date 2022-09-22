@@ -30,7 +30,7 @@ from selfdrive.locationd.calibrationd import Calibration
 from selfdrive.hardware import HARDWARE, TICI, EON
 from selfdrive.manager.process_config import managed_processes
 from selfdrive.car.hyundai.scc_smoother import SccSmoother
-from selfdrive.ntune import ntune_common_get, ntune_common_enabled, ntune_scc_get
+from selfdrive.ntune import ntune_common_get, ntune_common_enabled, ntune_scc_get, ntune_option_enabled
 from decimal import Decimal
 
 SOFT_DISABLE_TIME = 3  # seconds
@@ -113,7 +113,7 @@ class Controls:
       self.CP.alternativeExperience |= ALTERNATIVE_EXPERIENCE.DISABLE_DISENGAGE_ON_GAS
 
     # read params
-    self.is_live_torque = params.get_bool("IsLiveTorque")
+    self.is_live_torque = ntune_option_enabled('isLiveTorque') if params.get_bool("UseNpilotManager") else params.get_bool("IsLiveTorque")
     self.is_metric = params.get_bool("IsMetric")
     self.is_ldw_enabled = params.get_bool("IsLdwEnabled")
     openpilot_enabled_toggle = params.get_bool("OpenpilotEnabledToggle")

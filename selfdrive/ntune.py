@@ -276,50 +276,50 @@ class nTune():
     if self.checkValue("batteryChargingMax", 0., 100., 80.):
       updated = True
 
-    if self.checkValue("isOpenpilotViewEnabled", 0., 1., 0.):
-      updated = True
+    # if self.checkValue("isOpenpilotViewEnabled", 0., 1., 0.):
+    #   updated = True
 
-    if self.checkValue("autoScreenOff", 0., 1., 0.):
-      updated = True
+    # if self.checkValue("autoScreenOff", 0., 1., 0.):
+    #   updated = True
 
-    if self.checkValue("uIBrightness", 0., 100., 0.):
-      updated = True
+    # if self.checkValue("uIBrightness", 0., 100., 0.):
+    #   updated = True
         
-    if self.checkValue("uIBrightnessOff", 0., 100., 10.):
-      updated = True
+    # if self.checkValue("uIBrightnessOff", 0., 100., 10.):
+    #   updated = True
 
-    if self.checkValue("closeToRoadEdge", 0., 100., 0.):
-      updated = True
+    # if self.checkValue("closeToRoadEdge", 0., 100., 0.):
+    #   updated = True
 
-    if self.checkValue("leftEdgeOffset", 0., 100., 0.):
-      updated = True
+    # if self.checkValue("leftEdgeOffset", 0., 100., 0.):
+    #   updated = True
 
-    if self.checkValue("rightEdgeOffset", 0., 100., 0.):
-      updated = True
+    # if self.checkValue("rightEdgeOffset", 0., 100., 0.):
+    #   updated = True
 
-    if self.checkValue("cameraOffsetAdj", 0., 100., 60.):
-      updated = True
+    # if self.checkValue("cameraOffsetAdj", 0., 100., 60.):
+    #   updated = True
 
-    if self.checkValue("steerActuatorDelayAdj", 0., 100., 10.):
-      updated = True
+    # if self.checkValue("steerActuatorDelayAdj", 0., 100., 10.):
+    #   updated = True
 
-    if self.checkValue("steerLimitTimerAdj", 0., 1000., 400.):
-      updated = True
+    # if self.checkValue("steerLimitTimerAdj", 0., 1000., 400.):
+    #   updated = True
 
-    if self.checkValue("pathOffsetAdj", 0., 1000., 0.):
-      updated = True
+    # if self.checkValue("pathOffsetAdj", 0., 1000., 0.):
+    #   updated = True
 
-    if self.checkValue("steerRatioAdj", 0., 3000., 1550.):
-      updated = True
+    # if self.checkValue("steerRatioAdj", 0., 3000., 1550.):
+    #   updated = True
 
-    if self.checkValue("liveSteerRatio", 0., 5000., 1790.):
-      updated = True
+    # if self.checkValue("liveSteerRatio", 0., 5000., 1790.):
+    #   updated = True
 
-    if self.checkValue("variableSteerMax", 0., 100., 1.):
-      updated = True
+    # if self.checkValue("variableSteerMax", 0., 100., 1.):
+    #   updated = True
 
-    if self.checkValue("liveSteerRatioPercent", -100., 100., -5.):
-      updated = True
+    # if self.checkValue("liveSteerRatioPercent", -100., 100., -5.):
+    #   updated = True
 
     return updated
 
