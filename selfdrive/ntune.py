@@ -417,7 +417,10 @@ def ntune_scc_get(key):
   return ntune_get("scc", key)
 
 def ntune_option_get(key):
-      return ntune_get("option", key)
+   return ntune_get("option", key)
 
 def ntune_option_enabled(key):
   return ntune_option_get(key) > 0.5
+
+def ntune_lqr_get(key):
+  return ntune_get("lat_lqr", key)
