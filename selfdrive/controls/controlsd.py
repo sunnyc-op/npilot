@@ -875,7 +875,7 @@ class Controls:
 
     controlsState.steerRatio = float(self.steerRatio_to_send)
     #controlsState.steerActuatorDelay = float(Decimal(Params().get("SteerActuatorDelayAdj", encoding="utf8")) * Decimal('0.01'))
-    controlsState.steerActuatorDelay = ntune_common_get('steerActuatorDelay') if params.get_bool("UseNpilotManager") else float(Decimal(Params().get("SteerActuatorDelayAdj", encoding="utf8")) * Decimal('0.01'))
+    controlsState.steerActuatorDelay = ntune_common_get('steerActuatorDelay') if Params().get_bool("UseNpilotManager") else float(Decimal(Params().get("SteerActuatorDelayAdj", encoding="utf8")) * Decimal('0.01'))
 
     controlsState.sccGasFactor = ntune_scc_get('sccGasFactor')
     controlsState.sccBrakeFactor = ntune_scc_get('sccBrakeFactor')
