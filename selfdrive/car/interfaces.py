@@ -217,10 +217,10 @@ class CarInterfaceBase(ABC):
 
     # janpoo6427
     # auto engage when cruise enabled
-    if ntune_option_enabled('autoEngage'):
-      if cs_out.cruiseState.enabled:
-        if cs_out.gearShifter == GearShifter.drive and cs_out.vEgo > 4.166667:  # 15km/h
-          events.add(EventName.pcmEnable)
+    #if ntune_option_enabled('autoEngage'):
+    #  if cs_out.cruiseState.enabled:
+    #    if cs_out.gearShifter == GearShifter.drive and cs_out.vEgo > 4.166667:  # 15km/h
+    #      events.add(EventName.pcmEnable)
 
     return events
 
