@@ -13,6 +13,7 @@ from common.filter_simple import FirstOrderFilter
 from selfdrive.swaglog import cloudlog
 from selfdrive.controls.lib.vehicle_model import ACCELERATION_DUE_TO_GRAVITY
 
+
 HISTORY = 5  # secs
 POINTS_PER_BUCKET = 1500
 MIN_POINTS_TOTAL = 4000
@@ -28,10 +29,11 @@ LAT_ACC_THRESHOLD = 1
 STEER_BUCKET_BOUNDS = [(-0.5, -0.3), (-0.3, -0.2), (-0.2, -0.1), (-0.1, 0), (0, 0.1), (0.1, 0.2), (0.2, 0.3), (0.3, 0.5)]
 MIN_BUCKET_POINTS = [100, 300, 500, 500, 500, 500, 300, 100]
 MAX_RESETS = 5.0
-MAX_INVALID_THRESHOLD = 10
+MAX_INVALID_COUNT = 10
 MIN_ENGAGE_BUFFER = 2  # secs
 
 VERSION = 1  # bump this to invalidate old parameter caches
+
 
 def slope2rot(slope):
   sin = np.sqrt(slope**2 / (slope**2 + 1))
@@ -39,7 +41,7 @@ def slope2rot(slope):
   return np.array([[cos, -sin], [sin, cos]])
 
 
-class NPQueue:
+class npqueue:
   def __init__(self, maxlen, rowsize):
     self.maxlen = maxlen
     self.arr = np.empty((0, rowsize))
@@ -58,7 +60,7 @@ class NPQueue:
 class PointBuckets:
   def __init__(self, x_bounds, min_points):
     self.x_bounds = x_bounds
-    self.buckets = {bounds: NPQueue(maxlen=POINTS_PER_BUCKET, rowsize=3) for bounds in x_bounds}
+    self.buckets = {bounds: npqueue(maxlen=POINTS_PER_BUCKET, rowsize=3) for bounds in x_bounds}
     self.buckets_min_points = {bounds: min_point for bounds, min_point in zip(x_bounds, min_points)}
 
   def bucket_lengths(self):
@@ -77,7 +79,7 @@ class PointBuckets:
         break
 
   def get_points(self, num_points=None):
-    points = np.vstack([x.arr for x in self.buckets.values()])
+    points = np.concatenate([x.arr for x in self.buckets.values() if len(x) > 0])
     if num_points is None:
       return points
     return points[np.random.choice(np.arange(len(points)), min(len(points), num_points), replace=False)]
@@ -123,13 +125,12 @@ class TorqueEstimator:
         cache_ltp = log.Event.from_bytes(torque_cache).liveTorqueParameters
         cache_CP = car.CarParams.from_bytes(params_cache)
         if self.get_restore_key(cache_CP, cache_ltp.version) == self.get_restore_key(CP, VERSION):
-          if cache_ltp.liveValid:
-            initial_params = {
-              'latAccelFactor': cache_ltp.latAccelFactorFiltered,
-              'latAccelOffset': cache_ltp.latAccelOffsetFiltered,
-              'frictionCoefficient': cache_ltp.frictionCoefficientFiltered
-            }
-          initial_params['points'] = cache_ltp.points
+          initial_params = {
+            'latAccelFactor': cache_ltp.latAccelFactorFiltered,
+            'latAccelOffset': cache_ltp.latAccelOffsetFiltered,
+            'frictionCoefficient': cache_ltp.frictionCoefficientFiltered,
+            'points': cache_ltp.points
+          }
           self.decay = cache_ltp.decay
           self.filtered_points.load_points(initial_params['points'])
           cloudlog.info("restored torque params from cache")
@@ -151,8 +152,7 @@ class TorqueEstimator:
 
   def reset(self):
     self.resets += 1.0
-    self.invalid_values_tracker = 0.0
-    self.decay = MIN_FILTER_DECAY
+    self.invalid_values_count = 0
     self.raw_points = defaultdict(lambda: deque(maxlen=self.hist_len))
     self.filtered_points = PointBuckets(x_bounds=STEER_BUCKET_BOUNDS, min_points=MIN_BUCKET_POINTS)
 
@@ -218,13 +218,12 @@ class TorqueEstimator:
       if self.is_sane(latAccelFactor, latAccelOffset, friction_coeff):
         liveTorqueParameters.liveValid = True
         self.update_params({'latAccelFactor': latAccelFactor, 'latAccelOffset': latAccelOffset, 'frictionCoefficient': friction_coeff})
-        self.invalid_values_tracker = max(0.0, self.invalid_values_tracker - 0.5)
+        self.invalid_values_count = 0
       else:
         cloudlog.exception("live torque params are numerically unstable")
         liveTorqueParameters.liveValid = False
-        self.invalid_values_tracker += 1.0
-        # Reset when ~10 invalid over 5 secs
-        if self.invalid_values_tracker > MAX_INVALID_THRESHOLD:
+        self.invalid_values_count += 1
+        if self.invalid_values_count > MAX_INVALID_COUNT:
           # Do not reset the filter as it may cause a drastic jump, just reset points
           self.reset()
     else:
@@ -276,15 +275,16 @@ def main(sm=None, pm=None):
 #        if sm.updated[which]:
 #          t = sm.logMonoTime[which] * 1e-9
 #          estimator.handle_log(t, which, sm[which])
+
     for which in sm.updated.keys():
       if sm.updated[which]:
         t = sm.logMonoTime[which] * 1e-9
         estimator.handle_log(t, which, sm[which])
 
-
     # 4Hz driven by liveLocationKalman
     if sm.frame % 5 == 0:
       pm.send('liveTorqueParameters', estimator.get_msg(valid=sm.all_checks()))
+
 
 if __name__ == "__main__":
   main()
