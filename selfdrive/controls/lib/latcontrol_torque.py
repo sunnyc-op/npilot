@@ -64,9 +64,9 @@ class LatControlTorque(LatControl):
       isLowSpeed  = ntune_option_enabled('isLowSpeedFactor') if Params().get_bool('UseNpilotManager') else Params().get_bool('IsLowSpeedFactor')
 
       if isLowSpeed:
-        low_speed_factor = interp(CS.vEgo, [0, 10, 20], [100, 75, 75])
+        #low_speed_factor = interp(CS.vEgo, [0, 10, 20], [100, 75, 75])
         #low_speed_factor = interp(CS.vEgo, [0, 15], [500, 0]) # comma 1st
-        #low_speed_factor = interp(CS.vEgo, [0, 10, 20], [500, 500, 200]) # comma 2nd
+        low_speed_factor = interp(CS.vEgo, [0, 10, 20], [500, 500, 200]) # comma 2nd
       else:
         low_speed_factor =  0
 
