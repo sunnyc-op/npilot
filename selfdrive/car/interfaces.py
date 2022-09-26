@@ -168,10 +168,13 @@ class CarInterfaceBase(ABC):
   def create_common_events(self, cs_out, extra_gears=None, pcm_enable=True):
     events = Events()
 
-    if cs_out.doorOpen:
-      events.add(EventName.doorOpen)
-    if cs_out.seatbeltUnlatched:
-      events.add(EventName.seatbeltNotLatched)
+
+    # janpoo6427
+    if cs_out.gearShifter != GearShifter.park:
+      if cs_out.doorOpen:
+        events.add(EventName.doorOpen)
+      if cs_out.seatbeltUnlatched:
+        events.add(EventName.seatbeltNotLatched)
     if cs_out.gearShifter != GearShifter.drive and (extra_gears is None or
        cs_out.gearShifter not in extra_gears):
       events.add(EventName.wrongGear)
@@ -216,11 +219,7 @@ class CarInterfaceBase(ABC):
         events.add(EventName.pcmDisable)
 
     # janpoo6427
-    # auto engage when cruise enabled
-    #if ntune_option_enabled('autoEngage'):
-    #  if cs_out.cruiseState.enabled:
-    #    if cs_out.gearShifter == GearShifter.drive and cs_out.vEgo > 4.166667:  # 15km/h
-    #      events.add(EventName.pcmEnable)
+    # move to controlsd
 
     return events
 
