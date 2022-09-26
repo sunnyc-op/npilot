@@ -70,9 +70,13 @@ class LateralPlanner:
       
     if self.use_lanelines:
       d_path_xyz = self.LP.get_d_path(v_ego, self.t_idxs, self.path_xyz)
+      if Params().get_bool("UseNpilotManager"):
+        d_path_xyz[:, 1] += ntune_common_get('pathOffset')
       self.lat_mpc.set_weights(MPC_COST_LAT.PATH, MPC_COST_LAT.HEADING, steer_rate)
     else:
       d_path_xyz = self.path_xyz
+      if Params().get_bool("UseNpilotManager"):
+        d_path_xyz[:, 1] += ntune_common_get('pathOffset')
       # Heading cost is useful at low speed, otherwise end of plan can be off-heading
       heading_cost = interp(v_ego, [5.0, 10.0], [MPC_COST_LAT.HEADING, 0.15])
       self.lat_mpc.set_weights(MPC_COST_LAT.PATH, heading_cost, steer_rate)

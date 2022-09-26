@@ -187,6 +187,9 @@ class nTune():
     if self.checkValue("steerLimitTimer", 0.5, 3.0, 2.5):
       updated = True
 
+    if self.checkValue("steerRatioScale", 0.0, 0.3, 0.01):
+      updated = True
+
     return updated
 
   def checkValidIndi(self):
@@ -318,6 +321,7 @@ class nTune():
           self.config["useLiveSteerRatio"] = 1.
           self.config["steerRatio"] = round(self.CP.steerRatio, 2)
           self.config["steerActuatorDelay"] = round(self.CP.steerActuatorDelay, 2)
+          self.config["steerRatioScale"] = round(self.CP.steerRatioScale, 2)
 
     except:
       pass
