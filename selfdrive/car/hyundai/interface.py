@@ -84,7 +84,7 @@ class CarInterface(CarInterfaceBase):
     params = Params()
     if params.get_bool("UseNpilotManager"):
       ret.steerActuatorDelay = max(ntune_common_get('steerActuatorDelay'), 0.1)
-      ret.steerLimitTimer = max(ntune_lqr_get('steerLimitTimer'), 0.1)
+      ret.steerLimitTimer = max(ntune_common_get('steerLimitTimer'), 3.0)
     else:
       ret.steerActuatorDelay = float(Decimal(params.get("SteerActuatorDelayAdj", encoding="utf8")) * Decimal('0.01'))
       ret.steerLimitTimer = float(Decimal(params.get("SteerLimitTimerAdj", encoding="utf8")) * Decimal('0.01'))
