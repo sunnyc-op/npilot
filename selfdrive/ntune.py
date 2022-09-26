@@ -189,6 +189,10 @@ class nTune():
 
     if self.checkValue("steerRatioScale", 0.0, 0.3, 0.01):
       updated = True
+       
+    if self.checkValue("steerRateCost", 0.1, 1.5, 0.4):
+      updated = True
+
 
     return updated
 
@@ -321,6 +325,7 @@ class nTune():
           self.config["useLiveSteerRatio"] = 1.
           self.config["steerRatio"] = round(self.CP.steerRatio, 2)
           self.config["steerActuatorDelay"] = round(self.CP.steerActuatorDelay, 2)
+          self.config["steerRateCost"] = round(self.CP.steerRateCost, 2)
           self.config["steerRatioScale"] = round(self.CP.steerRatioScale, 2)
 
     except:
