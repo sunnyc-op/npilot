@@ -218,7 +218,8 @@ class SccSmoother:
 
     # janpoo6427
     ascc_auto_set = ntune_option_enabled('autoCruiseSet') and enabled and (clu11_speed > 30 or CS.obj_valid) \
-                  and CS.gas_pressed and CS.prev_cruiseState_speed and not CS.cruiseState_speed
+                  and CS.gas_pressed and CS.prev_cruiseState_speed and not CS.cruiseState_speed \
+                  and (activated_hda if ntune_option_enabled('autoCruiseSetDependsOnNda') else True)
 
     ascc_enabled = CS.acc_mode and enabled and CS.cruiseState_enabled \
                    and 1 < CS.cruiseState_speed < 255 and not CS.brake_pressed
