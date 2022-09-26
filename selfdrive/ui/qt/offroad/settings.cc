@@ -2063,24 +2063,32 @@ CommunityPanel::CommunityPanel(QWidget* parent) : QWidget(parent) {
     toggleLayout->addWidget(new ChargingMax());
   }
   toggleLayout->addWidget(new LabelControl(tr("〓〓〓〓〓〓〓〓〓〓【 TUNING 】〓〓〓〓〓〓〓〓〓〓"), ""));
-  toggleLayout->addWidget(new CameraOffset());
-  toggleLayout->addWidget(new PathOffset());
+
+  if(!QVariant(useNpilotManager).toBool()){
+    toggleLayout->addWidget(new CameraOffset());
+    toggleLayout->addWidget(new PathOffset());
+  }
   toggleLayout->addWidget(horizontal_line());
   toggleLayout->addWidget(new CloseToRoadEdgeToggle());
   toggleLayout->addWidget(new OPKREdgeOffset());
   toggleLayout->addWidget(horizontal_line());
-  toggleLayout->addWidget(new LiveSteerRatioToggle());
-  toggleLayout->addWidget(new LiveSRPercent());
+  if(!QVariant(useNpilotManager).toBool()){
+    toggleLayout->addWidget(new LiveSteerRatioToggle());
+    toggleLayout->addWidget(new LiveSRPercent());
+  }
   toggleLayout->addWidget(new SRBaseControl());
   toggleLayout->addWidget(new SRMaxControl());
-  toggleLayout->addWidget(horizontal_line());
-  toggleLayout->addWidget(new SteerActuatorDelay());
-  toggleLayout->addWidget(horizontal_line());
-  toggleLayout->addWidget(new SteerLimitTimer());
-  toggleLayout->addWidget(horizontal_line());
-  toggleLayout->addWidget(new TorqueMaxLatAccel());
-  toggleLayout->addWidget(horizontal_line());
-  toggleLayout->addWidget(new TorqueFriction());
+  if(!QVariant(useNpilotManager).toBool()){
+    toggleLayout->addWidget(horizontal_line());
+    toggleLayout->addWidget(new SteerActuatorDelay());
+    toggleLayout->addWidget(horizontal_line());
+    toggleLayout->addWidget(new SteerLimitTimer());
+    toggleLayout->addWidget(horizontal_line());
+    toggleLayout->addWidget(new TorqueMaxLatAccel());
+    toggleLayout->addWidget(horizontal_line());
+    toggleLayout->addWidget(new TorqueFriction());
+  }
+
 
 
   toggles.append(new ParamControl("UseClusterSpeed",
