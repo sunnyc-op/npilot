@@ -114,7 +114,11 @@ class Controls:
       self.CP.alternativeExperience |= ALTERNATIVE_EXPERIENCE.DISABLE_DISENGAGE_ON_GAS
 
     # read params
-    self.is_live_torque = ntune_torque_get('liveTorqueParams') if params.get_bool('UseNpilotManager') else params.get_bool('IsLiveTorque')
+    try:
+      self.is_live_torque = ntune_torque_get('liveTorqueParams') if params.get_bool('UseNpilotManager') else params.get_bool('IsLiveTorque')
+    except:
+      self.is_live_torque = params.get_bool('IsLiveTorque')
+
     self.is_metric = params.get_bool("IsMetric")
     self.is_ldw_enabled = params.get_bool("IsLdwEnabled")
     openpilot_enabled_toggle = params.get_bool("OpenpilotEnabledToggle")
@@ -651,8 +655,13 @@ class Controls:
           self.LaC.update_live_torque_params(torque_params.latAccelFactorFiltered, torque_params.latAccelOffsetFiltered, torque_params.frictionCoefficientFiltered)
         else:
           if Params().get_bool("UseNpilotManager"):
-            self.torque_latAccelFactor = ntune_torque_get('latAccelFactor') #LAT_ACCEL_FACTOR
-            self.torque_friction = ntune_torque_get('friction') #FRICTION
+            try:
+              self.torque_latAccelFactor = ntune_torque_get('latAccelFactor') #LAT_ACCEL_FACTOR
+              self.torque_friction = ntune_torque_get('friction') #FRICTION
+            except:
+              self.torque_latAccelFactor = float(Decimal(Params().get("TorqueMaxLatAccel", encoding="utf8")) * Decimal('0.1'))
+              self.torque_friction = float(Decimal(Params().get("TorqueFriction", encoding="utf8")) * Decimal('0.001'))
+
           else:
             self.torque_latAccelFactor = float(Decimal(Params().get("TorqueMaxLatAccel", encoding="utf8")) * Decimal('0.1'))
             self.torque_friction = float(Decimal(Params().get("TorqueFriction", encoding="utf8")) * Decimal('0.001'))
@@ -660,8 +669,12 @@ class Controls:
       else:
 
         if Params().get_bool("UseNpilotManager"):
-          self.torque_latAccelFactor = ntune_torque_get('latAccelFactor') #LAT_ACCEL_FACTOR
-          self.torque_friction = ntune_torque_get('friction') #FRICTION
+          try:
+            self.torque_latAccelFactor = ntune_torque_get('latAccelFactor') #LAT_ACCEL_FACTOR
+            self.torque_friction = ntune_torque_get('friction') #FRICTION
+          except:
+            self.torque_latAccelFactor = float(Decimal(Params().get("TorqueMaxLatAccel", encoding="utf8")) * Decimal('0.1'))
+            self.torque_friction = float(Decimal(Params().get("TorqueFriction", encoding="utf8")) * Decimal('0.001'))
         else:
           self.torque_latAccelFactor = float(Decimal(Params().get("TorqueMaxLatAccel", encoding="utf8")) * Decimal('0.1'))
           self.torque_friction = float(Decimal(Params().get("TorqueFriction", encoding="utf8")) * Decimal('0.001'))
@@ -817,7 +830,10 @@ class Controls:
       #r_lane_close = right_lane_visible and (lane_lines[2].y[0] < (1.08 - CAMERA_OFFSET))
 
       if Params().get_bool("UseNpilotManager"):
+        try:
           cameraOffset = ntune_common_get('cameraOffset')
+        except:
+          cameraOffset = -(float(Decimal(Params().get("CameraOffsetAdj", encoding="utf8")) * Decimal('0.001')))
       else:
         if Params().get_bool("CloseToRoadEdge"):
           cameraOffset = totalCameraOffset
