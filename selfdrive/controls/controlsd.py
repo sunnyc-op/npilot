@@ -114,7 +114,7 @@ class Controls:
       self.CP.alternativeExperience |= ALTERNATIVE_EXPERIENCE.DISABLE_DISENGAGE_ON_GAS
 
     # read params
-    self.is_live_torque = ntune_option_enabled('isLiveTorque') if params.get_bool("UseNpilotManager") else params.get_bool("IsLiveTorque")
+    self.is_live_torque = params.get_bool("IsLiveTorque")
     self.is_metric = params.get_bool("IsMetric")
     self.is_ldw_enabled = params.get_bool("IsLdwEnabled")
     openpilot_enabled_toggle = params.get_bool("OpenpilotEnabledToggle")
