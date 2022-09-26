@@ -7,6 +7,7 @@ from selfdrive.hardware import EON, TICI
 from selfdrive.swaglog import cloudlog
 from common.params import Params
 from decimal import Decimal
+from selfdrive.ntune import ntune_common_get
 
 ENABLE_ZORROBYTE = True
 ENABLE_INC_LANE_PROB = True
@@ -18,7 +19,7 @@ TRAJECTORY_SIZE = 33
 # so a path offset is not needed
 
 #PATH_OFFSET = 0.00
-PATH_OFFSET = -(float(Decimal(Params().get("PathOffsetAdj", encoding="utf8")) * Decimal('0.001')))  # default 0.0
+PATH_OFFSET = ntune_common_get('pathOffset') if Params().get_bool('UseNpilotManager') else -(float(Decimal(Params().get("PathOffsetAdj", encoding="utf8")) * Decimal('0.001')))  # default 0.0
 if EON:
   #CAMERA_OFFSET = 0.00
   CAMERA_OFFSET = -(float(Decimal(Params().get("CameraOffsetAdj", encoding="utf8")) * Decimal('0.001')))  # m from center car to camera

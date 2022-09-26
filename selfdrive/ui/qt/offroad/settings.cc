@@ -2034,62 +2034,48 @@ CommunityPanel::CommunityPanel(QWidget* parent) : QWidget(parent) {
   )");
 
   QString useNpilotManager = QString::fromStdString(Params().get("UseNpilotManager"));
-
+  bool useNM = QVariant(useNpilotManager).toBool();
   QList<ParamControl*> toggles;
 
   toggleLayout->addWidget(new UseNpilotManagerToggle());
-  if(!QVariant(useNpilotManager).toBool()){
-    toggleLayout->addWidget(horizontal_line());
-    toggleLayout->addWidget(new AutoEnabledToggle());
-    toggleLayout->addWidget(new AutoEnableSpeed());
-    
-    toggles.append(new ParamControl("IsLiveTorque",
-                                              "Enable Live Torque",
-                                              "",
-                                              "../assets/offroad/icon_shell.png",
-                                              this));
-    toggles.append(new ParamControl("IsLowSpeedFactor",
-                                          "Enable Low Speed Factor",
-                                          "",
-                                          "../assets/offroad/icon_shell.png",
-                                          this));
-    toggleLayout->addWidget(horizontal_line());
-    toggleLayout->addWidget(new ParamControl("OpkrBatteryChargingControl",
-                                          "Enable Battery Charging Control",
-                                          "It uses the battery charge control function.",
-                                          "../assets/offroad/icon_shell.png",
-                                          this));
-    toggleLayout->addWidget(new ChargingMin());
-    toggleLayout->addWidget(new ChargingMax());
-  }
-  toggleLayout->addWidget(new LabelControl(tr("〓〓〓〓〓〓〓〓〓〓【 TUNING 】〓〓〓〓〓〓〓〓〓〓"), ""));
 
-  if(!QVariant(useNpilotManager).toBool()){
-    toggleLayout->addWidget(new CameraOffset());
-    toggleLayout->addWidget(new PathOffset());
-  }
-  toggleLayout->addWidget(horizontal_line());
+  toggleLayout->addWidget(new LabelControl(tr("〓〓〓〓〓〓〓〓〓〓【 OFFSET 】〓〓〓〓〓〓〓〓〓〓"), ""));
+  if (!useNM) toggleLayout->addWidget(new CameraOffset());
+  if (!useNM) toggleLayout->addWidget(horizontal_line());
+  if (!useNM) toggleLayout->addWidget(new PathOffset());
+  if (!useNM) toggleLayout->addWidget(horizontal_line());
   toggleLayout->addWidget(new CloseToRoadEdgeToggle());
   toggleLayout->addWidget(new OPKREdgeOffset());
-  toggleLayout->addWidget(horizontal_line());
-  if(!QVariant(useNpilotManager).toBool()){
-    toggleLayout->addWidget(new LiveSteerRatioToggle());
-    toggleLayout->addWidget(new LiveSRPercent());
-  }
-  toggleLayout->addWidget(new SRBaseControl());
-  toggleLayout->addWidget(new SRMaxControl());
-  if(!QVariant(useNpilotManager).toBool()){
-    toggleLayout->addWidget(horizontal_line());
-    toggleLayout->addWidget(new SteerActuatorDelay());
-    toggleLayout->addWidget(horizontal_line());
-    toggleLayout->addWidget(new SteerLimitTimer());
-    toggleLayout->addWidget(horizontal_line());
-    toggleLayout->addWidget(new TorqueMaxLatAccel());
-    toggleLayout->addWidget(horizontal_line());
-    toggleLayout->addWidget(new TorqueFriction());
-  }
 
+  if (!useNM) toggleLayout->addWidget(new LabelControl(tr("〓〓〓〓〓〓〓〓〓〓【 TUNING 】〓〓〓〓〓〓〓〓〓〓"), ""));
+  //toggleLayout->addWidget(new LiveSteerRatioToggle());
+  //toggleLayout->addWidget(new LiveSRPercent());
+  if (!useNM) toggleLayout->addWidget(new SRBaseControl());
+  if (!useNM) toggleLayout->addWidget(horizontal_line());
+  //toggleLayout->addWidget(new SRMaxControl());
+  if (!useNM) toggleLayout->addWidget(new SteerActuatorDelay());
+  if (!useNM) toggleLayout->addWidget(horizontal_line());
+  if (!useNM) toggleLayout->addWidget(new SteerLimitTimer());
+  if (!useNM) toggleLayout->addWidget(horizontal_line());
+  if (!useNM) toggleLayout->addWidget(new TorqueMaxLatAccel());
+  if (!useNM) toggleLayout->addWidget(horizontal_line());
+  if (!useNM) toggleLayout->addWidget(new TorqueFriction());
+  if (!useNM) toggleLayout->addWidget(horizontal_line());
+  if (!useNM) toggleLayout->addWidget(new AutoEnabledToggle());
+  if (!useNM) toggleLayout->addWidget(horizontal_line());
+  if (!useNM) toggleLayout->addWidget(new AutoEnableSpeed());
 
+  if (!useNM) toggles.append(new ParamControl("IsLiveTorque",
+                                            "Enable Live Torque",
+                                            "",
+                                            "../assets/offroad/icon_shell.png",
+                                            this));
+
+  if (!useNM) toggles.append(new ParamControl("IsLowSpeedFactor",
+                                            "Enable Low Speed Factor",
+                                            "",
+                                            "../assets/offroad/icon_shell.png",
+                                            this));
 
   toggles.append(new ParamControl("UseClusterSpeed",
                                             "Use Cluster Speed",
@@ -2156,12 +2142,6 @@ CommunityPanel::CommunityPanel(QWidget* parent) : QWidget(parent) {
                                             "../assets/offroad/icon_openpilot.png",
                                             this));
 
-  /*toggles.append(new ParamControl("NewRadarInterface",
-                                            "Use new radar interface",
-                                            "",
-                                            "../assets/offroad/icon_road.png",
-                                            this));*/
-
   toggles.append(new ParamControl("DisableOpFcw",
                                             "Disable Openpilot FCW",
                                             "",
@@ -2174,13 +2154,11 @@ CommunityPanel::CommunityPanel(QWidget* parent) : QWidget(parent) {
                                             "../assets/offroad/icon_shell.png",
                                             this));
 
-
-
-  /*toggles.append(new ParamControl("CustomLeadMark",
-                                            "Use custom lead mark",
-                                            "",
-                                            "../assets/offroad/icon_road.png",
-                                            this));*/
+  if (!useNM) toggles.append(new ParamControl("OpkrBatteryChargingControl",
+                                            "Enable Battery Charging Control",
+                                            "It uses the battery charge control function.",
+                                            "../assets/offroad/icon_shell.png",
+                                            this));
 
   for(ParamControl *toggle : toggles) {
     if(main_layout->count() != 0) {
@@ -2189,6 +2167,10 @@ CommunityPanel::CommunityPanel(QWidget* parent) : QWidget(parent) {
     toggleLayout->addWidget(toggle);
   }
 
+  if (!useNM) toggleLayout->addWidget(horizontal_line());
+  if (!useNM) toggleLayout->addWidget(new ChargingMin());
+  if (!useNM) toggleLayout->addWidget(horizontal_line());
+  if (!useNM) toggleLayout->addWidget(new ChargingMax());
   toggleLayout->addWidget(horizontal_line());
   toggleLayout->addWidget(new BrightnessControl());
   toggleLayout->addWidget(horizontal_line());

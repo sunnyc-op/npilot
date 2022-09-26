@@ -172,7 +172,7 @@ class nTune():
   def checkValidCommon(self):
     updated = False
 
-    if self.checkValue("useLiveSteerRatio", 0., 1., 1.):
+    if self.checkValue("useLiveSteerRatio", 0., 1., 0.):
       updated = True
 
     if self.checkValue("steerRatio", 10.0, 20.0, 16.5):
@@ -181,16 +181,19 @@ class nTune():
     if self.checkValue("steerActuatorDelay", 0., 0.8, 0.1):
       updated = True
 
+    if self.checkValue("cameraOffset", -2.0, 2.0, -0.06):
+      updated = True
+
     if self.checkValue("pathOffset", -1.0, 1.0, 0.0):
       updated = True
-    
-    if self.checkValue("steerLimitTimer", 0.5, 3.0, 2.5):
+
+    if self.checkValue("steerLimitTimer", 0.1, 3.0, 0.4):
       updated = True
 
     if self.checkValue("steerRatioScale", 0.0, 0.3, 0.01):
       updated = True
-       
-    if self.checkValue("steerRateCost", 0.1, 1.5, 0.4):
+
+    if self.checkValue("steerRateCost", 0.1, 1.5, 1.0):
       updated = True
 
 
@@ -213,7 +216,7 @@ class nTune():
   def checkValidTorque(self):
     updated = False
 
-    if self.checkValue("liveTorqueParams", 0., 1., 0.):
+    if self.checkValue("liveTorqueParams", 0., 1., 1.):
       updated = True
     if self.checkValue("useSteeringAngle", 0., 1., 1.):
       updated = True
@@ -237,7 +240,7 @@ class nTune():
     if self.checkValue("sccBrakeFactor", 0.5, 1.5, 1.0):
       updated = True
 
-    if self.checkValue("sccCurvatureFactor", 0.5, 1.5, 0.98):
+    if self.checkValue("sccCurvatureFactor", 0.5, 1.5, 0.96):
       updated = True
 
     return updated
@@ -259,13 +262,13 @@ class nTune():
   def checkValidOption(self):
     updated = False
 
-    if self.checkValue("autoEnable", 0., 1., 1.):
+    if self.checkValue("autoEnable", 0., 1., 0.):
       updated = True
 
     if self.checkValue("autoEnableSpeed", 0., 60., 15.):
       updated = True
 
-    if self.checkValue("autoCruiseSet", 0., 1., 1.):
+    if self.checkValue("autoCruiseSet", 0., 1., 0.):
       updated = True
 
     if self.checkValue("autoCruiseSetDependsOnNda", 0., 1., 0.):
@@ -396,3 +399,6 @@ def ntune_option_enabled(key):
 
 def ntune_lqr_get(key):
   return ntune_get("lat_lqr", key)
+
+def ntune_torque_get(key):
+  return ntune_get("lat_torque_v4", key)
