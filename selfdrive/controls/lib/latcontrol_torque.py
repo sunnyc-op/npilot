@@ -7,7 +7,7 @@ from selfdrive.controls.lib.pid import PIDController
 from selfdrive.controls.lib.vehicle_model import ACCELERATION_DUE_TO_GRAVITY
 from common.params import Params
 from decimal import Decimal
-from selfdrive.ntune import ntune_option_enabled
+from selfdrive.ntune import ntune_option_enabled, nTune
 
 # At higher speeds (25+mph) we can assume:
 # Lateral acceleration achieved by a specific car correlates to
@@ -29,14 +29,18 @@ class LatControlTorque(LatControl):
     self.torque_from_lateral_accel = CI.torque_from_lateral_accel()
     self.use_steering_angle = CP.lateralTuning.torque.useSteeringAngle
     self.steering_angle_deadzone_deg = CP.lateralTuning.torque.steeringAngleDeadzoneDeg
+    if Params().get_bool("UseNpilotManager"):
+      self.tune = nTune(CP, self)
     self.update_live_torque_params(CP.lateralTuning.torque.latAccelFactor, CP.lateralTuning.torque.latAccelOffset, CP.lateralTuning.torque.friction)
-
+    
   def update_live_torque_params(self, latAccelFactor, latAccelOffset, friction):
     self.live_torque_params = {
       'latAccelFactor': latAccelFactor,
       'friction': friction,
       'latAccelOffset': latAccelOffset
     }
+    if Params().get_bool("UseNpilotManager"):
+      self.tune.updateTorque()
 
   def update(self, active, CS, VM, params, last_actuators, steer_limited, desired_curvature, desired_curvature_rate, llk):
     pid_log = log.ControlsState.LateralTorqueState.new_message()
