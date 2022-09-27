@@ -1629,7 +1629,7 @@ void TorqueFriction::refresh() {
   label.setText(QString::fromStdString(valuefs.toStdString()));
 }
 
-TorqueMaxLatAccel::TorqueMaxLatAccel() : AbstractControl(tr("MaxLatAccel"), tr("Adjust MaxLatAccel"), "../assets/offroad/icon_shell.png") {
+TorqueMaxLatAccel::TorqueMaxLatAccel() : AbstractControl(tr("LAT ACCEL FACTOR"), tr("Adjust MaxLatAccel"), "../assets/offroad/icon_shell.png") {
 
   label.setAlignment(Qt::AlignVCenter|Qt::AlignRight);
   label.setStyleSheet("color: #e0e879");
