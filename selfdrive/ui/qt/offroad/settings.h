@@ -8,6 +8,7 @@
 #include <QStackedWidget>
 #include <QWidget>
 #include <QStackedLayout>
+#include <QComboBox>
 
 
 #include "selfdrive/ui/qt/widgets/controls.h"
