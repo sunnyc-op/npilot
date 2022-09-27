@@ -833,7 +833,9 @@ class Controls:
           cameraOffset = totalCameraOffset
         else:
           cameraOffset = -(float(Decimal(Params().get("CameraOffsetAdj", encoding="utf8")) * Decimal('0.001')))
-
+          
+      totalCameraOffset = cameraOffset
+      
       l_lane_close = left_lane_visible and (lane_lines[1].y[0] > -(1.08 + cameraOffset))
       r_lane_close = right_lane_visible and (lane_lines[2].y[0] < (1.08 - cameraOffset))
 
