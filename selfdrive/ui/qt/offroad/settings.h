@@ -503,4 +503,18 @@ private:
   void refresh();
 };
 
+class TimeZoneSelectCombo : public AbstractControl 
+{
+  Q_OBJECT
+
+public:
+  TimeZoneSelectCombo();
+
+private:
+  QPushButton btn;
+  QComboBox combobox;
+  Params params;
+
+  void refresh();
+};
 
