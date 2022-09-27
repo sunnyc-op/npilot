@@ -524,12 +524,12 @@ SettingsWindow::SettingsWindow(QWidget *parent) : QFrame(parent) {
       panel_widget->setCurrentWidget(w);
     });
   }
-  sidebar_layout->setContentsMargins(5, 50, 20, 50);
+  sidebar_layout->setContentsMargins(5, 50, 10, 50);
 
   // main settings layout, sidebar + main panel
   QHBoxLayout *main_layout = new QHBoxLayout(this);
 
-  sidebar_widget->setFixedWidth(330);
+  sidebar_widget->setFixedWidth(320);
   main_layout->addWidget(sidebar_widget);
   main_layout->addWidget(panel_widget);
 
@@ -1787,10 +1787,10 @@ OPKRServerSelect::OPKRServerSelect() : AbstractControl(tr("API Server"), tr("Set
   )");
   btn3.setFixedSize(250, 100);
   hlayout->addWidget(&btn1);
-  hlayout->addWidget(&btn2);
+  //hlayout->addWidget(&btn2);
   hlayout->addWidget(&btn3);
   btn1.setText(tr("OPKR"));
-  btn2.setText(tr("Comma"));
+  //btn2.setText(tr("Comma"));
   btn3.setText(tr("User's"));
 
   QObject::connect(&btn1, &QPushButton::clicked, [=]() {
@@ -1943,7 +1943,7 @@ void OPKRServerAPI::refresh() {
   }
 }
 
-TimeZoneSelectCombo::TimeZoneSelectCombo() : AbstractControl("", "", "") 
+TimeZoneSelectCombo::TimeZoneSelectCombo() : AbstractControl("TZ", "", "../assets/offroad/icon_shell.png") 
 {
   combobox.setStyleSheet(R"(
     subcontrol-origin: padding;
@@ -1969,7 +1969,7 @@ TimeZoneSelectCombo::TimeZoneSelectCombo() : AbstractControl("", "", "")
     timezonelistfile.close();
   }
 
-  combobox.setFixedWidth(1055);
+  combobox.setFixedWidth(950);
 
   btn.setStyleSheet(R"(
     padding: 0;
@@ -2364,3 +2364,4 @@ LateralControl::LateralControl(QWidget* parent): QWidget(parent) {
 
   main_layout->addWidget(list);
 }
+
