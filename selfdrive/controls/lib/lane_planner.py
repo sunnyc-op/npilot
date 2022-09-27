@@ -22,7 +22,8 @@ TRAJECTORY_SIZE = 33
 PATH_OFFSET = ntune_common_get('pathOffset') if Params().get_bool('UseNpilotManager') else -(float(Decimal(Params().get("PathOffsetAdj", encoding="utf8")) * Decimal('0.001')))  # default 0.0
 if EON:
   #CAMERA_OFFSET = 0.00
-  CAMERA_OFFSET = -(float(Decimal(Params().get("CameraOffsetAdj", encoding="utf8")) * Decimal('0.001')))  # m from center car to camera
+  CAMERA_OFFSET = ntune_common_get('cameraOffset') if Params().get_bool('UseNpilotManager') else -(float(Decimal(Params().get("CameraOffsetAdj", encoding="utf8")) * Decimal('0.001')))  # m from center car to camera
+  CAMERA_OFFSET_A = CAMERA_OFFSET + 0.15
 elif TICI:
   CAMERA_OFFSET = 0.0
 else:
@@ -49,8 +50,8 @@ class LanePlanner:
     self.l_lane_change_prob = 0.
     self.r_lane_change_prob = 0.
 
-    self.camera_offset = -CAMERA_OFFSET if wide_camera else CAMERA_OFFSET
-    self.path_offset = -PATH_OFFSET if wide_camera else PATH_OFFSET
+    self.camera_offset = CAMERA_OFFSET
+    self.path_offset = PATH_OFFSET
 
     self.readings = []
     self.frame = 0
@@ -75,7 +76,7 @@ class LanePlanner:
     self.lp_timer += DT_MDL
     if self.lp_timer > 1.0:
       self.lp_timer = 0.0
-      self.camera_offset = -(float(Decimal(self.params.get("CameraOffsetAdj", encoding="utf8")) * Decimal('0.001')))
+      self.camera_offset = ntune_common_get('cameraOffset') if Params().get_bool('UseNpilotManager') else -(float(Decimal(Params().get("CameraOffsetAdj", encoding="utf8")) * Decimal('0.001')))  # m from center car to camera
 
     #opkr
     if self.drive_close_to_edge:

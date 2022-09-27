@@ -15,7 +15,7 @@ from selfdrive.controls.lib.latcontrol_torque import LatControlTorque
 from selfdrive.swaglog import cloudlog
 from selfdrive.boardd.boardd import can_list_to_can_capnp
 from selfdrive.car.car_helpers import get_car, get_startup_event, get_one_can
-from selfdrive.controls.lib.lane_planner import CAMERA_OFFSET
+from selfdrive.controls.lib.lane_planner import CAMERA_OFFSET, CAMERA_OFFSET_A
 from selfdrive.controls.lib.drive_helpers import update_v_cruise, initialize_v_cruise
 from selfdrive.controls.lib.drive_helpers import get_lag_adjusted_curvature
 from selfdrive.controls.lib.longcontrol import LongControl
@@ -820,24 +820,12 @@ class Controls:
       r_lane_change_prob = desire_prediction[Desire.laneChangeRight - 1]
 
       lane_lines = model_v2.laneLines
-      #l_lane_close = left_lane_visible and (lane_lines[1].y[0] > -(1.08 + CAMERA_OFFSET))
-      #r_lane_close = right_lane_visible and (lane_lines[2].y[0] < (1.08 - CAMERA_OFFSET))
-
-      if Params().get_bool("UseNpilotManager"):
-        try:
-          cameraOffset = ntune_common_get('cameraOffset')
-        except:
-          cameraOffset = -(float(Decimal(Params().get("CameraOffsetAdj", encoding="utf8")) * Decimal('0.001')))
+      if CS.cruiseState.modeSel == 4:
+        l_lane_close = left_lane_visible and (lane_lines[1].y[0] > -(1.08 + CAMERA_OFFSET_A))
+        r_lane_close = right_lane_visible and (lane_lines[2].y[0] < (1.08 - CAMERA_OFFSET_A))
       else:
-        if Params().get_bool("CloseToRoadEdge"):
-          cameraOffset = totalCameraOffset
-        else:
-          cameraOffset = -(float(Decimal(Params().get("CameraOffsetAdj", encoding="utf8")) * Decimal('0.001')))
-          
-      totalCameraOffset = cameraOffset
-      
-      l_lane_close = left_lane_visible and (lane_lines[1].y[0] > -(1.08 + cameraOffset))
-      r_lane_close = right_lane_visible and (lane_lines[2].y[0] < (1.08 - cameraOffset))
+        l_lane_close = left_lane_visible and (lane_lines[1].y[0] > -(1.08 + CAMERA_OFFSET))
+        r_lane_close = right_lane_visible and (lane_lines[2].y[0] < (1.08 - CAMERA_OFFSET))
 
       hudControl.leftLaneDepart = bool(l_lane_change_prob > LANE_DEPARTURE_THRESHOLD and l_lane_close)
       hudControl.rightLaneDepart = bool(r_lane_change_prob > LANE_DEPARTURE_THRESHOLD and r_lane_close)
