@@ -2120,43 +2120,46 @@ CommunityPanel::CommunityPanel(QWidget* parent) : QWidget(parent) {
 
   toggleLayout->addWidget(new UseNpilotManagerToggle());
 
-  toggleLayout->addWidget(new LabelControl(tr("〓〓〓〓〓〓〓〓〓〓【 OFFSET 】〓〓〓〓〓〓〓〓〓〓"), ""));
-  if (!useNM) toggleLayout->addWidget(new CameraOffset());
-  if (!useNM) toggleLayout->addWidget(horizontal_line());
-  if (!useNM) toggleLayout->addWidget(new PathOffset());
-  if (!useNM) toggleLayout->addWidget(horizontal_line());
-  toggleLayout->addWidget(new CloseToRoadEdgeToggle());
-  toggleLayout->addWidget(new OPKREdgeOffset());
+  if (!useNM) {
+    toggleLayout->addWidget(new LabelControl(tr("〓〓〓〓〓〓〓〓〓〓【 OFFSET 】〓〓〓〓〓〓〓〓〓〓"), ""));
+    toggleLayout->addWidget(new CameraOffset());
+    toggleLayout->addWidget(horizontal_line());
+    toggleLayout->addWidget(new PathOffset());
+    toggleLayout->addWidget(horizontal_line());
+    toggleLayout->addWidget(new CloseToRoadEdgeToggle());
+    toggleLayout->addWidget(new OPKREdgeOffset());
 
-  if (!useNM) toggleLayout->addWidget(new LabelControl(tr("〓〓〓〓〓〓〓〓〓〓【 TUNING 】〓〓〓〓〓〓〓〓〓〓"), ""));
-  //toggleLayout->addWidget(new LiveSteerRatioToggle());
-  //toggleLayout->addWidget(new LiveSRPercent());
-  if (!useNM) toggleLayout->addWidget(new SRBaseControl());
-  if (!useNM) toggleLayout->addWidget(horizontal_line());
-  //toggleLayout->addWidget(new SRMaxControl());
-  if (!useNM) toggleLayout->addWidget(new SteerActuatorDelay());
-  if (!useNM) toggleLayout->addWidget(horizontal_line());
-  if (!useNM) toggleLayout->addWidget(new SteerLimitTimer());
-  if (!useNM) toggleLayout->addWidget(horizontal_line());
-  if (!useNM) toggleLayout->addWidget(new TorqueMaxLatAccel());
-  if (!useNM) toggleLayout->addWidget(horizontal_line());
-  if (!useNM) toggleLayout->addWidget(new TorqueFriction());
-  if (!useNM) toggleLayout->addWidget(horizontal_line());
-  if (!useNM) toggleLayout->addWidget(new AutoEnabledToggle());
-  if (!useNM) toggleLayout->addWidget(horizontal_line());
-  if (!useNM) toggleLayout->addWidget(new AutoEnableSpeed());
+    toggleLayout->addWidget(new LabelControl(tr("〓〓〓〓〓〓〓〓〓〓【 TUNING 】〓〓〓〓〓〓〓〓〓〓"), ""));
+    //toggleLayout->addWidget(new LiveSteerRatioToggle());
+    //toggleLayout->addWidget(new LiveSRPercent());
+    toggleLayout->addWidget(new SRBaseControl());
+    toggleLayout->addWidget(horizontal_line());
+    //toggleLayout->addWidget(new SRMaxControl());
+    toggleLayout->addWidget(new SteerActuatorDelay());
+    toggleLayout->addWidget(horizontal_line());
+    toggleLayout->addWidget(new SteerLimitTimer());
+    toggleLayout->addWidget(horizontal_line());
+    toggleLayout->addWidget(new TorqueMaxLatAccel());
+    toggleLayout->addWidget(horizontal_line());
+    toggleLayout->addWidget(new TorqueFriction());
+    toggleLayout->addWidget(horizontal_line());
+    toggleLayout->addWidget(new AutoEnabledToggle());
+    toggleLayout->addWidget(horizontal_line());
+    toggleLayout->addWidget(new AutoEnableSpeed());
 
-  if (!useNM) toggles.append(new ParamControl("IsLiveTorque",
+    toggles.append(new ParamControl("IsLiveTorque",
                                             "Enable Live Torque",
                                             "",
                                             "../assets/offroad/icon_shell.png",
                                             this));
 
-  if (!useNM) toggles.append(new ParamControl("IsLowSpeedFactor",
+    toggles.append(new ParamControl("IsLowSpeedFactor",
                                             "Enable Low Speed Factor",
                                             "",
                                             "../assets/offroad/icon_shell.png",
                                             this));
+  }
+  
 
   toggles.append(new ParamControl("UseClusterSpeed",
                                             "Use Cluster Speed",
