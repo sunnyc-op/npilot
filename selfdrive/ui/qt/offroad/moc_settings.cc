@@ -2467,6 +2467,146 @@ int AutoEnableSpeed::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     _id = AbstractControl::qt_metacall(_c, _id, _a);
     return _id;
 }
+struct qt_meta_stringdata_AutoCruiseSetToggle_t {
+    QByteArrayData data[1];
+    char stringdata0[20];
+};
+#define QT_MOC_LITERAL(idx, ofs, len) \
+    Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
+    qptrdiff(offsetof(qt_meta_stringdata_AutoCruiseSetToggle_t, stringdata0) + ofs \
+        - idx * sizeof(QByteArrayData)) \
+    )
+static const qt_meta_stringdata_AutoCruiseSetToggle_t qt_meta_stringdata_AutoCruiseSetToggle = {
+    {
+QT_MOC_LITERAL(0, 0, 19) // "AutoCruiseSetToggle"
+
+    },
+    "AutoCruiseSetToggle"
+};
+#undef QT_MOC_LITERAL
+
+static const uint qt_meta_data_AutoCruiseSetToggle[] = {
+
+ // content:
+       8,       // revision
+       0,       // classname
+       0,    0, // classinfo
+       0,    0, // methods
+       0,    0, // properties
+       0,    0, // enums/sets
+       0,    0, // constructors
+       0,       // flags
+       0,       // signalCount
+
+       0        // eod
+};
+
+void AutoCruiseSetToggle::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+{
+    Q_UNUSED(_o);
+    Q_UNUSED(_id);
+    Q_UNUSED(_c);
+    Q_UNUSED(_a);
+}
+
+QT_INIT_METAOBJECT const QMetaObject AutoCruiseSetToggle::staticMetaObject = { {
+    &ToggleControl::staticMetaObject,
+    qt_meta_stringdata_AutoCruiseSetToggle.data,
+    qt_meta_data_AutoCruiseSetToggle,
+    qt_static_metacall,
+    nullptr,
+    nullptr
+} };
+
+
+const QMetaObject *AutoCruiseSetToggle::metaObject() const
+{
+    return QObject::d_ptr->metaObject ? QObject::d_ptr->dynamicMetaObject() : &staticMetaObject;
+}
+
+void *AutoCruiseSetToggle::qt_metacast(const char *_clname)
+{
+    if (!_clname) return nullptr;
+    if (!strcmp(_clname, qt_meta_stringdata_AutoCruiseSetToggle.stringdata0))
+        return static_cast<void*>(this);
+    return ToggleControl::qt_metacast(_clname);
+}
+
+int AutoCruiseSetToggle::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+{
+    _id = ToggleControl::qt_metacall(_c, _id, _a);
+    return _id;
+}
+struct qt_meta_stringdata_AutoCruiseSetDependsOnNdaToggle_t {
+    QByteArrayData data[1];
+    char stringdata0[32];
+};
+#define QT_MOC_LITERAL(idx, ofs, len) \
+    Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
+    qptrdiff(offsetof(qt_meta_stringdata_AutoCruiseSetDependsOnNdaToggle_t, stringdata0) + ofs \
+        - idx * sizeof(QByteArrayData)) \
+    )
+static const qt_meta_stringdata_AutoCruiseSetDependsOnNdaToggle_t qt_meta_stringdata_AutoCruiseSetDependsOnNdaToggle = {
+    {
+QT_MOC_LITERAL(0, 0, 31) // "AutoCruiseSetDependsOnNdaToggle"
+
+    },
+    "AutoCruiseSetDependsOnNdaToggle"
+};
+#undef QT_MOC_LITERAL
+
+static const uint qt_meta_data_AutoCruiseSetDependsOnNdaToggle[] = {
+
+ // content:
+       8,       // revision
+       0,       // classname
+       0,    0, // classinfo
+       0,    0, // methods
+       0,    0, // properties
+       0,    0, // enums/sets
+       0,    0, // constructors
+       0,       // flags
+       0,       // signalCount
+
+       0        // eod
+};
+
+void AutoCruiseSetDependsOnNdaToggle::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+{
+    Q_UNUSED(_o);
+    Q_UNUSED(_id);
+    Q_UNUSED(_c);
+    Q_UNUSED(_a);
+}
+
+QT_INIT_METAOBJECT const QMetaObject AutoCruiseSetDependsOnNdaToggle::staticMetaObject = { {
+    &ToggleControl::staticMetaObject,
+    qt_meta_stringdata_AutoCruiseSetDependsOnNdaToggle.data,
+    qt_meta_data_AutoCruiseSetDependsOnNdaToggle,
+    qt_static_metacall,
+    nullptr,
+    nullptr
+} };
+
+
+const QMetaObject *AutoCruiseSetDependsOnNdaToggle::metaObject() const
+{
+    return QObject::d_ptr->metaObject ? QObject::d_ptr->dynamicMetaObject() : &staticMetaObject;
+}
+
+void *AutoCruiseSetDependsOnNdaToggle::qt_metacast(const char *_clname)
+{
+    if (!_clname) return nullptr;
+    if (!strcmp(_clname, qt_meta_stringdata_AutoCruiseSetDependsOnNdaToggle.stringdata0))
+        return static_cast<void*>(this);
+    return ToggleControl::qt_metacast(_clname);
+}
+
+int AutoCruiseSetDependsOnNdaToggle::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+{
+    _id = ToggleControl::qt_metacall(_c, _id, _a);
+    return _id;
+}
 struct qt_meta_stringdata_OPKRServerSelect_t {
     QByteArrayData data[1];
     char stringdata0[17];

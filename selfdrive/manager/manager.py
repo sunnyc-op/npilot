@@ -88,6 +88,7 @@ def manager_init() -> None:
     ("IsLiveTorque", "0"),
     ("IsLowSpeedFactor", "0"),
     ("AutoEnable", "0"),
+    ("AutoCruiseSet", "0"),
     ("AutoEnableSpeed", "3"),
     ("OPKRServer", "0"),
     
