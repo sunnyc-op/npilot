@@ -479,7 +479,7 @@ class AutoCruiseSetToggle : public ToggleControl {
   Q_OBJECT
 
 public:
-  AutoEnabledToggle() : ToggleControl(tr("Use Auto Cruise "), "", "../assets/offroad/icon_shell.png", Params().getBool("AutoCruiseSet")) {
+  AutoCruiseSetToggle() : ToggleControl(tr("Use Auto Cruise "), "", "../assets/offroad/icon_shell.png", Params().getBool("AutoCruiseSet")) {
     QObject::connect(this, &AutoEnabledToggle::toggleFlipped, [=](int state) {
       bool status = state ? true : false;
       Params().putBool("AutoCruiseSet", status);
