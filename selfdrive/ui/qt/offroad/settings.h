@@ -243,7 +243,7 @@ class CloseToRoadEdgeToggle : public ToggleControl {
   Q_OBJECT
 
 public:
-  CloseToRoadEdgeToggle() : ToggleControl(tr("Driving Close to RoadEdge"), tr("This will adjust the camera offset to get close to road edge if the car is on the first or last lane."), "../assets/offroad/icon_shell.png", Params().getBool("CloseToRoadEdge")) {
+  CloseToRoadEdgeToggle() : ToggleControl(tr("Driving Close to RoadEdge"), tr("This will adjust the camera offset to get close to road edge if the car is on the first or last lane."), "../assets/offroad/icon_road.png", Params().getBool("CloseToRoadEdge")) {
     QObject::connect(this, &CloseToRoadEdgeToggle::toggleFlipped, [=](int state) {
       bool status = state ? true : false;
       Params().putBool("CloseToRoadEdge", status);
@@ -336,7 +336,7 @@ class LiveSteerRatioToggle : public ToggleControl {
   Q_OBJECT
 
 public:
-  LiveSteerRatioToggle() : ToggleControl(tr("Use Live SteerRatio"), tr("Live SteerRatio is used instead of variable/fixed SteerRatio."), "../assets/offroad/icon_shell.png", Params().getBool("OpkrLiveSteerRatio")) {
+  LiveSteerRatioToggle() : ToggleControl(tr("Use Live SteerRatio"), tr("Live SteerRatio is used instead of variable/fixed SteerRatio."), "../assets/offroad/icon_openpilot.png", Params().getBool("OpkrLiveSteerRatio")) {
     QObject::connect(this, &LiveSteerRatioToggle::toggleFlipped, [=](int state) {
       bool status = state ? true : false;
       Params().putBool("OpkrLiveSteerRatio", status);
@@ -360,7 +360,7 @@ class VariableSteerMaxToggle : public ToggleControl {
   Q_OBJECT
 
 public:
-  VariableSteerMaxToggle() : ToggleControl(tr("SteerMax/Variable SteerMax Toggle"), tr("Use the variable SteerMax by curvature. If this is off, runs only with base value below. STBase: SteerMax Default value. STMax: SteerMax Maximum value."), "../assets/offroad/icon_shell.png", Params().getBool("OpkrVariableSteerMax")) {
+  VariableSteerMaxToggle() : ToggleControl(tr("SteerMax/Variable SteerMax Toggle"), tr("Use the variable SteerMax by curvature. If this is off, runs only with base value below. STBase: SteerMax Default value. STMax: SteerMax Maximum value."), "../assets/offroad/icon_openpilot.png", Params().getBool("OpkrVariableSteerMax")) {
     QObject::connect(this, &VariableSteerMaxToggle::toggleFlipped, [=](int state) {
       bool status = state ? true : false;
       Params().putBool("OpkrVariableSteerMax", status);
@@ -451,7 +451,7 @@ class AutoEnabledToggle : public ToggleControl {
   Q_OBJECT
 
 public:
-  AutoEnabledToggle() : ToggleControl(tr("Use Auto Engagement"), tr("If the cruise button status is standby (CRUISE indication only and speed is not specified) in the Disengagement state, activate the automatic Engagement."), "../assets/offroad/icon_shell.png", Params().getBool("AutoEnable")) {
+  AutoEnabledToggle() : ToggleControl(tr("Use Auto Engagement"), tr("If the cruise button status is standby (CRUISE indication only and speed is not specified) in the Disengagement state, activate the automatic Engagement."), "../assets/offroad/icon_openpilot.png", Params().getBool("AutoEnable")) {
     QObject::connect(this, &AutoEnabledToggle::toggleFlipped, [=](int state) {
       bool status = state ? true : false;
       Params().putBool("AutoEnable", status);
@@ -479,7 +479,7 @@ class AutoCruiseSetToggle : public ToggleControl {
   Q_OBJECT
 
 public:
-  AutoCruiseSetToggle() : ToggleControl(tr("Use Auto Cruise "), "", "../assets/offroad/icon_shell.png", Params().getBool("AutoCruiseSet")) {
+  AutoCruiseSetToggle() : ToggleControl(tr("Use Auto Cruise "), "", "../assets/offroad/icon_road.png", Params().getBool("AutoCruiseSet")) {
     QObject::connect(this, &AutoEnabledToggle::toggleFlipped, [=](int state) {
       bool status = state ? true : false;
       Params().putBool("AutoCruiseSet", status);
@@ -491,7 +491,7 @@ class AutoCruiseSetDependsOnNdaToggle : public ToggleControl {
   Q_OBJECT
 
 public:
-  AutoCruiseSetDependsOnNdaToggle() : ToggleControl(tr("Auto Cruise Set Depends On Nda "), "", "../assets/offroad/icon_shell.png", Params().getBool("AutoCruiseSetDependsOnNda")) {
+  AutoCruiseSetDependsOnNdaToggle() : ToggleControl(tr("Auto Cruise Set Depends On Nda "), "", "../assets/offroad/icon_road.png", Params().getBool("AutoCruiseSetDependsOnNda")) {
     QObject::connect(this, &AutoEnabledToggle::toggleFlipped, [=](int state) {
       bool status = state ? true : false;
       Params().putBool("AutoCruiseSetDependsOnNda", status);
