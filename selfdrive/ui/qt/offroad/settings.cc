@@ -1629,7 +1629,7 @@ void TorqueFriction::refresh() {
   label.setText(QString::fromStdString(valuefs.toStdString()));
 }
 
-TorqueMaxLatAccel::TorqueMaxLatAccel() : AbstractControl(tr("LAT_ACCEL_FACTOR"), tr("Adjust MaxLatAccel"), "../assets/offroad/icon_shell.png") {
+TorqueMaxLatAccel::TorqueMaxLatAccel() : AbstractControl(tr("LAT_ACCEL_FACTOR"), tr("Adjust LatAccelFactor"), "../assets/offroad/icon_shell.png") {
 
   label.setAlignment(Qt::AlignVCenter|Qt::AlignRight);
   label.setStyleSheet("color: #e0e879");
@@ -2146,6 +2146,8 @@ CommunityPanel::CommunityPanel(QWidget* parent) : QWidget(parent) {
     toggleLayout->addWidget(new AutoEnabledToggle());
     toggleLayout->addWidget(horizontal_line());
     toggleLayout->addWidget(new AutoEnableSpeed());
+    toggleLayout->addWidget(horizontal_line());
+    toggleLayout->addWidget(new AutoCruiseSetToggle());
 
     toggles.append(new ParamControl("IsLiveTorque",
                                             "Enable Live Torque",
