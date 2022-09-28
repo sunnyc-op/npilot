@@ -61,7 +61,7 @@ class LanePlanner:
     #opkr
     self.params = Params()
     if Params().get_bool('UseNpilotManager'):
-      self.drive_close_to_edge = ntune_common_enabled('coseToRoadEdge')
+      self.drive_close_to_edge = ntune_common_enabled('closeToRoadEdge')
       self.left_edge_offset = ntune_common_get('leftEdgeOffset') * 0.01 #0.15 move to right
       self.right_edge_offset = ntune_common_get('rightEdgeOffset') * 0.01 #-0.15 move to left  
     else:
