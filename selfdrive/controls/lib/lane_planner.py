@@ -7,7 +7,7 @@ from selfdrive.hardware import EON, TICI
 from selfdrive.swaglog import cloudlog
 from common.params import Params
 from decimal import Decimal
-from selfdrive.ntune import ntune_common_get
+from selfdrive.ntune import ntune_common_get, ntune_common_enabled
 
 ENABLE_ZORROBYTE = True
 ENABLE_INC_LANE_PROB = True
@@ -60,10 +60,14 @@ class LanePlanner:
 
     #opkr
     self.params = Params()
-    self.drive_close_to_edge = self.params.get_bool("CloseToRoadEdge")
-    self.left_edge_offset = float(Decimal(self.params.get("LeftEdgeOffset", encoding="utf8")) * Decimal('0.01')) #0.15 move to right
-    self.right_edge_offset = float(Decimal(self.params.get("RightEdgeOffset", encoding="utf8")) * Decimal('0.01')) #-0.15 move to left
-
+    if Params().get_bool('UseNpilotManager'):
+      self.drive_close_to_edge = ntune_common_enabled('coseToRoadEdge')
+      self.left_edge_offset = ntune_common_get('leftEdgeOffset') * 0.01 #0.15 move to right
+      self.right_edge_offset = ntune_common_get('rightEdgeOffset') * 0.01 #-0.15 move to left  
+    else:
+      self.drive_close_to_edge = self.params.get_bool("CloseToRoadEdge")
+      self.left_edge_offset = float(Decimal(self.params.get("LeftEdgeOffset", encoding="utf8")) * Decimal('0.01')) #0.15 move to right
+      self.right_edge_offset = float(Decimal(self.params.get("RightEdgeOffset", encoding="utf8")) * Decimal('0.01')) #-0.15 move to left     
     self.road_edge_offset = 0.0
     self.total_camera_offset = self.camera_offset
     self.lp_timer = 0

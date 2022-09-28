@@ -195,7 +195,15 @@ class nTune():
 
     if self.checkValue("steerRateCost", 0.1, 1.5, 1.0):
       updated = True
+      
+    if self.checkValue("closeToRoadEdge", 0., 1., 0.):
+      updated = True
 
+    if self.checkValue("leftEdgeOffset", -2., 2., 0.15):
+      updated = True
+
+    if self.checkValue("rightEdgeOffset", -2., 2., -0.15):
+      updated = True
 
     return updated
 
