@@ -2154,13 +2154,13 @@ CommunityPanel::CommunityPanel(QWidget* parent) : QWidget(parent) {
     toggles.append(new ParamControl("IsLiveTorque",
                                             "Enable Live Torque",
                                             "",
-                                            "../assets/offroad/icon_shell.png",
+                                            "../assets/offroad/icon_openpilot.png",
                                             this));
 
     toggles.append(new ParamControl("IsLowSpeedFactor",
                                             "Enable Low Speed Factor",
                                             "",
-                                            "../assets/offroad/icon_shell.png",
+                                            "../assets/offroad/icon_openpilot.png",
                                             this));
   }
   
