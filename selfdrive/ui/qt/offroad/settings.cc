@@ -2148,6 +2148,8 @@ CommunityPanel::CommunityPanel(QWidget* parent) : QWidget(parent) {
     toggleLayout->addWidget(new AutoEnableSpeed());
     toggleLayout->addWidget(horizontal_line());
     toggleLayout->addWidget(new AutoCruiseSetToggle());
+    toggleLayout->addWidget(horizontal_line());
+    toggleLayout->addWidget(new AutoCruiseSetDependsOnNdaToggle());
 
     toggles.append(new ParamControl("IsLiveTorque",
                                             "Enable Live Torque",
