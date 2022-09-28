@@ -154,7 +154,7 @@ class nTune():
       return self.checkValidCommon()
     elif self.group == "option":
       return self.checkValidOption()
-    else:
+    elif self.group =="scc":
       return self.checkValidISCC()
 
   def update(self):
