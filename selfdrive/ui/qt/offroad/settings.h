@@ -487,6 +487,18 @@ public:
   }
 };
 
+class AutoCruiseSetDependsOnNdaToggle : public ToggleControl {
+  Q_OBJECT
+
+public:
+  AutoCruiseSetDependsOnNdaToggle() : ToggleControl(tr("Auto Cruise Set Depends On Nda "), "", "../assets/offroad/icon_shell.png", Params().getBool("AutoCruiseSetDependsOnNda")) {
+    QObject::connect(this, &AutoEnabledToggle::toggleFlipped, [=](int state) {
+      bool status = state ? true : false;
+      Params().putBool("AutoCruiseSetDependsOnNda", status);
+    });
+  }
+};
+
 class OPKRServerSelect : public AbstractControl {
   Q_OBJECT
 
