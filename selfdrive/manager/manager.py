@@ -90,6 +90,7 @@ def manager_init() -> None:
     ("AutoEnable", "0"),
     ("AutoCruiseSet", "0"),
     ("AutoEnableSpeed", "3"),
+    ("AutoCruiseSetDependsOnNda", "0"),
     ("OPKRServer", "0"),
     
     #nPilot_Manager
