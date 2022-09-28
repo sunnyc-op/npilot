@@ -524,12 +524,12 @@ SettingsWindow::SettingsWindow(QWidget *parent) : QFrame(parent) {
       panel_widget->setCurrentWidget(w);
     });
   }
-  sidebar_layout->setContentsMargins(5, 50, 20, 50);
+  sidebar_layout->setContentsMargins(5, 50, 10, 50);
 
   // main settings layout, sidebar + main panel
   QHBoxLayout *main_layout = new QHBoxLayout(this);
 
-  sidebar_widget->setFixedWidth(330);
+  sidebar_widget->setFixedWidth(320);
   main_layout->addWidget(sidebar_widget);
   main_layout->addWidget(panel_widget);
 
@@ -1566,7 +1566,7 @@ void LiveSRPercent::refresh() {
   btnplus.setText("+");
 }
 
-TorqueFriction::TorqueFriction() : AbstractControl(tr("Friction"), tr("Adjust Friction"), "../assets/offroad/icon_shell.png") {
+TorqueFriction::TorqueFriction() : AbstractControl(tr("FRICTION"), tr("Adjust Friction"), "../assets/offroad/icon_shell.png") {
 
   label.setAlignment(Qt::AlignVCenter|Qt::AlignRight);
   label.setStyleSheet("color: #e0e879");
@@ -1629,7 +1629,7 @@ void TorqueFriction::refresh() {
   label.setText(QString::fromStdString(valuefs.toStdString()));
 }
 
-TorqueMaxLatAccel::TorqueMaxLatAccel() : AbstractControl(tr("MaxLatAccel"), tr("Adjust MaxLatAccel"), "../assets/offroad/icon_shell.png") {
+TorqueMaxLatAccel::TorqueMaxLatAccel() : AbstractControl(tr("LAT_ACCEL_FACTOR"), tr("Adjust MaxLatAccel"), "../assets/offroad/icon_shell.png") {
 
   label.setAlignment(Qt::AlignVCenter|Qt::AlignRight);
   label.setStyleSheet("color: #e0e879");
@@ -1787,10 +1787,10 @@ OPKRServerSelect::OPKRServerSelect() : AbstractControl(tr("API Server"), tr("Set
   )");
   btn3.setFixedSize(250, 100);
   hlayout->addWidget(&btn1);
-  hlayout->addWidget(&btn2);
+  //hlayout->addWidget(&btn2);
   hlayout->addWidget(&btn3);
   btn1.setText(tr("OPKR"));
-  btn2.setText(tr("Comma"));
+  //btn2.setText(tr("Comma"));
   btn3.setText(tr("User's"));
 
   QObject::connect(&btn1, &QPushButton::clicked, [=]() {
@@ -1943,6 +1943,87 @@ void OPKRServerAPI::refresh() {
   }
 }
 
+TimeZoneSelectCombo::TimeZoneSelectCombo() : AbstractControl("TZ", "", "../assets/offroad/icon_shell.png") 
+{
+  combobox.setStyleSheet(R"(
+    subcontrol-origin: padding;
+    subcontrol-position: top left;
+    selection-background-color: #111;
+    selection-color: yellow;
+    color: white;
+    background-color: #393939;
+    border-style: solid;
+    border: 0px solid #1e1e1e;
+    border-radius: 0;
+    width: 100px;
+  )");
+
+  combobox.addItem(tr("Select Your TimeZone"));
+  QFile timezonelistfile("/data/openpilot/selfdrive/assets/addon/param/TimeZone");
+  if (timezonelistfile.open(QIODevice::ReadOnly)) {
+    QTextStream timezonename(&timezonelistfile);
+    while (!timezonename.atEnd()) {
+      QString line = timezonename.readLine();
+      combobox.addItem(line);
+    }
+    timezonelistfile.close();
+  }
+
+  combobox.setFixedWidth(950);
+
+  btn.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 50px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #393939;
+  )");
+
+  btn.setFixedSize(150, 100);
+
+  QObject::connect(&btn, &QPushButton::clicked, [=]() {
+    if (btn.text() == tr("UNSET")) {
+      if (ConfirmationDialog::confirm(tr("Do you want to set default?"), this)) {
+        params.put("OPKRTimeZone", "UTC");
+        combobox.setCurrentIndex(0);
+        refresh();
+      }
+    }
+  });
+
+  //combobox.view()->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+
+  hlayout->addWidget(&combobox, Qt::AlignLeft);
+  hlayout->addWidget(&btn, Qt::AlignRight);
+
+  QObject::connect(&combobox, static_cast<void(QComboBox::*)(int)>(&QComboBox::activated), [=](int index)
+  {
+    combobox.itemData(combobox.currentIndex());
+    QString str = combobox.currentText();
+    if (combobox.currentIndex() != 0) {
+      if (ConfirmationDialog::confirm(tr("Press OK to set your timezone as") + "\n" + str, this)) {
+        params.put("OPKRTimeZone", str.toStdString());
+      }
+    }
+    refresh();
+  });
+  refresh();
+}
+
+void TimeZoneSelectCombo::refresh() {
+  QString selected_timezonename = QString::fromStdString(params.get("OPKRTimeZone"));
+  int index = combobox.findText(selected_timezonename);
+  if (index >= 0) combobox.setCurrentIndex(index);
+  if (selected_timezonename.length()) {
+    btn.setEnabled(true);
+    btn.setText(tr("UNSET"));
+  } else {
+    btn.setEnabled(false);
+    btn.setText(tr("SET"));
+  }
+}
+
 
 /////////////////////////////////////////////////////////////////////////
 
@@ -2034,54 +2115,51 @@ CommunityPanel::CommunityPanel(QWidget* parent) : QWidget(parent) {
   )");
 
   QString useNpilotManager = QString::fromStdString(Params().get("UseNpilotManager"));
-
+  bool useNM = QVariant(useNpilotManager).toBool();
   QList<ParamControl*> toggles;
 
   toggleLayout->addWidget(new UseNpilotManagerToggle());
-  if(!QVariant(useNpilotManager).toBool()){
+
+  if (!useNM) {
+    toggleLayout->addWidget(new LabelControl(tr("〓〓〓〓〓〓〓〓〓〓【 OFFSET 】〓〓〓〓〓〓〓〓〓〓"), ""));
+    toggleLayout->addWidget(new CameraOffset());
+    toggleLayout->addWidget(horizontal_line());
+    toggleLayout->addWidget(new PathOffset());
+    toggleLayout->addWidget(horizontal_line());
+    toggleLayout->addWidget(new CloseToRoadEdgeToggle());
+    toggleLayout->addWidget(new OPKREdgeOffset());
+
+    toggleLayout->addWidget(new LabelControl(tr("〓〓〓〓〓〓〓〓〓〓【 TUNING 】〓〓〓〓〓〓〓〓〓〓"), ""));
+    //toggleLayout->addWidget(new LiveSteerRatioToggle());
+    //toggleLayout->addWidget(new LiveSRPercent());
+    toggleLayout->addWidget(new SRBaseControl());
+    toggleLayout->addWidget(horizontal_line());
+    //toggleLayout->addWidget(new SRMaxControl());
+    toggleLayout->addWidget(new SteerActuatorDelay());
+    toggleLayout->addWidget(horizontal_line());
+    toggleLayout->addWidget(new SteerLimitTimer());
+    toggleLayout->addWidget(horizontal_line());
+    toggleLayout->addWidget(new TorqueMaxLatAccel());
+    toggleLayout->addWidget(horizontal_line());
+    toggleLayout->addWidget(new TorqueFriction());
     toggleLayout->addWidget(horizontal_line());
     toggleLayout->addWidget(new AutoEnabledToggle());
-    toggleLayout->addWidget(new AutoEnableSpeed());
-    
-    toggles.append(new ParamControl("IsLiveTorque",
-                                              "Enable Live Torque",
-                                              "",
-                                              "../assets/offroad/icon_shell.png",
-                                              this));
-    toggles.append(new ParamControl("IsLowSpeedFactor",
-                                          "Enable Low Speed Factor",
-                                          "",
-                                          "../assets/offroad/icon_shell.png",
-                                          this));
     toggleLayout->addWidget(horizontal_line());
-    toggleLayout->addWidget(new ParamControl("OpkrBatteryChargingControl",
-                                          "Enable Battery Charging Control",
-                                          "It uses the battery charge control function.",
-                                          "../assets/offroad/icon_shell.png",
-                                          this));
-    toggleLayout->addWidget(new ChargingMin());
-    toggleLayout->addWidget(new ChargingMax());
-  }
-  toggleLayout->addWidget(new LabelControl(tr("〓〓〓〓〓〓〓〓〓〓【 TUNING 】〓〓〓〓〓〓〓〓〓〓"), ""));
-  toggleLayout->addWidget(new CameraOffset());
-  toggleLayout->addWidget(new PathOffset());
-  toggleLayout->addWidget(horizontal_line());
-  toggleLayout->addWidget(new CloseToRoadEdgeToggle());
-  toggleLayout->addWidget(new OPKREdgeOffset());
-  toggleLayout->addWidget(horizontal_line());
-  toggleLayout->addWidget(new LiveSteerRatioToggle());
-  toggleLayout->addWidget(new LiveSRPercent());
-  toggleLayout->addWidget(new SRBaseControl());
-  toggleLayout->addWidget(new SRMaxControl());
-  toggleLayout->addWidget(horizontal_line());
-  toggleLayout->addWidget(new SteerActuatorDelay());
-  toggleLayout->addWidget(horizontal_line());
-  toggleLayout->addWidget(new SteerLimitTimer());
-  toggleLayout->addWidget(horizontal_line());
-  toggleLayout->addWidget(new TorqueMaxLatAccel());
-  toggleLayout->addWidget(horizontal_line());
-  toggleLayout->addWidget(new TorqueFriction());
+    toggleLayout->addWidget(new AutoEnableSpeed());
 
+    toggles.append(new ParamControl("IsLiveTorque",
+                                            "Enable Live Torque",
+                                            "",
+                                            "../assets/offroad/icon_shell.png",
+                                            this));
+
+    toggles.append(new ParamControl("IsLowSpeedFactor",
+                                            "Enable Low Speed Factor",
+                                            "",
+                                            "../assets/offroad/icon_shell.png",
+                                            this));
+  }
+  
 
   toggles.append(new ParamControl("UseClusterSpeed",
                                             "Use Cluster Speed",
@@ -2148,12 +2226,6 @@ CommunityPanel::CommunityPanel(QWidget* parent) : QWidget(parent) {
                                             "../assets/offroad/icon_openpilot.png",
                                             this));
 
-  /*toggles.append(new ParamControl("NewRadarInterface",
-                                            "Use new radar interface",
-                                            "",
-                                            "../assets/offroad/icon_road.png",
-                                            this));*/
-
   toggles.append(new ParamControl("DisableOpFcw",
                                             "Disable Openpilot FCW",
                                             "",
@@ -2166,13 +2238,11 @@ CommunityPanel::CommunityPanel(QWidget* parent) : QWidget(parent) {
                                             "../assets/offroad/icon_shell.png",
                                             this));
 
-
-
-  /*toggles.append(new ParamControl("CustomLeadMark",
-                                            "Use custom lead mark",
-                                            "",
-                                            "../assets/offroad/icon_road.png",
-                                            this));*/
+  if (!useNM) toggles.append(new ParamControl("OpkrBatteryChargingControl",
+                                            "Enable Battery Charging Control",
+                                            "It uses the battery charge control function.",
+                                            "../assets/offroad/icon_shell.png",
+                                            this));
 
   for(ParamControl *toggle : toggles) {
     if(main_layout->count() != 0) {
@@ -2181,6 +2251,10 @@ CommunityPanel::CommunityPanel(QWidget* parent) : QWidget(parent) {
     toggleLayout->addWidget(toggle);
   }
 
+  if (!useNM) toggleLayout->addWidget(horizontal_line());
+  if (!useNM) toggleLayout->addWidget(new ChargingMin());
+  if (!useNM) toggleLayout->addWidget(horizontal_line());
+  if (!useNM) toggleLayout->addWidget(new ChargingMax());
   toggleLayout->addWidget(horizontal_line());
   toggleLayout->addWidget(new BrightnessControl());
   toggleLayout->addWidget(horizontal_line());
@@ -2191,6 +2265,8 @@ CommunityPanel::CommunityPanel(QWidget* parent) : QWidget(parent) {
   toggleLayout->addWidget(new OPKRServerSelect());
   toggleLayout->addWidget(horizontal_line());
   toggleLayout->addWidget(new OPKRServerAPI());
+  toggleLayout->addWidget(horizontal_line());
+  toggleLayout->addWidget(new TimeZoneSelectCombo());
 }
 
 SelectCar::SelectCar(QWidget* parent): QWidget(parent) {
@@ -2291,3 +2367,4 @@ LateralControl::LateralControl(QWidget* parent): QWidget(parent) {
 
   main_layout->addWidget(list);
 }
+

@@ -1837,6 +1837,76 @@ int LiveSteerRatioToggle::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     _id = ToggleControl::qt_metacall(_c, _id, _a);
     return _id;
 }
+struct qt_meta_stringdata_UseNpilotManagerToggle_t {
+    QByteArrayData data[1];
+    char stringdata0[23];
+};
+#define QT_MOC_LITERAL(idx, ofs, len) \
+    Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
+    qptrdiff(offsetof(qt_meta_stringdata_UseNpilotManagerToggle_t, stringdata0) + ofs \
+        - idx * sizeof(QByteArrayData)) \
+    )
+static const qt_meta_stringdata_UseNpilotManagerToggle_t qt_meta_stringdata_UseNpilotManagerToggle = {
+    {
+QT_MOC_LITERAL(0, 0, 22) // "UseNpilotManagerToggle"
+
+    },
+    "UseNpilotManagerToggle"
+};
+#undef QT_MOC_LITERAL
+
+static const uint qt_meta_data_UseNpilotManagerToggle[] = {
+
+ // content:
+       8,       // revision
+       0,       // classname
+       0,    0, // classinfo
+       0,    0, // methods
+       0,    0, // properties
+       0,    0, // enums/sets
+       0,    0, // constructors
+       0,       // flags
+       0,       // signalCount
+
+       0        // eod
+};
+
+void UseNpilotManagerToggle::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+{
+    Q_UNUSED(_o);
+    Q_UNUSED(_id);
+    Q_UNUSED(_c);
+    Q_UNUSED(_a);
+}
+
+QT_INIT_METAOBJECT const QMetaObject UseNpilotManagerToggle::staticMetaObject = { {
+    &ToggleControl::staticMetaObject,
+    qt_meta_stringdata_UseNpilotManagerToggle.data,
+    qt_meta_data_UseNpilotManagerToggle,
+    qt_static_metacall,
+    nullptr,
+    nullptr
+} };
+
+
+const QMetaObject *UseNpilotManagerToggle::metaObject() const
+{
+    return QObject::d_ptr->metaObject ? QObject::d_ptr->dynamicMetaObject() : &staticMetaObject;
+}
+
+void *UseNpilotManagerToggle::qt_metacast(const char *_clname)
+{
+    if (!_clname) return nullptr;
+    if (!strcmp(_clname, qt_meta_stringdata_UseNpilotManagerToggle.stringdata0))
+        return static_cast<void*>(this);
+    return ToggleControl::qt_metacast(_clname);
+}
+
+int UseNpilotManagerToggle::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+{
+    _id = ToggleControl::qt_metacall(_c, _id, _a);
+    return _id;
+}
 struct qt_meta_stringdata_VariableSteerMaxToggle_t {
     QByteArrayData data[1];
     char stringdata0[23];
@@ -2533,6 +2603,76 @@ void *OPKRServerAPI::qt_metacast(const char *_clname)
 }
 
 int OPKRServerAPI::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+{
+    _id = AbstractControl::qt_metacall(_c, _id, _a);
+    return _id;
+}
+struct qt_meta_stringdata_TimeZoneSelectCombo_t {
+    QByteArrayData data[1];
+    char stringdata0[20];
+};
+#define QT_MOC_LITERAL(idx, ofs, len) \
+    Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
+    qptrdiff(offsetof(qt_meta_stringdata_TimeZoneSelectCombo_t, stringdata0) + ofs \
+        - idx * sizeof(QByteArrayData)) \
+    )
+static const qt_meta_stringdata_TimeZoneSelectCombo_t qt_meta_stringdata_TimeZoneSelectCombo = {
+    {
+QT_MOC_LITERAL(0, 0, 19) // "TimeZoneSelectCombo"
+
+    },
+    "TimeZoneSelectCombo"
+};
+#undef QT_MOC_LITERAL
+
+static const uint qt_meta_data_TimeZoneSelectCombo[] = {
+
+ // content:
+       8,       // revision
+       0,       // classname
+       0,    0, // classinfo
+       0,    0, // methods
+       0,    0, // properties
+       0,    0, // enums/sets
+       0,    0, // constructors
+       0,       // flags
+       0,       // signalCount
+
+       0        // eod
+};
+
+void TimeZoneSelectCombo::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+{
+    Q_UNUSED(_o);
+    Q_UNUSED(_id);
+    Q_UNUSED(_c);
+    Q_UNUSED(_a);
+}
+
+QT_INIT_METAOBJECT const QMetaObject TimeZoneSelectCombo::staticMetaObject = { {
+    &AbstractControl::staticMetaObject,
+    qt_meta_stringdata_TimeZoneSelectCombo.data,
+    qt_meta_data_TimeZoneSelectCombo,
+    qt_static_metacall,
+    nullptr,
+    nullptr
+} };
+
+
+const QMetaObject *TimeZoneSelectCombo::metaObject() const
+{
+    return QObject::d_ptr->metaObject ? QObject::d_ptr->dynamicMetaObject() : &staticMetaObject;
+}
+
+void *TimeZoneSelectCombo::qt_metacast(const char *_clname)
+{
+    if (!_clname) return nullptr;
+    if (!strcmp(_clname, qt_meta_stringdata_TimeZoneSelectCombo.stringdata0))
+        return static_cast<void*>(this);
+    return AbstractControl::qt_metacast(_clname);
+}
+
+int TimeZoneSelectCombo::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 {
     _id = AbstractControl::qt_metacall(_c, _id, _a);
     return _id;

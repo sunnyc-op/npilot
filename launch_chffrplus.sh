@@ -101,7 +101,29 @@ function two_init {
       rm -f /persist/sensors/sensors_settings /persist/sensors/error_log /persist/sensors/gyro_sensitity_cal &&
       echo "restart" > /sys/kernel/debug/msm_subsys/slpi &&
       sleep 5  # Give Android sensor subsystem a moment to recover
-  fi  
+  fi
+
+  if [ ! -f "/data/ntune/common.json" ]; then
+    mkdir /data/ntune
+  fi
+
+  if [ ! -f "/data/ntune/lat_torque_v4.json" ]; then
+    cp /data/openpilot/ntune/lat_torque_v4.json /data/ntune/lat_torque_v4.json
+  fi
+
+  if [ ! -f "/data/ntune/common.json" ]; then
+    cp /data/openpilot/ntune/common.json /data/ntune/common.json
+  fi
+
+  if [ ! -f "/data/ntune/scc.json" ]; then
+    cp /data/openpilot/ntune/scc.json /data/ntune/scc.json
+  fi
+
+  if [ ! -f "/data/ntune/option.json" ]; then
+    cp /data/openpilot/ntune/option.json /data/ntune/option.json
+  fi
+
+
 }
 
 function launch {

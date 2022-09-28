@@ -10,7 +10,7 @@ from selfdrive.car.interfaces import CarInterfaceBase
 from common.params import Params
 from selfdrive.controls.lib.desire_helper import LANE_CHANGE_SPEED_MIN
 from decimal import Decimal
-from selfdrive.ntune import ntune_common_get, ntune_lqr_get
+from selfdrive.ntune import ntune_common_get, ntune_lqr_get, ntune_torque_get
 
 GearShifter = car.CarState.GearShifter
 EventName = car.CarEvent.EventName
@@ -292,9 +292,18 @@ class CarInterface(CarInterfaceBase):
     if ret.lateralTuning.which() == 'torque':
       #TORQUE ONLY
       #selfdrive/car/torque_data/params.yaml 참조해서 값 입력 https://codebeautify.org/jsonviewer/y220b1623
-      torque_lat_accel_factor = float(Decimal(params.get("TorqueMaxLatAccel", encoding="utf8")) * Decimal('0.1')) #2.544642494803999 #LAT_ACCEL_FACTOR
-      torque_friction = float(Decimal(params.get("TorqueFriction", encoding="utf8")) * Decimal('0.001')) #0.05 #FRICTION
-      ret.maxLateralAccel = 1.8721703683337008 #MAX_LAT_ACCEL_MEASURED
+
+      if params.get_bool("UseNpilotManager"):
+        try:
+          torque_lat_accel_factor = ntune_torque_get('latAccelFactor') #LAT_ACCEL_FACTOR
+          torque_friction = ntune_torque_get('friction') #FRICTION
+        except:
+          torque_lat_accel_factor = float(Decimal(params.get("TorqueMaxLatAccel", encoding="utf8")) * Decimal('0.1')) #LAT_ACCEL_FACTOR
+          torque_friction = float(Decimal(params.get("TorqueFriction", encoding="utf8")) * Decimal('0.001')) #FRICTION
+
+      else:
+        torque_lat_accel_factor = float(Decimal(params.get("TorqueMaxLatAccel", encoding="utf8")) * Decimal('0.1')) #LAT_ACCEL_FACTOR
+        torque_friction = float(Decimal(params.get("TorqueFriction", encoding="utf8")) * Decimal('0.001')) #FRICTION
 
       #토크
       CarInterfaceBase.configure_torque_tune(ret.lateralTuning, torque_lat_accel_factor, torque_friction)
