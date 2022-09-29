@@ -154,7 +154,7 @@ class nTune():
       return self.checkValidCommon()
     elif self.group == "option":
       return self.checkValidOption()
-    else:
+    elif self.group =="scc":
       return self.checkValidISCC()
 
   def update(self):
@@ -172,7 +172,7 @@ class nTune():
   def checkValidCommon(self):
     updated = False
 
-    if self.checkValue("useLiveSteerRatio", 0., 1., 1.):
+    if self.checkValue("useLiveSteerRatio", 0., 1., 0.):
       updated = True
 
     if self.checkValue("steerRatio", 10.0, 20.0, 16.5):
@@ -181,7 +181,28 @@ class nTune():
     if self.checkValue("steerActuatorDelay", 0., 0.8, 0.1):
       updated = True
 
+    if self.checkValue("cameraOffset", -2.0, 2.0, -0.06):
+      updated = True
+
     if self.checkValue("pathOffset", -1.0, 1.0, 0.0):
+      updated = True
+
+    if self.checkValue("steerLimitTimer", 0.1, 3.0, 0.4):
+      updated = True
+
+    if self.checkValue("steerRatioScale", 0.0, 0.3, 0.01):
+      updated = True
+
+    if self.checkValue("steerRateCost", 0.1, 1.5, 1.0):
+      updated = True
+      
+    if self.checkValue("closeToRoadEdge", 0., 1., 0.):
+      updated = True
+
+    if self.checkValue("leftEdgeOffset", -2., 2., 0.15):
+      updated = True
+
+    if self.checkValue("rightEdgeOffset", -2., 2., -0.15):
       updated = True
 
     return updated
@@ -203,17 +224,17 @@ class nTune():
   def checkValidTorque(self):
     updated = False
 
+    if self.checkValue("liveTorqueParams", 0., 1., 1.):
+      updated = True
     if self.checkValue("useSteeringAngle", 0., 1., 1.):
       updated = True
-    if self.checkValue("maxLatAccel", 0.5, 4.0, 2.5):
+    if self.checkValue("latAccelFactor", 0.5, 4.5, 3.0):
       updated = True
-    if self.checkValue("friction", 0.0, 0.2, 0.0):
-      updated = True
-    if self.checkValue("ki_factor", 0.0, 1.0, 0.2):
-      updated = True
-    if self.checkValue("kd", 0.0, 2.0, 1.0):
+    if self.checkValue("friction", 0.0, 0.2, 0.1):
       updated = True
     if self.checkValue("angle_deadzone_v2", 0.0, 2.0, 0.0):
+      updated = True
+    if self.checkValue("isLowSpeedFactor", 0., 1., 0.):
       updated = True
 
     return updated
@@ -227,7 +248,7 @@ class nTune():
     if self.checkValue("sccBrakeFactor", 0.5, 1.5, 1.0):
       updated = True
 
-    if self.checkValue("sccCurvatureFactor", 0.5, 1.5, 0.98):
+    if self.checkValue("sccCurvatureFactor", 0.5, 1.5, 0.96):
       updated = True
 
     return updated
@@ -244,27 +265,21 @@ class nTune():
     if self.checkValue("dcGain", 0.002, 0.004, 0.0025):
       updated = True
 
-    if self.checkValue("steerLimitTimer", 0.5, 3.0, 2.5):
-      updated = True
-
     return updated
 
   def checkValidOption(self):
     updated = False
 
-    if self.checkValue("autoEngage", 0., 1., 1.):
+    if self.checkValue("autoEnable", 0., 1., 0.):
       updated = True
 
-    if self.checkValue("autoCruiseSet", 0., 1., 1.):
+    if self.checkValue("autoEnableSpeed", 0., 60., 15.):
+      updated = True
+
+    if self.checkValue("autoCruiseSet", 0., 1., 0.):
       updated = True
 
     if self.checkValue("autoCruiseSetDependsOnNda", 0., 1., 0.):
-      updated = True
-
-    if self.checkValue("isLiveTorque", 0., 1., 0.):
-      updated = True
-
-    if self.checkValue("isLowSpeedFactor", 0., 1., 0.):
       updated = True
 
     if self.checkValue("batteryChargingControl", 0., 1., 0.):
@@ -274,51 +289,6 @@ class nTune():
       updated = True
 
     if self.checkValue("batteryChargingMax", 0., 100., 80.):
-      updated = True
-
-    if self.checkValue("isOpenpilotViewEnabled", 0., 1., 0.):
-      updated = True
-
-    if self.checkValue("autoScreenOff", 0., 1., 0.):
-      updated = True
-
-    if self.checkValue("uIBrightness", 0., 100., 0.):
-      updated = True
-        
-    if self.checkValue("uIBrightnessOff", 0., 100., 10.):
-      updated = True
-
-    if self.checkValue("closeToRoadEdge", 0., 100., 0.):
-      updated = True
-
-    if self.checkValue("leftEdgeOffset", 0., 100., 0.):
-      updated = True
-
-    if self.checkValue("rightEdgeOffset", 0., 100., 0.):
-      updated = True
-
-    if self.checkValue("cameraOffsetAdj", 0., 100., 60.):
-      updated = True
-
-    if self.checkValue("steerActuatorDelayAdj", 0., 100., 10.):
-      updated = True
-
-    if self.checkValue("steerLimitTimerAdj", 0., 1000., 400.):
-      updated = True
-
-    if self.checkValue("pathOffsetAdj", 0., 1000., 0.):
-      updated = True
-
-    if self.checkValue("steerRatioAdj", 0., 3000., 1550.):
-      updated = True
-
-    if self.checkValue("liveSteerRatio", 0., 5000., 1790.):
-      updated = True
-
-    if self.checkValue("variableSteerMax", 0., 100., 1.):
-      updated = True
-
-    if self.checkValue("liveSteerRatioPercent", -100., 100., -5.):
       updated = True
 
     return updated
@@ -336,15 +306,11 @@ class nTune():
   def updateTorque(self):
     torque = self.get_ctrl()
     if torque is not None:
-      torque.use_steering_angle = float(self.config["useSteeringAngle"]) > 0.5
-      max_lat_accel = float(self.config["maxLatAccel"])
-      torque.pid._k_p = [[0], [1.0 / max_lat_accel]]
-      torque.pid.k_f = 1.0 / max_lat_accel
-      torque.pid._k_i = [[0], [self.config["ki_factor"] / max_lat_accel]]
-      torque.pid._k_d = [[0], [float(self.config["kd"])]]
-      torque.friction = float(self.config["friction"])
-      torque.steering_angle_deadzone_deg = float(self.config["angle_deadzone_v2"])
-      torque.reset()
+      if float(self.config["liveTorqueParams"]) <= 0.5:
+        torque.use_steering_angle = float(self.config["useSteeringAngle"]) > 0.5
+        torque.steering_angle_deadzone_deg = float(self.config["angle_deadzone_v2"])
+        torque.torque_params.latAccelFactor = float(self.config["latAccelFactor"])
+        torque.torque_params.friction = float(self.config["friction"])
 
   def updateLqr(self):
     lqr = self.get_ctrl()
@@ -352,12 +318,10 @@ class nTune():
       lqr.scale = float(self.config["scale"])
       lqr.ki = float(self.config["ki"])
       lqr.dc_gain = float(self.config["dcGain"])
-
       lqr.x_hat = np.array([[0], [0]])
       lqr.reset()
 
   def read_cp(self):
-
     try:
       if self.CP is not None:
 
@@ -365,14 +329,15 @@ class nTune():
           pass
         elif self.type == LatType.TORQUE:
           self.config["useSteeringAngle"] = 1. if self.CP.lateralTuning.torque.useSteeringAngle else 0.
-          self.config["maxLatAccel"] = round(1. / self.CP.lateralTuning.torque.kp, 2)
+          self.config["latAccelFactor"] = self.CP.lateralTuning.torque.latAccelFactor
           self.config["friction"] = round(self.CP.lateralTuning.torque.friction, 3)
-          self.config["kd"] = round(self.CP.lateralTuning.torque.kd, 2)
           self.config["angle_deadzone_v2"] = round(self.CP.lateralTuning.torque.steeringAngleDeadzoneDeg, 1)
         else:
           self.config["useLiveSteerRatio"] = 1.
           self.config["steerRatio"] = round(self.CP.steerRatio, 2)
           self.config["steerActuatorDelay"] = round(self.CP.steerActuatorDelay, 2)
+          self.config["steerRateCost"] = round(self.CP.steerRateCost, 2)
+          self.config["steerRatioScale"] = round(self.CP.steerRatioScale, 2)
 
     except:
       pass
@@ -435,7 +400,13 @@ def ntune_scc_get(key):
   return ntune_get("scc", key)
 
 def ntune_option_get(key):
-      return ntune_get("option", key)
+   return ntune_get("option", key)
 
 def ntune_option_enabled(key):
   return ntune_option_get(key) > 0.5
+
+def ntune_lqr_get(key):
+  return ntune_get("lat_lqr", key)
+
+def ntune_torque_get(key):
+  return ntune_get("lat_torque_v4", key)

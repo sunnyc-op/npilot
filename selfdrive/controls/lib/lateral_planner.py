@@ -8,7 +8,8 @@ from selfdrive.controls.lib.lane_planner import LanePlanner, TRAJECTORY_SIZE
 from selfdrive.controls.lib.desire_helper import DesireHelper, AUTO_LCA_START_TIME
 import cereal.messaging as messaging
 from cereal import log
-
+from common.params import Params
+from selfdrive.ntune import ntune_common_get
 
 class LateralPlanner:
   def __init__(self, CP, use_lanelines=True, wide_camera=False):
@@ -63,14 +64,22 @@ class LateralPlanner:
       self.LP.rll_prob *= self.DH.lane_change_ll_prob
 
     # Calculate final driving path and set MPC costs
+    steer_rate = MPC_COST_LAT.STEER_RATE
+    if Params().get_bool("UseNpilotManager"):
+      steer_rate = max(ntune_common_get('steerRateCost'), 0.3)
+
     if self.use_lanelines:
       d_path_xyz = self.LP.get_d_path(v_ego, self.t_idxs, self.path_xyz)
-      self.lat_mpc.set_weights(MPC_COST_LAT.PATH, MPC_COST_LAT.HEADING, MPC_COST_LAT.STEER_RATE)
+      if Params().get_bool("UseNpilotManager"):
+        d_path_xyz[:, 1] += ntune_common_get('pathOffset')
+      self.lat_mpc.set_weights(MPC_COST_LAT.PATH, MPC_COST_LAT.HEADING, steer_rate)
     else:
       d_path_xyz = self.path_xyz
+      if Params().get_bool("UseNpilotManager"):
+        d_path_xyz[:, 1] += ntune_common_get('pathOffset')
       # Heading cost is useful at low speed, otherwise end of plan can be off-heading
       heading_cost = interp(v_ego, [5.0, 10.0], [MPC_COST_LAT.HEADING, 0.15])
-      self.lat_mpc.set_weights(MPC_COST_LAT.PATH, heading_cost, MPC_COST_LAT.STEER_RATE)
+      self.lat_mpc.set_weights(MPC_COST_LAT.PATH, heading_cost, steer_rate)
 
     y_pts = np.interp(v_ego * self.t_idxs[:LAT_MPC_N + 1], np.linalg.norm(d_path_xyz, axis=1), d_path_xyz[:, 1])
     heading_pts = np.interp(v_ego * self.t_idxs[:LAT_MPC_N + 1], np.linalg.norm(self.path_xyz, axis=1), self.plan_yaw)

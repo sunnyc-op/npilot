@@ -30,7 +30,7 @@ from selfdrive.locationd.calibrationd import Calibration
 from selfdrive.hardware import HARDWARE, TICI, EON
 from selfdrive.manager.process_config import managed_processes
 from selfdrive.car.hyundai.scc_smoother import SccSmoother
-from selfdrive.ntune import ntune_common_get, ntune_common_enabled, ntune_scc_get
+from selfdrive.ntune import ntune_common_get, ntune_common_enabled, ntune_scc_get, ntune_option_enabled, ntune_option_get, ntune_torque_get
 from decimal import Decimal
 
 SOFT_DISABLE_TIME = 3  # seconds
@@ -114,16 +114,26 @@ class Controls:
       self.CP.alternativeExperience |= ALTERNATIVE_EXPERIENCE.DISABLE_DISENGAGE_ON_GAS
 
     # read params
-    self.is_live_torque = params.get_bool("IsLiveTorque")
+    try:
+      self.is_live_torque = ntune_torque_get('liveTorqueParams') if params.get_bool('UseNpilotManager') else params.get_bool('IsLiveTorque')
+    except:
+      self.is_live_torque = params.get_bool('IsLiveTorque')
+
     self.is_metric = params.get_bool("IsMetric")
     self.is_ldw_enabled = params.get_bool("IsLdwEnabled")
     openpilot_enabled_toggle = params.get_bool("OpenpilotEnabledToggle")
     passive = params.get_bool("Passive") or not openpilot_enabled_toggle
-    #opkr
-    self.auto_enabled = params.get_bool("AutoEnable")
-    self.auto_enable_speed = max(1, int(Params().get("AutoEnableSpeed", encoding="utf8"))) if int(Params().get("AutoEnableSpeed", encoding="utf8")) > -1 else int(Params().get("AutoEnableSpeed", encoding="utf8"))
-    self.ready_timer = 0
 
+    # npilot_manager
+    if params.get_bool("UseNpilotManager"):
+      self.auto_enabled = ntune_option_enabled('autoEnable')
+      self.auto_enable_speed = max(1, int(ntune_option_get('autoEnableSpeed')))
+    #opkr
+    else:
+      self.auto_enabled = params.get_bool("AutoEnable")
+      self.auto_enable_speed = max(1, int(Params().get("AutoEnableSpeed", encoding="utf8"))) if int(Params().get("AutoEnableSpeed", encoding="utf8")) > -1 else int(Params().get("AutoEnableSpeed", encoding="utf8"))
+
+    self.ready_timer = 0
     # detect sound card presence and ensure successful init
     sounds_available = HARDWARE.get_sound_card_online()
 
@@ -606,13 +616,22 @@ class Controls:
     # Update VehicleModel
     params = self.sm['liveParameters']
     x = max(params.stiffnessFactor, 0.1)
-    if self.live_sr:
-      sr = max(params.steerRatio, 0.1)
-      sr = min(sr, self.steerRatio_Max)
-      if self.live_sr_percent != 0:
-        sr = sr * (1+(0.01*self.live_sr_percent))
+
+
+    if Params().get_bool("UseNpilotManager"):
+      if ntune_common_enabled('useLiveSteerRatio'):
+        sr = max(params.steerRatio, 0.1)
+        sr = sr - (sr * ntune_common_get('steerRatioScale')) # steerRatioScale value update
+      else:
+        sr = max(ntune_common_get('steerRatio'), 0.1)
     else:
-     sr = max(self.new_steerRatio, 0.1)
+      if self.live_sr:
+        sr = max(params.steerRatio, 0.1)
+        sr = min(sr, self.steerRatio_Max)
+        if self.live_sr_percent != 0:
+          sr = sr * (1+(0.01*self.live_sr_percent))
+      else:
+        sr = max(self.new_steerRatio, 0.1)
 
     self.VM.update_params(x, sr)
 
@@ -622,21 +641,39 @@ class Controls:
     if self.CP.lateralTuning.which() == 'torque':
       if self.is_live_torque:
         torque_params = self.sm['liveTorqueParameters']
-        # Todo: Figure out why this is needed, and remove it
+
         if (torque_params.latAccelFactorFiltered > 0) and (self.sm.valid['liveTorqueParameters']):
           self.torque_latAccelFactor = torque_params.latAccelFactorFiltered
           self.torque_latAccelOffset = torque_params.latAccelOffsetFiltered
           self.torque_friction = torque_params.frictionCoefficientFiltered
           self.LaC.update_live_torque_params(torque_params.latAccelFactorFiltered, torque_params.latAccelOffsetFiltered, torque_params.frictionCoefficientFiltered)
         else:
-          self.torque_latAccelFactor = float(Decimal(Params().get("TorqueMaxLatAccel", encoding="utf8")) * Decimal('0.1'))
-          self.torque_latAccelOffset = 0.
-          self.torque_friction = float(Decimal(Params().get("TorqueFriction", encoding="utf8")) * Decimal('0.001'))
-          self.LaC.update_live_torque_params(self.torque_latAccelFactor, self.torque_latAccelOffset, self.torque_friction)
+          if Params().get_bool("UseNpilotManager"):
+            try:
+              self.torque_latAccelFactor = ntune_torque_get('latAccelFactor') #LAT_ACCEL_FACTOR
+              self.torque_friction = ntune_torque_get('friction') #FRICTION
+            except:
+              self.torque_latAccelFactor = float(Decimal(Params().get("TorqueMaxLatAccel", encoding="utf8")) * Decimal('0.1'))
+              self.torque_friction = float(Decimal(Params().get("TorqueFriction", encoding="utf8")) * Decimal('0.001'))
+
+          else:
+            self.torque_latAccelFactor = float(Decimal(Params().get("TorqueMaxLatAccel", encoding="utf8")) * Decimal('0.1'))
+            self.torque_friction = float(Decimal(Params().get("TorqueFriction", encoding="utf8")) * Decimal('0.001'))
+
       else:
-        self.torque_latAccelFactor = float(Decimal(Params().get("TorqueMaxLatAccel", encoding="utf8")) * Decimal('0.1'))
+
+        if Params().get_bool("UseNpilotManager"):
+          try:
+            self.torque_latAccelFactor = ntune_torque_get('latAccelFactor') #LAT_ACCEL_FACTOR
+            self.torque_friction = ntune_torque_get('friction') #FRICTION
+          except:
+            self.torque_latAccelFactor = float(Decimal(Params().get("TorqueMaxLatAccel", encoding="utf8")) * Decimal('0.1'))
+            self.torque_friction = float(Decimal(Params().get("TorqueFriction", encoding="utf8")) * Decimal('0.001'))
+        else:
+          self.torque_latAccelFactor = float(Decimal(Params().get("TorqueMaxLatAccel", encoding="utf8")) * Decimal('0.1'))
+          self.torque_friction = float(Decimal(Params().get("TorqueFriction", encoding="utf8")) * Decimal('0.001'))
+
         self.torque_latAccelOffset = 0.
-        self.torque_friction = float(Decimal(Params().get("TorqueFriction", encoding="utf8")) * Decimal('0.001'))
         self.LaC.update_live_torque_params(self.torque_latAccelFactor, self.torque_latAccelOffset, self.torque_friction)
 
     lat_plan = self.sm['lateralPlan']
@@ -783,12 +820,9 @@ class Controls:
       r_lane_change_prob = desire_prediction[Desire.laneChangeRight - 1]
 
       lane_lines = model_v2.laneLines
-      #l_lane_close = left_lane_visible and (lane_lines[1].y[0] > -(1.08 + CAMERA_OFFSET))
-      #r_lane_close = right_lane_visible and (lane_lines[2].y[0] < (1.08 - CAMERA_OFFSET))
 
-      cameraOffset = -(float(Decimal(Params().get("CameraOffsetAdj", encoding="utf8")) * Decimal('0.001')))
-      l_lane_close = left_lane_visible and (lane_lines[1].y[0] > -(1.08 + cameraOffset))
-      r_lane_close = right_lane_visible and (lane_lines[2].y[0] < (1.08 - cameraOffset))
+      l_lane_close = left_lane_visible and (lane_lines[1].y[0] > -(1.08 + CAMERA_OFFSET))
+      r_lane_close = right_lane_visible and (lane_lines[2].y[0] < (1.08 - CAMERA_OFFSET))
 
       hudControl.leftLaneDepart = bool(l_lane_change_prob > LANE_DEPARTURE_THRESHOLD and l_lane_close)
       hudControl.rightLaneDepart = bool(r_lane_change_prob > LANE_DEPARTURE_THRESHOLD and r_lane_close)
@@ -868,7 +902,7 @@ class Controls:
     controlsState.sccStockCamStatus = self.sccStockCamStatus
 
     controlsState.steerRatio = float(self.steerRatio_to_send)
-    controlsState.steerActuatorDelay = float(Decimal(Params().get("SteerActuatorDelayAdj", encoding="utf8")) * Decimal('0.01'))
+    controlsState.steerActuatorDelay = ntune_common_get('steerActuatorDelay') if Params().get_bool("UseNpilotManager") else float(Decimal(Params().get("SteerActuatorDelayAdj", encoding="utf8")) * Decimal('0.01'))
 
     controlsState.sccGasFactor = ntune_scc_get('sccGasFactor')
     controlsState.sccBrakeFactor = ntune_scc_get('sccBrakeFactor')

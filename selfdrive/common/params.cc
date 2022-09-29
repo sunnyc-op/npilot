@@ -232,8 +232,15 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"IsLowSpeedFactor", PERSISTENT},
     {"AutoEnable", PERSISTENT},
     {"AutoEnableSpeed", PERSISTENT},
+    {"AutoCruiseSet", PERSISTENT},
+    {"AutoCruiseSetDependsOnNda", PERSISTENT},
     {"OPKRServer", PERSISTENT},
     {"OPKRServerAPI", PERSISTENT},
+    {"OPKRTimeZone", PERSISTENT},
+    //npilot_manager
+    {"UseNpilotManager", PERSISTENT},
+
+
 };
 
 } // namespace
