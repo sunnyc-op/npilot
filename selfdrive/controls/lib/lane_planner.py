@@ -23,7 +23,6 @@ PATH_OFFSET = ntune_common_get('pathOffset') if Params().get_bool('UseNpilotMana
 if EON:
   #CAMERA_OFFSET = 0.00
   CAMERA_OFFSET = ntune_common_get('cameraOffset') if Params().get_bool('UseNpilotManager') else -(float(Decimal(Params().get("CameraOffsetAdj", encoding="utf8")) * Decimal('0.001')))  # m from center car to camera
-  CAMERA_OFFSET_A = CAMERA_OFFSET + 0.15
 elif TICI:
   CAMERA_OFFSET = 0.0
 else:
@@ -63,11 +62,12 @@ class LanePlanner:
     if Params().get_bool('UseNpilotManager'):
       self.drive_close_to_edge = ntune_common_enabled('closeToRoadEdge')
       self.left_edge_offset = ntune_common_get('leftEdgeOffset') * 0.01 #0.15 move to right
-      self.right_edge_offset = ntune_common_get('rightEdgeOffset') * 0.01 #-0.15 move to left  
+      self.right_edge_offset = ntune_common_get('rightEdgeOffset') * 0.01 #-0.15 move to lef 
     else:
       self.drive_close_to_edge = self.params.get_bool("CloseToRoadEdge")
       self.left_edge_offset = float(Decimal(self.params.get("LeftEdgeOffset", encoding="utf8")) * Decimal('0.01')) #0.15 move to right
-      self.right_edge_offset = float(Decimal(self.params.get("RightEdgeOffset", encoding="utf8")) * Decimal('0.01')) #-0.15 move to left     
+      self.right_edge_offset = float(Decimal(self.params.get("RightEdgeOffset", encoding="utf8")) * Decimal('0.01')) #-0.15 move to left
+
     self.road_edge_offset = 0.0
     self.total_camera_offset = self.camera_offset
     self.lp_timer = 0
