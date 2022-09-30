@@ -124,7 +124,6 @@ class CarInterface(CarInterfaceBase):
       ret.mass = 2200
       ret.wheelbase = 3.15
       ret.centerToFront = ret.wheelbase * 0.4
-      ret.steerRatio = 16.0
       ret.steerRatio = 12.069
     elif candidate == CAR.GENESIS_EQ900_L:
       ret.mass = 2290
