@@ -633,6 +633,10 @@ class Controls:
       else:
         sr = max(self.new_steerRatio, 0.1)
 
+    if Params().get_bool("UseBaseTorqueValues") and not Params().get_bool("UseNpilotManager"):
+      sr = self.CP.steerRatio
+      self.is_live_torque = True
+
     self.VM.update_params(x, sr)
 
     self.steerRatio_to_send = sr
@@ -659,6 +663,9 @@ class Controls:
           else:
             self.torque_latAccelFactor = float(Decimal(Params().get("TorqueMaxLatAccel", encoding="utf8")) * Decimal('0.1'))
             self.torque_friction = float(Decimal(Params().get("TorqueFriction", encoding="utf8")) * Decimal('0.001'))
+
+          self.torque_latAccelOffset = 0.
+          self.LaC.update_live_torque_params(self.torque_latAccelFactor, self.torque_latAccelOffset, self.torque_friction)
 
       else:
 

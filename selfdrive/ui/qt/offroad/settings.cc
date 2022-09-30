@@ -1758,7 +1758,7 @@ void AutoEnableSpeed::refresh() {
   btnplus.setText("+");
 }
 
-OPKRServerSelect::OPKRServerSelect() : AbstractControl(tr("API Server"), tr("Set API server to OPKR/Comma/User's"), "../assets/offroad/icon_shell.png") {
+OPKRServerSelect::OPKRServerSelect() : AbstractControl(tr("API Server"), tr("Set API server to OPKR/User's"), "../assets/offroad/icon_shell.png") {
   btn1.setStyleSheet(R"(
     padding: 0;
     border-radius: 50px;
@@ -1890,7 +1890,7 @@ void OPKRServerSelect::refresh() {
   }
 }
 
-OPKRServerAPI::OPKRServerAPI() : AbstractControl(tr("User's API"), tr("Set Your API server URL or IP"), "") {
+OPKRServerAPI::OPKRServerAPI() : AbstractControl(tr("User's API"), tr("Set Your API server URL or IP"), "../assets/offroad/icon_shell.png") {
   label.setAlignment(Qt::AlignVCenter|Qt::AlignRight);
   label.setStyleSheet("color: #e0e879");
   hlayout->addWidget(&label);
@@ -2024,6 +2024,17 @@ void TimeZoneSelectCombo::refresh() {
   }
 }
 
+CTorqueControlGroup::CTorqueControlGroup() : CGroupWidget( tr("Torque Control Options") )
+{
+  QVBoxLayout *pBoxLayout = CreateBoxLayout();
+
+  pBoxLayout->addWidget(new SRBaseControl());
+  pBoxLayout->addWidget(new TorqueMaxLatAccel());
+  pBoxLayout->addWidget(new TorqueFriction());
+  pBoxLayout->addWidget(new UseLiveTorqueToggle());
+  pBoxLayout->addWidget(new LowSpeedFactorToggle());
+}
+
 
 /////////////////////////////////////////////////////////////////////////
 
@@ -2116,6 +2127,8 @@ CommunityPanel::CommunityPanel(QWidget* parent) : QWidget(parent) {
 
   QString useNpilotManager = QString::fromStdString(Params().get("UseNpilotManager"));
   bool useNM = QVariant(useNpilotManager).toBool();
+  QString UseBaseTorqueValues = QString::fromStdString(Params().get("UseBaseTorqueValues"));
+  bool useBaseValues = QVariant(UseBaseTorqueValues).toBool();
   QList<ParamControl*> toggles;
 
   toggleLayout->addWidget(new UseNpilotManagerToggle());
@@ -2130,18 +2143,18 @@ CommunityPanel::CommunityPanel(QWidget* parent) : QWidget(parent) {
     toggleLayout->addWidget(new OPKREdgeOffset());
 
     toggleLayout->addWidget(new LabelControl(tr("〓〓〓〓〓〓〓〓〓〓【 TUNING 】〓〓〓〓〓〓〓〓〓〓"), ""));
-    //toggleLayout->addWidget(new LiveSteerRatioToggle());
-    //toggleLayout->addWidget(new LiveSRPercent());
-    toggleLayout->addWidget(new SRBaseControl());
+    toggleLayout->addWidget(new UseBaseTorqueToggle());
     toggleLayout->addWidget(horizontal_line());
-    //toggleLayout->addWidget(new SRMaxControl());
+
+    if(!useBaseValues)
+      toggleLayout->addWidget(new CTorqueControlGroup());
+    else
+      toggleLayout->addWidget(new LowSpeedFactorToggle());
+
+    toggleLayout->addWidget(horizontal_line());
     toggleLayout->addWidget(new SteerActuatorDelay());
     toggleLayout->addWidget(horizontal_line());
     toggleLayout->addWidget(new SteerLimitTimer());
-    toggleLayout->addWidget(horizontal_line());
-    toggleLayout->addWidget(new TorqueMaxLatAccel());
-    toggleLayout->addWidget(horizontal_line());
-    toggleLayout->addWidget(new TorqueFriction());
     toggleLayout->addWidget(horizontal_line());
     toggleLayout->addWidget(new AutoEnabledToggle());
     toggleLayout->addWidget(horizontal_line());
@@ -2151,19 +2164,8 @@ CommunityPanel::CommunityPanel(QWidget* parent) : QWidget(parent) {
     toggleLayout->addWidget(horizontal_line());
     toggleLayout->addWidget(new AutoCruiseSetDependsOnNdaToggle());
 
-    toggles.append(new ParamControl("IsLiveTorque",
-                                            "Enable Live Torque",
-                                            "",
-                                            "../assets/offroad/icon_openpilot.png",
-                                            this));
-
-    toggles.append(new ParamControl("IsLowSpeedFactor",
-                                            "Enable Low Speed Factor",
-                                            "",
-                                            "../assets/offroad/icon_openpilot.png",
-                                            this));
   }
-  
+
 
   toggles.append(new ParamControl("UseClusterSpeed",
                                             "Use Cluster Speed",

@@ -479,6 +479,8 @@ void NvgWindow::drawHud(QPainter &p) {
   const auto controls_state = sm["controlsState"].getControlsState();
   const auto car_params = sm["carParams"].getCarParams();
   const auto live_params = sm["liveParameters"].getLiveParameters();
+  //const auto live_torque_params = sm["liveTorqueParameters"].getLiveTorqueParameters();
+  //const auto torque_state = controls_state.getLateralControlState().getTorqueState();
 
   int mdps_bus = car_params.getMdpsBus();
   int scc_bus = car_params.getSccBus();

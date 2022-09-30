@@ -154,10 +154,9 @@ class CarInterface(CarInterfaceBase):
       tire_stiffness_factor = 0.65
       ret.centerToFront = ret.wheelbase * 0.4
     elif candidate == CAR.PALISADE:
-      #ret.lateralTuning.pid.kf = 0.00005
       ret.mass = 1999. + STD_CARGO_KG
       ret.wheelbase = 2.90
-      ret.steerRatio = 15.6 * 1.15
+      ret.steerRatio = 15.6
       tire_stiffness_factor = 0.63
 
     elif candidate in [CAR.ELANTRA, CAR.ELANTRA_GT_I30]:
@@ -168,13 +167,13 @@ class CarInterface(CarInterfaceBase):
     elif candidate == CAR.ELANTRA_2021:
       ret.mass = (2800. * CV.LB_TO_KG) + STD_CARGO_KG
       ret.wheelbase = 2.72
-      ret.steerRatio = 13.27 * 1.15   # 15% higher at the center seems reasonable
+      ret.steerRatio = 13.27
       tire_stiffness_factor = 0.65
       ret.centerToFront = ret.wheelbase * 0.4
     elif candidate == CAR.ELANTRA_HEV_2021:
       ret.mass = (3017. * CV.LB_TO_KG) + STD_CARGO_KG
       ret.wheelbase = 2.72
-      ret.steerRatio = 13.27 * 1.15  # 15% higher at the center seems reasonable
+      ret.steerRatio = 13.27
       tire_stiffness_factor = 0.65
       ret.centerToFront = ret.wheelbase * 0.4
     elif candidate == CAR.KONA:
@@ -287,10 +286,10 @@ class CarInterface(CarInterfaceBase):
     if params.get_bool("UseNpilotManager"):
       ret.steerRatio = max(ntune_common_get('steerRatio'), 12.0)
     else:
-      ret.steerRatio = float(Decimal(params.get("SteerRatioAdj", encoding="utf8")) * Decimal('0.01'))
+      if not params.get_bool("UseBaseTorqueValues"):
+        ret.steerRatio = float(Decimal(params.get("SteerRatioAdj", encoding="utf8")) * Decimal('0.01'))
 
     if ret.lateralTuning.which() == 'torque':
-      #TORQUE ONLY
       #selfdrive/car/torque_data/params.yaml 참조해서 값 입력 https://codebeautify.org/jsonviewer/y220b1623
 
       if params.get_bool("UseNpilotManager"):
@@ -304,6 +303,16 @@ class CarInterface(CarInterfaceBase):
       else:
         torque_lat_accel_factor = float(Decimal(params.get("TorqueMaxLatAccel", encoding="utf8")) * Decimal('0.1')) #LAT_ACCEL_FACTOR
         torque_friction = float(Decimal(params.get("TorqueFriction", encoding="utf8")) * Decimal('0.001')) #FRICTION
+
+        if params.get_bool("UseBaseTorqueValues"):
+          try:
+            torque_params = CarInterfaceBase.get_torque_params(candidate)
+            torque_lat_accel_factor = torque_params['LAT_ACCEL_FACTOR']
+            torque_friction = torque_params['FRICTION']
+          except:
+            params.put_bool("UseBaseTorqueValues", False)
+            torque_lat_accel_factor = float(Decimal(params.get("TorqueMaxLatAccel", encoding="utf8")) * Decimal('0.1')) #LAT_ACCEL_FACTOR
+            torque_friction = float(Decimal(params.get("TorqueFriction", encoding="utf8")) * Decimal('0.001')) #FRICTION
 
       #토크
       CarInterfaceBase.configure_torque_tune(ret.lateralTuning, torque_lat_accel_factor, torque_friction)
