@@ -24,7 +24,7 @@ from selfdrive.swaglog import cloudlog
 from selfdrive.thermald.power_monitoring import PowerMonitoring
 from selfdrive.thermald.fan_controller import EonFanController, UnoFanController, TiciFanController
 from selfdrive.version import terms_version, training_version
-from selfdrive.ntune import ntune_option_enabled
+from selfdrive.ntune import ntune_option_enabled, ntune_option_get
 
 ThermalStatus = log.DeviceState.ThermalStatus
 NetworkType = log.DeviceState.NetworkType
@@ -212,8 +212,8 @@ def thermald_thread(end_event, hw_queue):
   #OPKR
   if params.get_bool("UseNpilotManager"):
     battery_charging_control = ntune_option_enabled('batteryChargingControl')
-    battery_charging_min = int(ntune_option_enabled('batteryChargingMin'))
-    battery_charging_max = int(ntune_option_enabled('batteryChargingMax'))
+    battery_charging_min = int(ntune_option_get('batteryChargingMin'))
+    battery_charging_max = int(ntune_option_get('batteryChargingMax'))
   else:
     battery_charging_control = params.get_bool("OpkrBatteryChargingControl")
     battery_charging_min = int(params.get("OpkrBatteryChargingMin", encoding="utf8"))
