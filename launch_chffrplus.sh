@@ -123,6 +123,9 @@ function two_init {
     cp /data/openpilot/ntune/option.json /data/ntune/option.json
   fi
 
+  if [ ! -f "/data/ntune/lat_lqr.json" ]; then
+    cp /data/openpilot/ntune/lat_lqr.json /data/ntune/lat_lqr.json
+  fi
 
 }
 
