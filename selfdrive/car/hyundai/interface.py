@@ -314,7 +314,6 @@ class CarInterface(CarInterfaceBase):
         ret.steerRatio = float(Decimal(params.get("SteerRatioAdj", encoding="utf8")) * Decimal('0.01'))
 
     if ret.lateralTuning.which() == 'torque':
-      #selfdrive/car/torque_data/params.yaml 참조해서 값 입력 https://codebeautify.org/jsonviewer/y220b1623
 
       if params.get_bool("UseNpilotManager"):
         try:
@@ -330,7 +329,7 @@ class CarInterface(CarInterfaceBase):
 
         if params.get_bool("UseBaseTorqueValues"):
           try:
-            torque_params = CarInterfaceBase.get_torque_params(candidate)
+            torque_params = CarInterfaceBase.get_torque_params(candidate) #selfdrive/car/torque_data 자동으로 가져오기
             torque_lat_accel_factor = torque_params['LAT_ACCEL_FACTOR']
             torque_friction = torque_params['FRICTION']
           except:
