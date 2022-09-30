@@ -149,7 +149,7 @@ class nTune():
     elif self.type == LatType.TORQUE:
       return self.checkValidTorque()
     elif self.type == LatType.LQR:
-      return self.checkValidLqr()
+      return self.checkValidLQR()
     elif self.group == "common":
       return self.checkValidCommon()
     elif self.group == "option":
