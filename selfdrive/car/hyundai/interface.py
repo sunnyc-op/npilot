@@ -109,95 +109,108 @@ class CarInterface(CarInterfaceBase):
       ret.centerToFront = ret.wheelbase * 0.4
       ret.maxSteeringAngleDeg = 90.
       ret.steerFaultMaxAngle = 0
+      ret.steerRatio = 16.5
     elif candidate == CAR.GENESIS_G70:
       ret.mass = 1640. + STD_CARGO_KG
       ret.wheelbase = 2.84
       ret.centerToFront = ret.wheelbase * 0.4
+      ret.steerRatio = 13.56
     elif candidate == CAR.GENESIS_G80:
       ret.mass = 1855. + STD_CARGO_KG
       ret.wheelbase = 3.01
       ret.centerToFront = ret.wheelbase * 0.4
+      ret.steerRatio = 16.5
     elif candidate == CAR.GENESIS_EQ900:
       ret.mass = 2200
       ret.wheelbase = 3.15
       ret.centerToFront = ret.wheelbase * 0.4
       ret.steerRatio = 16.0
+      ret.steerRatio = 12.069
     elif candidate == CAR.GENESIS_EQ900_L:
       ret.mass = 2290
       ret.wheelbase = 3.45
       ret.centerToFront = ret.wheelbase * 0.4
+      ret.steerRatio = 12.069
     elif candidate == CAR.GENESIS_G90:
       ret.mass = 2150
       ret.wheelbase = 3.16
       ret.centerToFront = ret.wheelbase * 0.4
+      ret.steerRatio = 12.069
     # hyundai
     elif candidate in [CAR.SANTA_FE]:
       ret.mass = 1694 + STD_CARGO_KG
       ret.wheelbase = 2.766
       ret.centerToFront = ret.wheelbase * 0.4
+      ret.steerRatio = 13.8  
     elif candidate in [CAR.SANTA_FE_2022, CAR.SANTA_FE_HEV_2022]:
       ret.mass = 1750 + STD_CARGO_KG
       ret.wheelbase = 2.766
       ret.centerToFront = ret.wheelbase * 0.4
+      ret.steerRatio = 13.8 
     elif candidate in [CAR.SONATA, CAR.SONATA_HEV, CAR.SONATA21_HEV]:
       ret.mass = 1513. + STD_CARGO_KG
       ret.wheelbase = 2.84
       ret.centerToFront = ret.wheelbase * 0.4
       tire_stiffness_factor = 0.65
+      ret.steerRatio = 13.27
     elif candidate in [CAR.SONATA19, CAR.SONATA19_HEV]:
       ret.mass = 4497. * CV.LB_TO_KG
       ret.wheelbase = 2.804
       ret.centerToFront = ret.wheelbase * 0.4
+      ret.steerRatio = 13.27
     elif candidate == CAR.SONATA_LF_TURBO:
       ret.mass = 1590. + STD_CARGO_KG
       ret.wheelbase = 2.805
       tire_stiffness_factor = 0.65
+      ret.steerRatio = 13.27
       ret.centerToFront = ret.wheelbase * 0.4
     elif candidate == CAR.PALISADE:
       ret.mass = 1999. + STD_CARGO_KG
       ret.wheelbase = 2.90
       ret.steerRatio = 15.6
       tire_stiffness_factor = 0.63
-
     elif candidate in [CAR.ELANTRA, CAR.ELANTRA_GT_I30]:
       ret.mass = 1275. + STD_CARGO_KG
       ret.wheelbase = 2.7
       tire_stiffness_factor = 0.7
       ret.centerToFront = ret.wheelbase * 0.4
+      ret.steerRatio = 15.4
     elif candidate == CAR.ELANTRA_2021:
       ret.mass = (2800. * CV.LB_TO_KG) + STD_CARGO_KG
       ret.wheelbase = 2.72
-      ret.steerRatio = 13.27
       tire_stiffness_factor = 0.65
       ret.centerToFront = ret.wheelbase * 0.4
+      ret.steerRatio = 12.9
     elif candidate == CAR.ELANTRA_HEV_2021:
       ret.mass = (3017. * CV.LB_TO_KG) + STD_CARGO_KG
       ret.wheelbase = 2.72
-      ret.steerRatio = 13.27
       tire_stiffness_factor = 0.65
       ret.centerToFront = ret.wheelbase * 0.4
+      ret.steerRatio = 12.9
     elif candidate == CAR.KONA:
       ret.mass = 1275. + STD_CARGO_KG
       ret.wheelbase = 2.7
       tire_stiffness_factor = 0.7
+      ret.steerRatio = 13.42
       ret.centerToFront = ret.wheelbase * 0.4
     elif candidate in [CAR.KONA_HEV, CAR.KONA_EV]:
       ret.mass = 1395. + STD_CARGO_KG
       ret.wheelbase = 2.6
       tire_stiffness_factor = 0.7
       ret.centerToFront = ret.wheelbase * 0.4
+      ret.steerRatio = 13.42
     elif candidate in [CAR.IONIQ, CAR.IONIQ_EV_LTD, CAR.IONIQ_EV_2020, CAR.IONIQ_PHEV]:
       ret.mass = 1490. + STD_CARGO_KG
       ret.wheelbase = 2.7
       tire_stiffness_factor = 0.385
       ret.centerToFront = ret.wheelbase * 0.4
+      ret.steerRatio = 13.73
     elif candidate in [CAR.GRANDEUR_IG, CAR.GRANDEUR_IG_HEV]:
       tire_stiffness_factor = 0.8
       ret.mass = 1570. + STD_CARGO_KG
       ret.wheelbase = 2.845
       ret.centerToFront = ret.wheelbase * 0.385
       ret.steerRatio = 16.
-
     elif candidate in [CAR.GRANDEUR_IG_FL, CAR.GRANDEUR_IG_FL_HEV]:
       tire_stiffness_factor = 0.8
       ret.mass = 1600. + STD_CARGO_KG
@@ -209,61 +222,73 @@ class CarInterface(CarInterfaceBase):
       ret.wheelbase = 2.80
       tire_stiffness_factor = 0.9
       ret.centerToFront = ret.wheelbase * 0.4
+      ret.steerRatio = 13.75
     elif candidate == CAR.TUCSON_TL_SCC:
       ret.mass = 1594. + STD_CARGO_KG #1730
       ret.wheelbase = 2.67
       tire_stiffness_factor = 0.7
       ret.centerToFront = ret.wheelbase * 0.4
+      ret.steerRatio = 14.00
     # kia
     elif candidate == CAR.SORENTO:
       ret.mass = 1985. + STD_CARGO_KG
       ret.wheelbase = 2.78
       tire_stiffness_factor = 0.7
       ret.centerToFront = ret.wheelbase * 0.4
+      ret.steerRatio = 14.4
     elif candidate in [CAR.K5, CAR.K5_HEV]:
       ret.mass = 3558. * CV.LB_TO_KG
       ret.wheelbase = 2.80
       tire_stiffness_factor = 0.7
       ret.centerToFront = ret.wheelbase * 0.4
+      ret.steerRatio = 13.27
     elif candidate in [CAR.K5_2021]:
       ret.mass = 3228. * CV.LB_TO_KG
       ret.wheelbase = 2.85
       tire_stiffness_factor = 0.7
+      ret.steerRatio = 13.27
     elif candidate == CAR.STINGER:
       tire_stiffness_factor = 1.125 # LiveParameters (Tunder's 2020)
       ret.mass = 1825.0 + STD_CARGO_KG
       ret.wheelbase = 2.906
       ret.centerToFront = ret.wheelbase * 0.4
+      ret.steerRatio = 14.4
     elif candidate == CAR.FORTE:
       ret.mass = 3558. * CV.LB_TO_KG
       ret.wheelbase = 2.80
       tire_stiffness_factor = 0.7
       ret.centerToFront = ret.wheelbase * 0.4
+      ret.steerRatio = 13.75
     elif candidate == CAR.CEED:
       ret.mass = 1350. + STD_CARGO_KG
       ret.wheelbase = 2.65
       tire_stiffness_factor = 0.6
       ret.centerToFront = ret.wheelbase * 0.4
+      ret.steerRatio = 13.75
     elif candidate == CAR.SPORTAGE:
       ret.mass = 1985. + STD_CARGO_KG
       ret.wheelbase = 2.78
       tire_stiffness_factor = 0.7
       ret.centerToFront = ret.wheelbase * 0.4
+      ret.steerRatio = 14.4
     elif candidate in [CAR.NIRO_EV, CAR.NIRO_HEV, CAR.NIRO_HEV_2021]:
       ret.mass = 1737. + STD_CARGO_KG
       ret.wheelbase = 2.7
       tire_stiffness_factor = 0.7
       ret.centerToFront = ret.wheelbase * 0.4
+      ret.steerRatio = 13.3
     elif candidate == CAR.SELTOS:
       ret.mass = 1310. + STD_CARGO_KG
       ret.wheelbase = 2.6
       tire_stiffness_factor = 0.7
+      ret.steerRatio = 14.56
       ret.centerToFront = ret.wheelbase * 0.4
     elif candidate == CAR.MOHAVE:
       ret.mass = 2285. + STD_CARGO_KG
       ret.wheelbase = 2.895
       ret.centerToFront = ret.wheelbase * 0.5
       tire_stiffness_factor = 0.8
+      ret.steerRatio = 16.5
     elif candidate in [CAR.K7, CAR.K7_HEV]:
       tire_stiffness_factor = 0.7
       ret.mass = 1650. + STD_CARGO_KG
