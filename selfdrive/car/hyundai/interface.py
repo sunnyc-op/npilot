@@ -136,16 +136,23 @@ class CarInterface(CarInterfaceBase):
       ret.centerToFront = ret.wheelbase * 0.4
       ret.steerRatio = 12.069
     # hyundai
+    elif candidate == CAR.TUCSON:
+      ret.mass = 3520. * CV.LB_TO_KG
+      ret.wheelbase = 2.67
+      ret.steerRatio = 14.00
+      tire_stiffness_factor = 0.385
     elif candidate in [CAR.SANTA_FE]:
       ret.mass = 1694 + STD_CARGO_KG
       ret.wheelbase = 2.766
       ret.centerToFront = ret.wheelbase * 0.4
       ret.steerRatio = 13.8  
+      tire_stiffness_factor = 0.82
     elif candidate in [CAR.SANTA_FE_2022, CAR.SANTA_FE_HEV_2022]:
       ret.mass = 1750 + STD_CARGO_KG
       ret.wheelbase = 2.766
       ret.centerToFront = ret.wheelbase * 0.4
       ret.steerRatio = 13.8 
+      tire_stiffness_factor = 0.82
     elif candidate in [CAR.SONATA, CAR.SONATA_HEV, CAR.SONATA21_HEV]:
       ret.mass = 1513. + STD_CARGO_KG
       ret.wheelbase = 2.84
