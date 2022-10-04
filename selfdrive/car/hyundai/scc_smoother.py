@@ -251,10 +251,10 @@ class SccSmoother:
         if ascc_enabled:
           self.btn = self.get_button(CS.cruiseState_speed * self.speed_conv_to_clu)
         elif ascc_auto_set:
-          if activated_hda == 1: # when nda connected# if clu11_speed < 60:
-                self.btn = Buttons.SET_DECEL
-          else:                                        # active hda(nda from openpilot)
+          if activated_hda > 1: # when nda highway
             self.btn = Buttons.RES_ACCEL
+          else:                 # when nda connected and normal road
+            self.btn = Buttons.SET_DECEL
         self.alive_count = SccSmoother.get_alive_count()
 
       if self.btn != Buttons.NONE:
