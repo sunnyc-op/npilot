@@ -83,16 +83,17 @@ def manager_init() -> None:
     ("OpkrLiveSteerRatio", "0"),
     ("LiveSteerRatioPercent", "-5"),
     ("OpkrVariableSteerMax", "0"),
-    ("TorqueFriction", "100"),
-    ("TorqueMaxLatAccel", "28"),
-    ("IsLiveTorque", "0"),
-    ("IsLowSpeedFactor", "0"),
+    ("TorqueFriction", "120"),
+    ("TorqueMaxLatAccel", "30"),
+    ("IsLiveTorque", "1"),
+    ("IsLowSpeedFactor", "1"),
     ("AutoEnable", "0"),
     ("AutoCruiseSet", "0"),
     ("AutoEnableSpeed", "3"),
     ("AutoCruiseSetDependsOnNda", "0"),
     ("OPKRServer", "0"),
-    
+    ("UseBaseTorqueValues", "1"),
+
     #nPilot_Manager
     ("UseNpilotManager", "0"),
 

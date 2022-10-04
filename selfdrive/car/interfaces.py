@@ -24,6 +24,10 @@ ACCEL_MAX = 2.0
 ACCEL_MIN = -3.5
 FRICTION_THRESHOLD = 0.2
 
+TORQUE_PARAMS_PATH = os.path.join(BASEDIR, 'selfdrive/car/torque_data/params.yaml')
+TORQUE_OVERRIDE_PATH = os.path.join(BASEDIR, 'selfdrive/car/torque_data/override.yaml')
+TORQUE_SUBSTITUTE_PATH = os.path.join(BASEDIR, 'selfdrive/car/torque_data/substitute.yaml')
+
 # generic car and radar interfaces
 
 class CarInterfaceBase(ABC):
@@ -92,6 +96,29 @@ class CarInterfaceBase(ABC):
   def torque_from_lateral_accel(self):
     return self.torque_from_lateral_accel_linear
 
+  @staticmethod
+  def get_torque_params(candidate):
+    with open(TORQUE_SUBSTITUTE_PATH) as f:
+      sub = yaml.load(f, Loader=yaml.Loader)
+    if candidate in sub:
+      candidate = sub[candidate]
+
+    with open(TORQUE_PARAMS_PATH) as f:
+      params = yaml.load(f, Loader=yaml.Loader)
+    with open(TORQUE_OVERRIDE_PATH) as f:
+      override = yaml.load(f, Loader=yaml.Loader)
+
+    # Ensure no overlap
+    if sum([candidate in x for x in [sub, params, override]]) > 1:
+      raise RuntimeError(f'{candidate} is defined twice in torque config')
+
+    if candidate in override:
+      out = override[candidate]
+    elif candidate in params:
+      out = params[candidate]
+    else:
+      raise NotImplementedError(f"Did not find torque params for {candidate}")
+    return {key: out[i] for i, key in enumerate(params['legend'])}
 
   # returns a set of default params to avoid repetition in car specific params
   @staticmethod
