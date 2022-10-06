@@ -609,6 +609,7 @@ struct ControlsState @0x97ff69c53601abf1 {
   latAccelFactor @75 :Float32;
   latAccelOffset @76 :Float32;
   friction @77 :Float32;
+  totalBucketPoints @79 :Float32;
   
   totalCameraOffset @78 :Float32;
 

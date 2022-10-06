@@ -69,10 +69,9 @@ class LatControlTorque(LatControl):
       if isLowSpeed:
         #low_speed_factor = interp(CS.vEgo, [0, 10, 20], [100, 75, 75])
         #low_speed_factor = interp(CS.vEgo, [0, 15], [500, 0]) # comma 1st
-        #low_speed_factor = interp(CS.vEgo, [10, 20, 30, 40], [500, 300, 100, 0]) #seltos
         low_speed_factor = interp(CS.vEgo, [0, 10, 20], [500, 500, 200]) # comma 2nd
       else:
-        low_speed_factor =  0
+        low_speed_factor = interp(CS.vEgo, [0, 5], [300, 0])
 
       setpoint = desired_lateral_accel + low_speed_factor * desired_curvature
       measurement = actual_lateral_accel + low_speed_factor * actual_curvature
