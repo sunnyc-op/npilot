@@ -220,6 +220,7 @@ class Controls:
     self.torque_latAccelFactor = 0.
     self.torque_latAccelOffset = 0.
     self.torque_friction = 0.
+    self.totalBucketPoints = 0.
 
     #opkr
     self.second = 0.0
@@ -650,6 +651,8 @@ class Controls:
           self.torque_latAccelFactor = torque_params.latAccelFactorFiltered
           self.torque_latAccelOffset = torque_params.latAccelOffsetFiltered
           self.torque_friction = torque_params.frictionCoefficientFiltered
+          self.totalBucketPoints = torque_params.totalBucketPoints
+
           self.LaC.update_live_torque_params(torque_params.latAccelFactorFiltered, torque_params.latAccelOffsetFiltered, torque_params.frictionCoefficientFiltered)
         else:
           if Params().get_bool("UseNpilotManager"):
@@ -918,6 +921,7 @@ class Controls:
     controlsState.latAccelFactor = self.torque_latAccelFactor
     controlsState.latAccelOffset = self.torque_latAccelOffset
     controlsState.friction = self.torque_friction
+    controlsState.totalBucketPoints = self.totalBucketPoints
 
     controlsState.totalCameraOffset = totalCameraOffset
 

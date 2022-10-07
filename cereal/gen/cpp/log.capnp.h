@@ -863,7 +863,7 @@ struct ControlsState {
   struct LateralControlState;
 
   struct _capnpPrivate {
-    CAPNP_DECLARE_STRUCT_HEADER(97ff69c53601abf1, 31, 6)
+    CAPNP_DECLARE_STRUCT_HEADER(97ff69c53601abf1, 32, 6)
     #if !CAPNP_LITE
     static constexpr ::capnp::_::RawBrandedSchema const* brand() { return &schema->defaultBrand; }
     #endif  // !CAPNP_LITE
@@ -976,7 +976,7 @@ struct ControlsState::LateralControlState {
   };
 
   struct _capnpPrivate {
-    CAPNP_DECLARE_STRUCT_HEADER(fd5b914d6b444695, 31, 6)
+    CAPNP_DECLARE_STRUCT_HEADER(fd5b914d6b444695, 32, 6)
     #if !CAPNP_LITE
     static constexpr ::capnp::_::RawBrandedSchema const* brand() { return &schema->defaultBrand; }
     #endif  // !CAPNP_LITE
@@ -5878,6 +5878,8 @@ public:
 
   inline float getTotalCameraOffset() const;
 
+  inline float getTotalBucketPoints() const;
+
 private:
   ::capnp::_::StructReader _reader;
   template <typename, ::capnp::Kind>
@@ -6148,6 +6150,9 @@ public:
 
   inline float getTotalCameraOffset();
   inline void setTotalCameraOffset(float value);
+
+  inline float getTotalBucketPoints();
+  inline void setTotalBucketPoints(float value);
 
 private:
   ::capnp::_::StructBuilder _builder;
@@ -23845,6 +23850,20 @@ inline float ControlsState::Builder::getTotalCameraOffset() {
 inline void ControlsState::Builder::setTotalCameraOffset(float value) {
   _builder.setDataField<float>(
       ::capnp::bounded<61>() * ::capnp::ELEMENTS, value);
+}
+
+inline float ControlsState::Reader::getTotalBucketPoints() const {
+  return _reader.getDataField<float>(
+      ::capnp::bounded<62>() * ::capnp::ELEMENTS);
+}
+
+inline float ControlsState::Builder::getTotalBucketPoints() {
+  return _builder.getDataField<float>(
+      ::capnp::bounded<62>() * ::capnp::ELEMENTS);
+}
+inline void ControlsState::Builder::setTotalBucketPoints(float value) {
+  _builder.setDataField<float>(
+      ::capnp::bounded<62>() * ::capnp::ELEMENTS, value);
 }
 
 inline bool ControlsState::LateralINDIState::Reader::getActive() const {

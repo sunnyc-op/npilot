@@ -478,7 +478,7 @@ void NvgWindow::drawHud(QPainter &p) {
 
   const auto controls_state = sm["controlsState"].getControlsState();
   const auto car_params = sm["carParams"].getCarParams();
-  const auto live_params = sm["liveParameters"].getLiveParameters();
+  //const auto live_params = sm["liveParameters"].getLiveParameters();
   //const auto live_torque_params = sm["liveTorqueParameters"].getLiveTorqueParameters();
   //const auto torque_state = controls_state.getLateralControlState().getTorqueState();
 
@@ -486,14 +486,13 @@ void NvgWindow::drawHud(QPainter &p) {
   int scc_bus = car_params.getSccBus();
 
   QString infoText;
-  infoText.sprintf("%s(%.2f/%.2f/%.2f) TCO(%.2f) AO(%.2f/%.2f) SR(%.2f) SAD(%.2f) BUS(MDPS %d, SCC %d) SCC(%.2f/%.2f/%.2f)",
+  infoText.sprintf("%s(%.2f/%.2f/%.2f/%.0f) TCO(%.2f) SR(%.2f) SAD(%.2f) BUS(MDPS %d, SCC %d) SCC(%.2f/%.2f/%.2f)",
                       s->lat_control.c_str(),
                       controls_state.getLatAccelFactor(),
                       controls_state.getLatAccelOffset(),
                       controls_state.getFriction(),
+                      controls_state.getTotalBucketPoints(),
                       controls_state.getTotalCameraOffset(),
-                      live_params.getAngleOffsetDeg(),
-                      live_params.getAngleOffsetAverageDeg(),
                       controls_state.getSteerRatio(),
                       controls_state.getSteerActuatorDelay(),
                       mdps_bus, scc_bus,
