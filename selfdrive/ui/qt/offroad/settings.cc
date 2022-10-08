@@ -2267,10 +2267,10 @@ CommunityPanel::CommunityPanel(QWidget* parent) : QWidget(parent) {
   toggleLayout->addWidget(new AutoScreenOff());
   toggleLayout->addWidget(horizontal_line());
   toggleLayout->addWidget(new BrightnessOffControl());
-  toggleLayout->addWidget(horizontal_line());
-  toggleLayout->addWidget(new OPKRServerSelect());
-  toggleLayout->addWidget(horizontal_line());
-  toggleLayout->addWidget(new OPKRServerAPI());
+//  toggleLayout->addWidget(horizontal_line());
+//  toggleLayout->addWidget(new OPKRServerSelect());
+//  toggleLayout->addWidget(horizontal_line());
+//  toggleLayout->addWidget(new OPKRServerAPI());
   toggleLayout->addWidget(horizontal_line());
   toggleLayout->addWidget(new TimeZoneSelectCombo());
 }
