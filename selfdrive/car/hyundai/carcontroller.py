@@ -66,6 +66,7 @@ class CarController:
 
     param = Params()
 
+    self.stopping_dist_adj_enabled = False
     self.mad_mode_enabled = param.get_bool('MadModeEnabled')
     self.ldws_opt = param.get_bool('IsLdwsCar')
     self.stock_navi_decel_enabled = param.get_bool('StockNaviDecelEnabled')
@@ -234,9 +235,32 @@ class CarController:
         set_speed *= CV.MS_TO_MPH if CS.is_set_speed_in_mph else CV.MS_TO_KPH
 
         stopping = controls.LoC.long_control_state == LongCtrlState.stopping
+
         apply_accel = self.scc_smoother.get_apply_accel(CS, controls.sm, actuators.accel, stopping)
         apply_accel = clip(apply_accel if CC.longActive else 0,
                            CarControllerParams.ACCEL_MIN, CarControllerParams.ACCEL_MAX)
+
+        last_accel = apply_accel
+
+        aReqValue = CS.scc12["aReqValue"]
+
+        if 0 < CS.lead_distance <= 149:
+          # neokii's logic, opkr mod
+          stock_weight = 0.0
+          if aReqValue > 0.0:
+            stock_weight = interp(CS.lead_distance, [3.5, 8.0, 13.0, 25.0], [0.5, 1.0, 1.0, 0.0])
+          elif aReqValue < 0.0 and self.stopping_dist_adj_enabled:
+            stock_weight = interp(CS.lead_distance, [4.5, 8.0, 20.0, 25.0], [0.2, 1.0, 1.0, 0.0])
+          elif aReqValue < 0.0:
+            stock_weight = interp(CS.lead_distance, [3.5, 25.0], [1.0, 0.0])
+          else:
+            stock_weight = 0.0
+          apply_accel = apply_accel * (1.0 - stock_weight) + aReqValue * stock_weight
+
+        else:
+          apply_accel = last_accel
+
+        apply_accel = clip(apply_accel if CC.longActive else 0, CarControllerParams.ACCEL_MIN, CarControllerParams.ACCEL_MAX)
 
         self.accel = apply_accel
 

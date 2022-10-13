@@ -116,13 +116,11 @@ class LongControl:
     # Intention is to stop, switch to a different brake control until we stop
     elif self.long_control_state == LongCtrlState.stopping:
       # Keep applying brakes until the car is stopped
-      if not CS.standstill or output_accel > self.CP.stopAccel:
-        output_accel -= self.CP.stoppingDecelRate * DT_CTRL * \
-                        interp(output_accel, [self.CP.stopAccel, self.CP.stopAccel/2., self.CP.stopAccel/4., 0.], [0.3, 0.65, 1., 2.])
-      output_accel = clip(output_accel, accel_limits[0], accel_limits[1])
+      if output_accel > self.CP.stopAccel:
+        output_accel -= self.CP.stoppingDecelRate * DT_CTRL
       self.reset(CS.vEgo)
 
-    self.last_output_accel = output_accel
-    final_accel = clip(output_accel, accel_limits[0], accel_limits[1])
+    self.last_output_accel = clip(output_accel, accel_limits[0], accel_limits[1])
 
-    return final_accel
+    return self.last_output_accel
+
