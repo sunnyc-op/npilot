@@ -252,9 +252,23 @@ class CarController:
           elif aReqValue < 0.0 and self.stopping_dist_adj_enabled:
             stock_weight = interp(CS.lead_distance, [4.5, 8.0, 20.0, 25.0], [0.2, 1.0, 1.0, 0.0])
           elif aReqValue < 0.0:
-            stock_weight = interp(CS.lead_distance, [3.5, 25.0], [1.0, 0.0])
+            stock_weight = interp(CS.lead_distance, [4.0, 25.0], [1.0, 0.0])
+            print("==============================")
+            print("0 < CS.lead_distance <= 149")
+            print("==============================")
+            print("CS.lead_distance: ", CS.lead_distance)
+            print("stock_weight: ", interp(CS.lead_distance, [3.5, 25.0], [1.0, 0.0]))
+            print("apply_accel: ", apply_accel * (1.0 - stock_weight) + aReqValue * stock_weight)
+            print("==============================")
           else:
             stock_weight = 0.0
+
+          if 0 < CS.lead_distance <= 4.0 and not CS.out.cruiseState.standstill: # use radar by force to stop anyway below 4.0m if lead car is detected.
+            stock_weight = interp(CS.lead_distance, [2.5, 4.0], [1., 0.])
+
+          if 5.5 < CS.lead_distance <= 6.5 and aReqValue < 0.0 and not CS.out.cruiseState.standstill:
+            stock_weight = interp(CS.lead_distance, [5.5, 6.5], [0.2, 1.0])
+
           apply_accel = apply_accel * (1.0 - stock_weight) + aReqValue * stock_weight
 
         else:

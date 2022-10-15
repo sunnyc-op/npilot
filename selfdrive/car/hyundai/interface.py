@@ -10,7 +10,7 @@ from selfdrive.car.interfaces import CarInterfaceBase
 from common.params import Params
 from selfdrive.controls.lib.desire_helper import LANE_CHANGE_SPEED_MIN
 from decimal import Decimal
-from selfdrive.ntune import ntune_common_get, ntune_lqr_get, ntune_torque_get
+from selfdrive.ntune import ntune_common_get, ntune_lqr_get, ntune_torque_get, ntune_scc_get
 
 GearShifter = car.CarState.GearShifter
 EventName = car.CarEvent.EventName
@@ -97,10 +97,10 @@ class CarInterface(CarInterfaceBase):
     ret.longitudinalActuatorDelayLowerBound = 0.3
     ret.longitudinalActuatorDelayUpperBound = 0.3
 
-    ret.stopAccel = -2.0
-    ret.stoppingDecelRate = 0.6  # brake_travel/s while trying to stop
-    ret.vEgoStopping = 0.6
-    ret.vEgoStarting = 0.6 # needs to be >= vEgoStopping to avoid state transition oscillation
+    ret.stopAccel = min(ntune_scc_get('stopAccel'), -2.0)
+    ret.stoppingDecelRate = max(ntune_scc_get('stoppingDecelRate'), 0.4) #0.4  # brake_travel/s while trying to stop
+    ret.vEgoStopping = max(ntune_scc_get('vEgoStopping'), 0.4) #0.5
+    ret.vEgoStarting = max(ntune_scc_get('vEgoStarting'), 0.4) #0.5 # needs to be >= vEgoStopping to avoid state transition oscillation
 
     # genesis
     if candidate == CAR.GENESIS:
