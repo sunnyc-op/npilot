@@ -298,7 +298,7 @@ class CarController:
 
         can_sends.append(create_scc12(self.packer, apply_accel, CC.enabled, self.scc12_cnt, self.scc_live, CS.scc12,
                                       CS.out.gasPressed, CS.out.brakePressed, CS.out.cruiseState.standstill,
-                                      self.car_fingerprint))
+                                      self.car_fingerprint, stopping))
 
         can_sends.append(create_scc11(self.packer, self.frame, CC.enabled, set_speed, hud_control.leadVisible, self.scc_live, CS.scc11,
                        self.scc_smoother.active_cam, stock_cam))

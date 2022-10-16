@@ -140,7 +140,7 @@ def create_scc11(packer, frame, enabled, set_speed, lead_visible, scc_live, scc1
   return packer.make_can_msg("SCC11", 0, values)
 
 def create_scc12(packer, apply_accel, enabled, cnt, scc_live, scc12, gaspressed, brakepressed,
-                 standstill, car_fingerprint):
+                 standstill, car_fingerprint, stopping):
   values = copy.copy(scc12)
 
   if car_fingerprint in EV_HYBRID_CAR:
@@ -165,6 +165,8 @@ def create_scc12(packer, apply_accel, enabled, cnt, scc_live, scc12, gaspressed,
     values["CR_VSM_Alive"] = cnt
     if not scc_live:
       values["ACCMode"] = 1 if enabled else 0  # 2 if gas padel pressed
+
+    values["StopReq"] = 1 if stopping else 0
 
   values["CR_VSM_ChkSum"] = 0
   dat = packer.make_can_msg("SCC12", 0, values)[2]
