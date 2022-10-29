@@ -220,7 +220,7 @@ class TorqueEstimator:
     msg.valid = valid
     liveTorqueParameters = msg.liveTorqueParameters
     liveTorqueParameters.version = VERSION
-    liveTorqueParameters.useParams = self.use_params
+    #liveTorqueParameters.useParams = self.use_params
 
     if self.filtered_points.is_valid():
       latAccelFactor, latAccelOffset, friction_coeff = self.estimate_params()
