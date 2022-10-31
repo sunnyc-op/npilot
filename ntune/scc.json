@@ -1,0 +1,15 @@
+{
+    "sccGasFactor": 1.0,
+    "sccBrakeFactor": 1.0,
+    "sccCurvatureFactor": 1.0,
+    "stoppingDecelRate": 0.8,
+    "vEgoStopping": 1.0,
+    "vEgoStarting": 0.4,
+    "stopAccel": -2.0,
+    "STOP_DISTANCE": 5.5,
+    "COMFORT_BRAKE": 2.5,
+    "StopAtStopSign": 0.0,
+    "StoppingDist": 10.0,
+    "STOP_LINE_OFFSET": 0.9,
+    "STOP_LINE_X_OFFSET": 1.0
+}
