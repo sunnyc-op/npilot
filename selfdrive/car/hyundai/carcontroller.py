@@ -312,11 +312,17 @@ class CarController:
                   # str_log2 = 'LPSource.stop: aReqValue={:02.3f} apply_accel={:02.3f}  stopLine={:03.0f} MPH={:02.0f} set_speed={:02.0f}'.format(
                   #             aReqValue, apply_accel, stop_distance, CS.out.vEgo*CV.MS_TO_MPH, set_speed )
                   # self.log.add( '{}'.format( str_log2 ) )
+                else:
+                  apply_accel = aReqValue
+              else:
+                apply_accel = aReqValue
 
               if stopping:
                 self.stopped = True
               else:
                 self.stopped = False
+            else:
+              apply_accel = aReqValue
           else:
             apply_accel = aReqValue
 
