@@ -8513,6 +8513,8 @@ public:
   inline bool hasCruiseTarget() const;
   inline  ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>::Reader getCruiseTarget() const;
 
+  inline bool getOnStop() const;
+
 private:
   ::capnp::_::StructReader _reader;
   template <typename, ::capnp::Kind>
@@ -8755,6 +8757,9 @@ public:
   inline  ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>::Builder initCruiseTarget(unsigned int size);
   inline void adoptCruiseTarget(::capnp::Orphan< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>&& value);
   inline ::capnp::Orphan< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>> disownCruiseTarget();
+
+  inline bool getOnStop();
+  inline void setOnStop(bool value);
 
 private:
   ::capnp::_::StructBuilder _builder;
@@ -28293,12 +28298,12 @@ inline bool LongitudinalPlan::Builder::hasStopLine() {
 inline  ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>::Reader LongitudinalPlan::Reader::getStopLine() const {
   return ::capnp::_::PointerHelpers< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>::get(_reader.getPointerField(
       ::capnp::bounded<6>() * ::capnp::POINTERS),
-        ::capnp::schemas::bp_e00b5b3eba12876c + 902);
+        ::capnp::schemas::bp_e00b5b3eba12876c + 909);
 }
 inline  ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>::Builder LongitudinalPlan::Builder::getStopLine() {
   return ::capnp::_::PointerHelpers< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>::get(_builder.getPointerField(
       ::capnp::bounded<6>() * ::capnp::POINTERS),
-        ::capnp::schemas::bp_e00b5b3eba12876c + 902);
+        ::capnp::schemas::bp_e00b5b3eba12876c + 909);
 }
 inline void LongitudinalPlan::Builder::setStopLine( ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>::Reader value) {
   ::capnp::_::PointerHelpers< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>::set(_builder.getPointerField(
@@ -28361,12 +28366,12 @@ inline bool LongitudinalPlan::Builder::hasE2eX() {
 inline  ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>::Reader LongitudinalPlan::Reader::getE2eX() const {
   return ::capnp::_::PointerHelpers< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>::get(_reader.getPointerField(
       ::capnp::bounded<7>() * ::capnp::POINTERS),
-        ::capnp::schemas::bp_e00b5b3eba12876c + 933);
+        ::capnp::schemas::bp_e00b5b3eba12876c + 940);
 }
 inline  ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>::Builder LongitudinalPlan::Builder::getE2eX() {
   return ::capnp::_::PointerHelpers< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>::get(_builder.getPointerField(
       ::capnp::bounded<7>() * ::capnp::POINTERS),
-        ::capnp::schemas::bp_e00b5b3eba12876c + 933);
+        ::capnp::schemas::bp_e00b5b3eba12876c + 940);
 }
 inline void LongitudinalPlan::Builder::setE2eX( ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>::Reader value) {
   ::capnp::_::PointerHelpers< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>::set(_builder.getPointerField(
@@ -28401,12 +28406,12 @@ inline bool LongitudinalPlan::Builder::hasLead0Obstacle() {
 inline  ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>::Reader LongitudinalPlan::Reader::getLead0Obstacle() const {
   return ::capnp::_::PointerHelpers< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>::get(_reader.getPointerField(
       ::capnp::bounded<8>() * ::capnp::POINTERS),
-        ::capnp::schemas::bp_e00b5b3eba12876c + 947);
+        ::capnp::schemas::bp_e00b5b3eba12876c + 954);
 }
 inline  ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>::Builder LongitudinalPlan::Builder::getLead0Obstacle() {
   return ::capnp::_::PointerHelpers< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>::get(_builder.getPointerField(
       ::capnp::bounded<8>() * ::capnp::POINTERS),
-        ::capnp::schemas::bp_e00b5b3eba12876c + 947);
+        ::capnp::schemas::bp_e00b5b3eba12876c + 954);
 }
 inline void LongitudinalPlan::Builder::setLead0Obstacle( ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>::Reader value) {
   ::capnp::_::PointerHelpers< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>::set(_builder.getPointerField(
@@ -28441,12 +28446,12 @@ inline bool LongitudinalPlan::Builder::hasLead1Obstacle() {
 inline  ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>::Reader LongitudinalPlan::Reader::getLead1Obstacle() const {
   return ::capnp::_::PointerHelpers< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>::get(_reader.getPointerField(
       ::capnp::bounded<9>() * ::capnp::POINTERS),
-        ::capnp::schemas::bp_e00b5b3eba12876c + 961);
+        ::capnp::schemas::bp_e00b5b3eba12876c + 968);
 }
 inline  ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>::Builder LongitudinalPlan::Builder::getLead1Obstacle() {
   return ::capnp::_::PointerHelpers< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>::get(_builder.getPointerField(
       ::capnp::bounded<9>() * ::capnp::POINTERS),
-        ::capnp::schemas::bp_e00b5b3eba12876c + 961);
+        ::capnp::schemas::bp_e00b5b3eba12876c + 968);
 }
 inline void LongitudinalPlan::Builder::setLead1Obstacle( ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>::Reader value) {
   ::capnp::_::PointerHelpers< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>::set(_builder.getPointerField(
@@ -28481,12 +28486,12 @@ inline bool LongitudinalPlan::Builder::hasCruiseTarget() {
 inline  ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>::Reader LongitudinalPlan::Reader::getCruiseTarget() const {
   return ::capnp::_::PointerHelpers< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>::get(_reader.getPointerField(
       ::capnp::bounded<10>() * ::capnp::POINTERS),
-        ::capnp::schemas::bp_e00b5b3eba12876c + 975);
+        ::capnp::schemas::bp_e00b5b3eba12876c + 982);
 }
 inline  ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>::Builder LongitudinalPlan::Builder::getCruiseTarget() {
   return ::capnp::_::PointerHelpers< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>::get(_builder.getPointerField(
       ::capnp::bounded<10>() * ::capnp::POINTERS),
-        ::capnp::schemas::bp_e00b5b3eba12876c + 975);
+        ::capnp::schemas::bp_e00b5b3eba12876c + 982);
 }
 inline void LongitudinalPlan::Builder::setCruiseTarget( ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>::Reader value) {
   ::capnp::_::PointerHelpers< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>::set(_builder.getPointerField(
@@ -28508,6 +28513,20 @@ inline void LongitudinalPlan::Builder::adoptCruiseTarget(
 inline ::capnp::Orphan< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>> LongitudinalPlan::Builder::disownCruiseTarget() {
   return ::capnp::_::PointerHelpers< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>::disown(_builder.getPointerField(
       ::capnp::bounded<10>() * ::capnp::POINTERS));
+}
+
+inline bool LongitudinalPlan::Reader::getOnStop() const {
+  return _reader.getDataField<bool>(
+      ::capnp::bounded<13>() * ::capnp::ELEMENTS);
+}
+
+inline bool LongitudinalPlan::Builder::getOnStop() {
+  return _builder.getDataField<bool>(
+      ::capnp::bounded<13>() * ::capnp::ELEMENTS);
+}
+inline void LongitudinalPlan::Builder::setOnStop(bool value) {
+  _builder.setDataField<bool>(
+      ::capnp::bounded<13>() * ::capnp::ELEMENTS, value);
 }
 
 inline bool LongitudinalPlan::GpsTrajectory::Reader::hasX() const {

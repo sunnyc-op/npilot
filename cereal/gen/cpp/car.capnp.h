@@ -2089,6 +2089,8 @@ public:
 
   inline float getSpeed() const;
 
+  inline float getOaccel() const;
+
 private:
   ::capnp::_::StructReader _reader;
   template <typename, ::capnp::Kind>
@@ -2137,6 +2139,9 @@ public:
 
   inline float getSpeed();
   inline void setSpeed(float value);
+
+  inline float getOaccel();
+  inline void setOaccel(float value);
 
 private:
   ::capnp::_::StructBuilder _builder;
@@ -6004,6 +6009,20 @@ inline float CarControl::Actuators::Builder::getSpeed() {
 inline void CarControl::Actuators::Builder::setSpeed(float value) {
   _builder.setDataField<float>(
       ::capnp::bounded<6>() * ::capnp::ELEMENTS, value);
+}
+
+inline float CarControl::Actuators::Reader::getOaccel() const {
+  return _reader.getDataField<float>(
+      ::capnp::bounded<7>() * ::capnp::ELEMENTS);
+}
+
+inline float CarControl::Actuators::Builder::getOaccel() {
+  return _builder.getDataField<float>(
+      ::capnp::bounded<7>() * ::capnp::ELEMENTS);
+}
+inline void CarControl::Actuators::Builder::setOaccel(float value) {
+  _builder.setDataField<float>(
+      ::capnp::bounded<7>() * ::capnp::ELEMENTS, value);
 }
 
 inline bool CarControl::CruiseControl::Reader::getCancel() const {
