@@ -8,5 +8,8 @@
     "stopAccel": -2.0,
     "STOP_DISTANCE": 5.5,
     "COMFORT_BRAKE": 2.5,
-    "StopAtStopSign": 1.0
+    "StopAtStopSign": 1.0,
+    "StoppingDist": 10.0,
+    "STOP_LINE_OFFSET": 0.9,
+    "STOP_LINE_X_OFFSET": 0.0
 }
