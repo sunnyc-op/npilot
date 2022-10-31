@@ -6,8 +6,7 @@
     "vEgoStopping": 0.8,
     "vEgoStarting": 0.4,
     "stopAccel": -2.0,
-    "STOP_DISTANCE": 5.2,
+    "STOP_DISTANCE": 5.5,
     "COMFORT_BRAKE": 2.5,
-    "X_EGO_OBSTACLE_COST": 5.0,
     "StopAtStopSign": 1.0
 }
