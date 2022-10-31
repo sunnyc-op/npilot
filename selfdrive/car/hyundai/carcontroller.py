@@ -14,7 +14,7 @@ from common.conversions import Conversions as CV
 from common.params import Params
 from selfdrive.controls.lib.longcontrol import LongCtrlState
 from selfdrive.road_speed_limiter import road_speed_limiter_get_active
-from selfdrive.ntune import ntune_scc_get
+from selfdrive.ntune import ntune_scc_get, ntune_scc_enabled
 
 LongitudinalPlanSource = log.LongitudinalPlan.LongitudinalPlanSource
 VisualAlert = car.CarControl.HUDControl.VisualAlert
@@ -81,7 +81,7 @@ class CarController:
     #else:
     #  self.stopsign_enabled = param.get_bool("StopAtStopSign")
 
-    self.stopsign_enabled = ntune_scc_get('StopAtStopSign')
+    self.stopsign_enabled = ntune_scc_enabled('StopAtStopSign')
 
     #opkr
     self.stoppingdist = ntune_scc_get('StoppingDist')

@@ -432,6 +432,9 @@ def ntune_common_enabled(key):
 def ntune_scc_get(key):
   return ntune_get("scc", key)
 
+def ntune_scc_enabled(key):
+  return ntune_scc_get(key) > 0.5  
+
 def ntune_option_get(key):
    return ntune_get("option", key)
 
