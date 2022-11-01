@@ -320,8 +320,8 @@ class CarController:
                 self.stopped = True
               else:
                 self.stopped = False
-          # else:
-          #   apply_accel = aReqValue
+          else:
+            apply_accel = aReqValue
 
         apply_accel = clip(apply_accel if CC.longActive else 0, CarControllerParams.ACCEL_MIN, CarControllerParams.ACCEL_MAX)
 
