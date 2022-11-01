@@ -85,6 +85,7 @@ class CarController:
 
     #opkr
     self.stoppingdist = ntune_scc_get('StoppingDist')
+    self.lo_timer = 0
     self.stopped = False
     self.smooth_start = False
     self.change_accel_fast = False
@@ -246,6 +247,11 @@ class CarController:
     # send scc to car if longcontrol enabled and SCC not on bus 0 or ont live
     if self.longcontrol and CS.cruiseState_enabled and (CS.scc_bus or not self.scc_live):
 
+      self.lo_timer += 1
+      if self.lo_timer > 200:
+        self.lo_timer = 0
+        self.stoppingdist = ntune_scc_get('StoppingDist')
+
       if self.frame % 2 == 0:
         set_speed = hud_control.setSpeed
 
@@ -298,7 +304,7 @@ class CarController:
               if 0 < stop_distance  < 150:
                 if not CS.out.cruiseState.standstill:
                   if stop_distance < 2.0:
-                    apply_accel = self.accel - (DT_CTRL * 5.0)
+                    apply_accel = self.accel - (DT_CTRL * 4.0)
                   elif stop_distance < self.stoppingdist:
                     apply_accel = self.accel - (DT_CTRL * interp(CS.out.vEgo, [0.5, 2.0], [1.0, 5.0]))                
                   else:
