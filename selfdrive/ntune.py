@@ -272,13 +272,13 @@ class nTune():
     if self.checkValue("StopAtStopSign", 0., 1., 1.):
       updated = True
 
-    if self.checkValue("StoppingDist", 0., 15., 6.0):
+    if self.checkValue("StoppingDist", 5.0, 10., 10.0):
       updated = True
 
     if self.checkValue("STOP_LINE_OFFSET", 0.7, 1.2, 0.9):
       updated = True
 
-    if self.checkValue("STOP_LINE_X_OFFSET", -3.0, 3.0, 1.0):
+    if self.checkValue("STOP_LINE_X_OFFSET", -3.0, 3.0, 0.0):
       updated = True
 
     return updated
@@ -431,6 +431,9 @@ def ntune_common_enabled(key):
 
 def ntune_scc_get(key):
   return ntune_get("scc", key)
+
+def ntune_scc_enabled(key):
+  return ntune_scc_get(key) > 0.5  
 
 def ntune_option_get(key):
    return ntune_get("option", key)

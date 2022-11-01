@@ -9,7 +9,7 @@ from selfdrive.swaglog import cloudlog
 from selfdrive.modeld.constants import index_function
 from selfdrive.controls.lib.radar_helpers import _LEAD_ACCEL_TAU
 from common.conversions import Conversions as CV
-from selfdrive.ntune import ntune_scc_get
+from selfdrive.ntune import ntune_scc_get, ntune_scc_enabled
 
 
 if __name__ == '__main__':  # generating code
@@ -222,7 +222,7 @@ class LongitudinalMpc:
     self.stopline = np.zeros(13, dtype=np.float64)
     self.stop_prob = 0.0
     self.on_stopping = False
-    self.stop_line = ntune_scc_get("StopAtStopSign")
+    self.stop_line = ntune_scc_enabled("StopAtStopSign")
     self.x_ego_obstacle_cost = 6
     self.stop_line_offset = 1.0
     self.stop_line_x_offset = 0.
