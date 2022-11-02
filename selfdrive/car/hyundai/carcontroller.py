@@ -311,7 +311,7 @@ class CarController:
                   else:
                     apply_accel = self.accel - (DT_CTRL * 0.1)
 
-                  str_log = '{:03.0f}, {:03.2f}, {:03.2f}, {:02.0f}, {:02.0f}, {:02.0f}'.format(
+                  str_log = ', {:03.0f}, {:03.2f}, {:03.2f}, {:02.0f}, {:02.0f}, {:02.0f}'.format(
                             stop_distance, aReqValue, apply_accel, CS.out.vEgo*CV.MS_TO_MPH, set_speed, self.stoppingdist)
                   self.log.add( '{}'.format( str_log ) )
 
