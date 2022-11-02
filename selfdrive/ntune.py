@@ -272,7 +272,7 @@ class nTune():
     if self.checkValue("StopAtStopSign", 0., 1., 1.):
       updated = True
 
-    if self.checkValue("StoppingDist", 5.0, 20., 12.):
+    if self.checkValue("StoppingDist", 5.0, 25., 20.):
       updated = True
 
     if self.checkValue("STOP_LINE_OFFSET", 0.7, 1.2, 0.95):
