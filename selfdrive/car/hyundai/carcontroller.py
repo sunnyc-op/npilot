@@ -302,15 +302,14 @@ class CarController:
 
             if self.sm['longitudinalPlan'].onStop:
               stop_distance = self.sm['longitudinalPlan'].stopLine[12]
-              if 0 < stop_distance  < 150:
+              if 0 < stop_distance  < 50:
                 if not CS.out.cruiseState.standstill:
                   if stop_distance < 6.0:
                     apply_accel = self.accel - (DT_CTRL * 5.0)
                   elif stop_distance < self.stoppingdist:
                     apply_accel = self.accel - (DT_CTRL * interp(CS.out.vEgo*CV.MS_TO_MPH, [1.0, 13.0], [1.0, 5.0]))
-                  #else:
-                  #  stock_weight = 0.0
-                  #  apply_accel = apply_accel * (1.0 - stock_weight) + aReqValue * stock_weight
+                  else:
+                    apply_accel = self.accel - (DT_CTRL * 0.1)
 
                   str_log = '{:03.0f}, {:03.2f}, {:03.2f}, {:02.0f}, {:02.0f}, {:02.0f}'.format(
                             stop_distance, aReqValue, apply_accel, CS.out.vEgo*CV.MS_TO_MPH, set_speed, self.stoppingdist)
