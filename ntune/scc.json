@@ -10,6 +10,6 @@
     "COMFORT_BRAKE": 2.5,
     "StopAtStopSign": 0.0,
     "StoppingDist": 20.0,
-    "STOP_LINE_OFFSET": 0.95,
+    "STOP_LINE_OFFSET": 0.90,
     "STOP_LINE_X_OFFSET": 0.0
 }
