@@ -399,7 +399,14 @@ class LongitudinalMpc:
     elif startSign:
       self.trafficState = 2 # "GREEN"
 
-    stopline = (model.stopLine.x + 5.0) * np.ones(N+1) if stopSign else 400 * np.ones(N+1)
+    #test
+    stopping = model.stopLine.prob > 0.5 if self.stop_line else False
+
+    #stopline = (model.stopLine.x + 5.0) * np.ones(N+1) if stopSign else 400 * np.ones(N+1)
+    
+    #test
+    stopline = (model.stopLine.x + 5.0) * np.ones(N+1)   
+
     x = (x[N] + 5.0) * np.ones(N+1)
 
     if self.stop_line_offset < 0.7 or self.stop_line_offset > 1.2:
@@ -407,9 +414,9 @@ class LongitudinalMpc:
 
     stopline3 = (((stopline*0.2)+(x*0.8)) * self.stop_line_offset) + self.stop_line_x_offset
 
-    stopping = True if (self.stop_line and self.trafficState == 1 and not self.status and not carstate.brakePressed and not carstate.gasPressed) else False
-
-    if stopping:
+    #stopping = True if (self.stop_line and self.trafficState == 1 and not self.status and not carstate.brakePressed and not carstate.gasPressed) else False
+    
+    if stopping and not self.status and not carstate.brakePressed and not carstate.gasPressed:
       self.on_stopping = True
       self.x_ego_obstacle_cost = 6.0
       self.set_weights(prev_accel_constraint)
