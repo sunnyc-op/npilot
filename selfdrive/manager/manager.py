@@ -105,6 +105,8 @@ def manager_init() -> None:
     ("TurnSpeedControl", "0"),
     ("TurnVisionControl", "0"),
 
+    ("ShowTrafficSignal", "0"),
+
 
   ]
   if not PC:

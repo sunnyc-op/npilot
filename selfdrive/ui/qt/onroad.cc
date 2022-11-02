@@ -486,7 +486,8 @@ void NvgWindow::drawHud(QPainter &p) {
   drawRestArea(p);
   drawTurnSignals(p);
   drawGpsStatus(p);
-  drawStoplineSignal(p);
+  if(s->show_signal)
+    drawStoplineSignal(p);
 
   if(s->show_debug && width() > 1200)
     drawDebugText(p);
