@@ -85,6 +85,7 @@ class CarController:
 
     #opkr
     self.stoppingdist = ntune_scc_get('StoppingDist')
+    self.lo_timer = 0
     self.stopped = False
     self.smooth_start = False
     self.change_accel_fast = False
@@ -246,6 +247,11 @@ class CarController:
     # send scc to car if longcontrol enabled and SCC not on bus 0 or ont live
     if self.longcontrol and CS.cruiseState_enabled and (CS.scc_bus or not self.scc_live):
 
+      self.lo_timer += 1
+      if self.lo_timer > 200:
+        self.lo_timer = 0
+        self.stoppingdist = ntune_scc_get('StoppingDist')
+
       if self.frame % 2 == 0:
         set_speed = hud_control.setSpeed
 
@@ -288,23 +294,24 @@ class CarController:
             self.stopped = False
 
           apply_accel = apply_accel * (1.0 - stock_weight) + aReqValue * stock_weight
+
         else:
           self.stopped = False
           if self.stopsign_enabled:
             self.sm.update(0)
-            
+
             if self.sm['longitudinalPlan'].onStop:
               stop_distance = self.sm['longitudinalPlan'].stopLine[12]
-              if 0 < stop_distance  < 150:
+              if 0 < stop_distance  < 50:
                 if not CS.out.cruiseState.standstill:
-                  if stop_distance < 2.0:
+                  if stop_distance < 6.0:
                     apply_accel = self.accel - (DT_CTRL * 5.0)
                   elif stop_distance < self.stoppingdist:
-                    apply_accel = self.accel - (DT_CTRL * interp(CS.out.vEgo, [0.5, 2.0], [1.0, 5.0]))                
+                    apply_accel = self.accel - (DT_CTRL * interp(CS.out.vEgo*CV.MS_TO_MPH, [1.0, 13.0], [1.0, 5.0]))
                   else:
-                    stock_weight = 0.0
-                    apply_accel = apply_accel * (1.0 - stock_weight) + aReqValue * stock_weight
+                    apply_accel = self.accel - (DT_CTRL * 0.1)
 
+<<<<<<< HEAD
 <<<<<<< HEAD
                   str_log2 = 'LPSource.stop: aReqValue={:02.3f} apply_accel={:02.3f}  stopLine={:03.0f} MPH={:02.0f} set_speed={:02.0f}'.format(
                               aReqValue, apply_accel, stop_distance, CS.out.vEgo*CV.MS_TO_MPH, set_speed )
@@ -327,6 +334,17 @@ class CarController:
                 self.stopped = False
           else:
             apply_accel = aReqValue
+=======
+                  str_log = ', {:03.0f}, {:03.2f}, {:03.2f}, {:02.0f}, {:02.0f}, {:02.0f}'.format(
+                            stop_distance, aReqValue, apply_accel, CS.out.vEgo*CV.MS_TO_MPH, set_speed, self.stoppingdist)
+                  self.log.add( '{}'.format( str_log ) )
+
+        if stopping:
+          self.stopped = True
+        else:
+          self.stopped = False
+
+>>>>>>> 1fb54357f2adcd51e3f663aa48d99e08d61e51b0
 
         apply_accel = clip(apply_accel if CC.longActive else 0, CarControllerParams.ACCEL_MIN, CarControllerParams.ACCEL_MAX)
 

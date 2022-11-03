@@ -161,6 +161,7 @@ public:
 
   bool recording = false;
   bool show_debug = false;
+  bool show_signal = false;
   std::string lat_control;
 
 signals:
