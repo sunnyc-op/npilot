@@ -10,8 +10,8 @@
 #include <QStackedLayout>
 #include <QComboBox>
 
-
 #include "selfdrive/ui/qt/widgets/controls.h"
+#include "selfdrive/ui/qt/widgets/groupWidget.h"
 #include "selfdrive/ui/ui.h"
 
 // ********** settings window + top-level panels **********
@@ -480,7 +480,7 @@ class AutoCruiseSetToggle : public ToggleControl {
 
 public:
   AutoCruiseSetToggle() : ToggleControl(tr("Use Auto Cruise "), "", "../assets/offroad/icon_road.png", Params().getBool("AutoCruiseSet")) {
-    QObject::connect(this, &AutoEnabledToggle::toggleFlipped, [=](int state) {
+    QObject::connect(this, &AutoCruiseSetToggle::toggleFlipped, [=](int state) {
       bool status = state ? true : false;
       Params().putBool("AutoCruiseSet", status);
     });
@@ -492,7 +492,7 @@ class AutoCruiseSetDependsOnNdaToggle : public ToggleControl {
 
 public:
   AutoCruiseSetDependsOnNdaToggle() : ToggleControl(tr("Auto Cruise Set Depends On Nda "), "", "../assets/offroad/icon_road.png", Params().getBool("AutoCruiseSetDependsOnNda")) {
-    QObject::connect(this, &AutoEnabledToggle::toggleFlipped, [=](int state) {
+    QObject::connect(this, &AutoCruiseSetDependsOnNdaToggle::toggleFlipped, [=](int state) {
       bool status = state ? true : false;
       Params().putBool("AutoCruiseSetDependsOnNda", status);
     });
@@ -541,5 +541,62 @@ private:
   Params params;
 
   void refresh();
+};
+
+class UseBaseTorqueToggle : public ToggleControl {
+  Q_OBJECT
+
+public:
+  UseBaseTorqueToggle() : ToggleControl(tr("Use Base Torque Values"), "", "../assets/offroad/icon_openpilot.png", Params().getBool("UseBaseTorqueValues")) {
+    QObject::connect(this, &UseBaseTorqueToggle::toggleFlipped, [=](int state) {
+      bool status = state ? true : false;
+      Params().putBool("UseBaseTorqueValues", status);
+    });
+  }
+};
+
+class CTorqueControlGroup : public CGroupWidget 
+{
+  Q_OBJECT
+
+public:
+  explicit CTorqueControlGroup();
+
+};
+
+class UseLiveTorqueToggle : public ToggleControl {
+  Q_OBJECT
+
+public:
+  UseLiveTorqueToggle() : ToggleControl(tr("Enable Live Torque"), "", "../assets/offroad/icon_openpilot.png", Params().getBool("IsLiveTorque")) {
+    QObject::connect(this, &UseLiveTorqueToggle::toggleFlipped, [=](int state) {
+      bool status = state ? true : false;
+      Params().putBool("IsLiveTorque", status);
+    });
+  }
+};
+
+class HotspotOnBootToggle : public ToggleControl {
+  Q_OBJECT
+
+public:
+  HotspotOnBootToggle() : ToggleControl(tr("HotSpot on Boot"), tr("It automatically runs a hotspot when booting."), "", Params().getBool("OpkrHotspotOnBoot")) {
+    QObject::connect(this, &HotspotOnBootToggle::toggleFlipped, [=](int state) {
+      bool status = state ? true : false;
+      Params().putBool("OpkrHotspotOnBoot", status);
+    });
+  }
+};
+
+class LowSpeedFactorToggle : public ToggleControl {
+  Q_OBJECT
+
+public:
+  LowSpeedFactorToggle() : ToggleControl(tr("Enable Low Speed Factor"), "", "../assets/offroad/icon_openpilot.png", Params().getBool("IsLowSpeedFactor")) {
+    QObject::connect(this, &LowSpeedFactorToggle::toggleFlipped, [=](int state) {
+      bool status = state ? true : false;
+      Params().putBool("IsLowSpeedFactor", status);
+    });
+  }
 };
 

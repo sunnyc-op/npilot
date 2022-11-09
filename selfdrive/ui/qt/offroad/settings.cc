@@ -371,6 +371,8 @@ C2NetworkPanel::C2NetworkPanel(QWidget *parent) : QWidget(parent) {
   ipaddress = new LabelControl("IP Address", "");
   list->addItem(ipaddress);
 
+  list->addItem(new HotspotOnBootToggle());
+
   // SSH key management
   list->addItem(new SshToggle());
   list->addItem(new SshControl());
@@ -1758,7 +1760,7 @@ void AutoEnableSpeed::refresh() {
   btnplus.setText("+");
 }
 
-OPKRServerSelect::OPKRServerSelect() : AbstractControl(tr("API Server"), tr("Set API server to OPKR/Comma/User's"), "../assets/offroad/icon_shell.png") {
+OPKRServerSelect::OPKRServerSelect() : AbstractControl(tr("API Server"), tr("Set API server to OPKR/User's"), "../assets/offroad/icon_shell.png") {
   btn1.setStyleSheet(R"(
     padding: 0;
     border-radius: 50px;
@@ -1890,7 +1892,7 @@ void OPKRServerSelect::refresh() {
   }
 }
 
-OPKRServerAPI::OPKRServerAPI() : AbstractControl(tr("User's API"), tr("Set Your API server URL or IP"), "") {
+OPKRServerAPI::OPKRServerAPI() : AbstractControl(tr("User's API"), tr("Set Your API server URL or IP"), "../assets/offroad/icon_shell.png") {
   label.setAlignment(Qt::AlignVCenter|Qt::AlignRight);
   label.setStyleSheet("color: #e0e879");
   hlayout->addWidget(&label);
@@ -2024,6 +2026,17 @@ void TimeZoneSelectCombo::refresh() {
   }
 }
 
+CTorqueControlGroup::CTorqueControlGroup() : CGroupWidget( tr("Torque Control Options") )
+{
+  QVBoxLayout *pBoxLayout = CreateBoxLayout();
+
+  pBoxLayout->addWidget(new SRBaseControl());
+  pBoxLayout->addWidget(new TorqueMaxLatAccel());
+  pBoxLayout->addWidget(new TorqueFriction());
+  pBoxLayout->addWidget(new UseLiveTorqueToggle());
+  pBoxLayout->addWidget(new LowSpeedFactorToggle());
+}
+
 
 /////////////////////////////////////////////////////////////////////////
 
@@ -2116,6 +2129,8 @@ CommunityPanel::CommunityPanel(QWidget* parent) : QWidget(parent) {
 
   QString useNpilotManager = QString::fromStdString(Params().get("UseNpilotManager"));
   bool useNM = QVariant(useNpilotManager).toBool();
+  QString UseBaseTorqueValues = QString::fromStdString(Params().get("UseBaseTorqueValues"));
+  bool useBaseValues = QVariant(UseBaseTorqueValues).toBool();
   QList<ParamControl*> toggles;
 
   toggleLayout->addWidget(new UseNpilotManagerToggle());
@@ -2130,18 +2145,18 @@ CommunityPanel::CommunityPanel(QWidget* parent) : QWidget(parent) {
     toggleLayout->addWidget(new OPKREdgeOffset());
 
     toggleLayout->addWidget(new LabelControl(tr("〓〓〓〓〓〓〓〓〓〓【 TUNING 】〓〓〓〓〓〓〓〓〓〓"), ""));
-    //toggleLayout->addWidget(new LiveSteerRatioToggle());
-    //toggleLayout->addWidget(new LiveSRPercent());
-    toggleLayout->addWidget(new SRBaseControl());
+    toggleLayout->addWidget(new UseBaseTorqueToggle());
     toggleLayout->addWidget(horizontal_line());
-    //toggleLayout->addWidget(new SRMaxControl());
+
+    if(!useBaseValues)
+      toggleLayout->addWidget(new CTorqueControlGroup());
+    else
+      toggleLayout->addWidget(new LowSpeedFactorToggle());
+
+    toggleLayout->addWidget(horizontal_line());
     toggleLayout->addWidget(new SteerActuatorDelay());
     toggleLayout->addWidget(horizontal_line());
     toggleLayout->addWidget(new SteerLimitTimer());
-    toggleLayout->addWidget(horizontal_line());
-    toggleLayout->addWidget(new TorqueMaxLatAccel());
-    toggleLayout->addWidget(horizontal_line());
-    toggleLayout->addWidget(new TorqueFriction());
     toggleLayout->addWidget(horizontal_line());
     toggleLayout->addWidget(new AutoEnabledToggle());
     toggleLayout->addWidget(horizontal_line());
@@ -2151,19 +2166,8 @@ CommunityPanel::CommunityPanel(QWidget* parent) : QWidget(parent) {
     toggleLayout->addWidget(horizontal_line());
     toggleLayout->addWidget(new AutoCruiseSetDependsOnNdaToggle());
 
-    toggles.append(new ParamControl("IsLiveTorque",
-                                            "Enable Live Torque",
-                                            "",
-                                            "../assets/offroad/icon_openpilot.png",
-                                            this));
-
-    toggles.append(new ParamControl("IsLowSpeedFactor",
-                                            "Enable Low Speed Factor",
-                                            "",
-                                            "../assets/offroad/icon_openpilot.png",
-                                            this));
   }
-  
+
 
   toggles.append(new ParamControl("UseClusterSpeed",
                                             "Use Cluster Speed",
@@ -2207,6 +2211,18 @@ CommunityPanel::CommunityPanel(QWidget* parent) : QWidget(parent) {
                                             "../assets/offroad/icon_road.png",
                                             this));
 
+  toggles.append(new ParamControl("TurnVisionControl",
+                                  "Enable vision based turn control",
+                                  "Use vision path predictions to estimate the appropiate speed to drive through turns ahead.",
+                                  "../assets/offroad/icon_road.png",
+                                  this));                                            
+
+  // toggles.append(new ParamControl("StopAtStopSign",
+  //                                 "Stop at Stop Light",
+  //                                 "Openpilot tries to stop at stop light.",
+  //                                 "../assets/offroad/icon_road.png",
+  //                                 this));   
+
   toggles.append(new ParamControl("SccSmootherSyncGasPressed",
                                             "Sync set speed on gas pressed",
                                             "",
@@ -2242,6 +2258,12 @@ CommunityPanel::CommunityPanel(QWidget* parent) : QWidget(parent) {
                                             "../assets/offroad/icon_shell.png",
                                             this));
 
+  toggles.append(new ParamControl("ShowTrafficSignal",
+                                            "Show Traffic Signal",
+                                            "",
+                                            "../assets/offroad/icon_shell.png",
+                                            this));                                      
+
   if (!useNM) toggles.append(new ParamControl("OpkrBatteryChargingControl",
                                             "Enable Battery Charging Control",
                                             "It uses the battery charge control function.",
@@ -2265,10 +2287,10 @@ CommunityPanel::CommunityPanel(QWidget* parent) : QWidget(parent) {
   toggleLayout->addWidget(new AutoScreenOff());
   toggleLayout->addWidget(horizontal_line());
   toggleLayout->addWidget(new BrightnessOffControl());
-  toggleLayout->addWidget(horizontal_line());
-  toggleLayout->addWidget(new OPKRServerSelect());
-  toggleLayout->addWidget(horizontal_line());
-  toggleLayout->addWidget(new OPKRServerAPI());
+//  toggleLayout->addWidget(horizontal_line());
+//  toggleLayout->addWidget(new OPKRServerSelect());
+//  toggleLayout->addWidget(horizontal_line());
+//  toggleLayout->addWidget(new OPKRServerAPI());
   toggleLayout->addWidget(horizontal_line());
   toggleLayout->addWidget(new TimeZoneSelectCombo());
 }

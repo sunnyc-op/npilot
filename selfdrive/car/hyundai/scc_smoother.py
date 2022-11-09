@@ -17,6 +17,8 @@ from selfdrive.ntune import ntune_scc_get, ntune_option_enabled
 from selfdrive.road_speed_limiter import road_speed_limiter_get_max_speed, road_speed_limiter_get_active, \
   get_road_speed_limiter
 
+TRAJECTORY_SIZE = 33
+
 SYNC_MARGIN = 3.
 CREEP_SPEED = 2.3
 
@@ -64,7 +66,7 @@ class SccSmoother:
   def __init__(self):
 
     self.longcontrol = Params().get_bool('LongControlEnabled')
-    self.slow_on_curves = Params().get_bool('SccSmootherSlowOnCurves')
+    self.slow_on_curves = False if Params().get_bool("TurnVisionControl") else Params().get_bool('SccSmootherSlowOnCurves')
     self.sync_set_speed_while_gas_pressed = Params().get_bool('SccSmootherSyncGasPressed')
     self.is_metric = Params().get_bool('IsMetric')
 
@@ -316,22 +318,30 @@ class SccSmoother:
 
   def cal_curve_speed(self, sm, v_ego, frame):
 
-    lateralPlan = sm['lateralPlan']
-    if len(lateralPlan.curvatures) == CONTROL_N:
-      curv = (lateralPlan.curvatures[-1] + lateralPlan.curvatures[-2]) / 2.
-      a_y_max = 2.975 - v_ego * 0.0375  # ~1.85 @ 75mph, ~2.6 @ 25mph
-      v_curvature = sqrt(a_y_max / max(abs(curv), 1e-4))
-      model_speed = v_curvature * 0.85 * ntune_scc_get("sccCurvatureFactor")
+    if frame % 20 == 0:
+      md = sm['modelV2']
+      if len(md.position.x) == TRAJECTORY_SIZE and len(md.position.y) == TRAJECTORY_SIZE:
+        x = md.position.x
+        y = md.position.y
+        dy = np.gradient(y, x)
+        d2y = np.gradient(dy, x)
+        curv = d2y / (1 + dy ** 2) ** 1.5
 
-      if model_speed < v_ego:
-        self.curve_speed_ms = float(max(model_speed, MIN_CURVE_SPEED))
+        start = int(interp(v_ego, [10., 27.], [10, TRAJECTORY_SIZE-10]))
+        curv = curv[start:min(start+10, TRAJECTORY_SIZE)]
+        a_y_max = 2.975 - v_ego * 0.0375  # ~1.85 @ 75mph, ~2.6 @ 25mph
+        v_curvature = np.sqrt(a_y_max / np.clip(np.abs(curv), 1e-4, None))
+        model_speed = np.mean(v_curvature) * 0.85 * ntune_scc_get("sccCurvatureFactor")
+
+        if model_speed < v_ego:
+          self.curve_speed_ms = float(max(model_speed, MIN_CURVE_SPEED))
+        else:
+          self.curve_speed_ms = 255.
+
+        if np.isnan(self.curve_speed_ms):
+          self.curve_speed_ms = 255.
       else:
         self.curve_speed_ms = 255.
-
-      if np.isnan(self.curve_speed_ms):
-        self.curve_speed_ms = 255.
-    else:
-      self.curve_speed_ms = 255.
 
   def cal_target_speed(self, CS, clu11_speed, controls):
 
@@ -366,12 +376,9 @@ class SccSmoother:
     gas_factor = ntune_scc_get("sccGasFactor")
     brake_factor = ntune_scc_get("sccBrakeFactor")
 
-    #lead = self.get_lead(sm)
-    #if lead is not None:
-    #  if not lead.radar:
-    #    brake_factor *= 0.975
+    boost_v = 0.5
 
-    start_boost = interp(CS.out.vEgo, [0.0, CREEP_SPEED, 2 * CREEP_SPEED], [0.6, 0.6, 0.0])
+    start_boost = interp(CS.out.vEgo, [CREEP_SPEED, 2 * CREEP_SPEED], [boost_v, 0.0])
     is_accelerating = interp(accel, [0.0, 0.2], [0.0, 1.0])
     boost = start_boost * is_accelerating
 

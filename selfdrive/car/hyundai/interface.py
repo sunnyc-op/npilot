@@ -10,7 +10,7 @@ from selfdrive.car.interfaces import CarInterfaceBase
 from common.params import Params
 from selfdrive.controls.lib.desire_helper import LANE_CHANGE_SPEED_MIN
 from decimal import Decimal
-from selfdrive.ntune import ntune_common_get, ntune_lqr_get, ntune_torque_get
+from selfdrive.ntune import ntune_common_get, ntune_lqr_get, ntune_torque_get, ntune_scc_get
 
 GearShifter = car.CarState.GearShifter
 EventName = car.CarEvent.EventName
@@ -97,10 +97,10 @@ class CarInterface(CarInterfaceBase):
     ret.longitudinalActuatorDelayLowerBound = 0.3
     ret.longitudinalActuatorDelayUpperBound = 0.3
 
-    ret.stopAccel = -2.0
-    ret.stoppingDecelRate = 0.4  # brake_travel/s while trying to stop
-    ret.vEgoStopping = 0.5
-    ret.vEgoStarting = 0.5
+    ret.stopAccel = min(ntune_scc_get('stopAccel'), -2.0)
+    ret.stoppingDecelRate = max(ntune_scc_get('stoppingDecelRate'), 0.4) #0.4  # brake_travel/s while trying to stop
+    ret.vEgoStopping = max(ntune_scc_get('vEgoStopping'), 0.4) #0.5
+    ret.vEgoStarting = max(ntune_scc_get('vEgoStarting'), 0.4) #0.5 # needs to be >= vEgoStopping to avoid state transition oscillation
 
     # genesis
     if candidate == CAR.GENESIS:
@@ -109,96 +109,114 @@ class CarInterface(CarInterfaceBase):
       ret.centerToFront = ret.wheelbase * 0.4
       ret.maxSteeringAngleDeg = 90.
       ret.steerFaultMaxAngle = 0
+      ret.steerRatio = 16.5
     elif candidate == CAR.GENESIS_G70:
       ret.mass = 1640. + STD_CARGO_KG
       ret.wheelbase = 2.84
       ret.centerToFront = ret.wheelbase * 0.4
+      ret.steerRatio = 13.56
     elif candidate == CAR.GENESIS_G80:
       ret.mass = 1855. + STD_CARGO_KG
       ret.wheelbase = 3.01
       ret.centerToFront = ret.wheelbase * 0.4
+      ret.steerRatio = 16.5
     elif candidate == CAR.GENESIS_EQ900:
       ret.mass = 2200
       ret.wheelbase = 3.15
       ret.centerToFront = ret.wheelbase * 0.4
-      ret.steerRatio = 16.0
+      ret.steerRatio = 12.069
     elif candidate == CAR.GENESIS_EQ900_L:
       ret.mass = 2290
       ret.wheelbase = 3.45
       ret.centerToFront = ret.wheelbase * 0.4
+      ret.steerRatio = 12.069
     elif candidate == CAR.GENESIS_G90:
       ret.mass = 2150
       ret.wheelbase = 3.16
       ret.centerToFront = ret.wheelbase * 0.4
+      ret.steerRatio = 12.069
     # hyundai
+    elif candidate == CAR.TUCSON:
+      ret.mass = 3520. * CV.LB_TO_KG
+      ret.wheelbase = 2.67
+      ret.steerRatio = 14.00
+      tire_stiffness_factor = 0.385
     elif candidate in [CAR.SANTA_FE]:
       ret.mass = 1694 + STD_CARGO_KG
       ret.wheelbase = 2.766
       ret.centerToFront = ret.wheelbase * 0.4
+      ret.steerRatio = 13.8  
+      tire_stiffness_factor = 0.82
     elif candidate in [CAR.SANTA_FE_2022, CAR.SANTA_FE_HEV_2022]:
       ret.mass = 1750 + STD_CARGO_KG
       ret.wheelbase = 2.766
       ret.centerToFront = ret.wheelbase * 0.4
+      ret.steerRatio = 13.8 
+      tire_stiffness_factor = 0.82
     elif candidate in [CAR.SONATA, CAR.SONATA_HEV, CAR.SONATA21_HEV]:
       ret.mass = 1513. + STD_CARGO_KG
       ret.wheelbase = 2.84
       ret.centerToFront = ret.wheelbase * 0.4
       tire_stiffness_factor = 0.65
+      ret.steerRatio = 13.27
     elif candidate in [CAR.SONATA19, CAR.SONATA19_HEV]:
       ret.mass = 4497. * CV.LB_TO_KG
       ret.wheelbase = 2.804
       ret.centerToFront = ret.wheelbase * 0.4
+      ret.steerRatio = 13.27
     elif candidate == CAR.SONATA_LF_TURBO:
       ret.mass = 1590. + STD_CARGO_KG
       ret.wheelbase = 2.805
       tire_stiffness_factor = 0.65
+      ret.steerRatio = 13.27
       ret.centerToFront = ret.wheelbase * 0.4
     elif candidate == CAR.PALISADE:
-      #ret.lateralTuning.pid.kf = 0.00005
       ret.mass = 1999. + STD_CARGO_KG
       ret.wheelbase = 2.90
-      ret.steerRatio = 15.6 * 1.15
+      ret.steerRatio = 15.6 * 1.04
       tire_stiffness_factor = 0.63
-
     elif candidate in [CAR.ELANTRA, CAR.ELANTRA_GT_I30]:
       ret.mass = 1275. + STD_CARGO_KG
       ret.wheelbase = 2.7
       tire_stiffness_factor = 0.7
       ret.centerToFront = ret.wheelbase * 0.4
+      ret.steerRatio = 15.4
     elif candidate == CAR.ELANTRA_2021:
       ret.mass = (2800. * CV.LB_TO_KG) + STD_CARGO_KG
       ret.wheelbase = 2.72
-      ret.steerRatio = 13.27 * 1.15   # 15% higher at the center seems reasonable
       tire_stiffness_factor = 0.65
       ret.centerToFront = ret.wheelbase * 0.4
+      ret.steerRatio = 12.9
     elif candidate == CAR.ELANTRA_HEV_2021:
       ret.mass = (3017. * CV.LB_TO_KG) + STD_CARGO_KG
       ret.wheelbase = 2.72
-      ret.steerRatio = 13.27 * 1.15  # 15% higher at the center seems reasonable
       tire_stiffness_factor = 0.65
       ret.centerToFront = ret.wheelbase * 0.4
+      ret.steerRatio = 12.9
     elif candidate == CAR.KONA:
       ret.mass = 1275. + STD_CARGO_KG
       ret.wheelbase = 2.7
       tire_stiffness_factor = 0.7
+      ret.steerRatio = 13.42
       ret.centerToFront = ret.wheelbase * 0.4
     elif candidate in [CAR.KONA_HEV, CAR.KONA_EV]:
       ret.mass = 1395. + STD_CARGO_KG
       ret.wheelbase = 2.6
       tire_stiffness_factor = 0.7
       ret.centerToFront = ret.wheelbase * 0.4
+      ret.steerRatio = 13.42
     elif candidate in [CAR.IONIQ, CAR.IONIQ_EV_LTD, CAR.IONIQ_EV_2020, CAR.IONIQ_PHEV]:
       ret.mass = 1490. + STD_CARGO_KG
       ret.wheelbase = 2.7
       tire_stiffness_factor = 0.385
       ret.centerToFront = ret.wheelbase * 0.4
+      ret.steerRatio = 13.73
     elif candidate in [CAR.GRANDEUR_IG, CAR.GRANDEUR_IG_HEV]:
       tire_stiffness_factor = 0.8
       ret.mass = 1570. + STD_CARGO_KG
       ret.wheelbase = 2.845
       ret.centerToFront = ret.wheelbase * 0.385
       ret.steerRatio = 16.
-
     elif candidate in [CAR.GRANDEUR_IG_FL, CAR.GRANDEUR_IG_FL_HEV]:
       tire_stiffness_factor = 0.8
       ret.mass = 1600. + STD_CARGO_KG
@@ -210,61 +228,73 @@ class CarInterface(CarInterfaceBase):
       ret.wheelbase = 2.80
       tire_stiffness_factor = 0.9
       ret.centerToFront = ret.wheelbase * 0.4
+      ret.steerRatio = 13.75
     elif candidate == CAR.TUCSON_TL_SCC:
       ret.mass = 1594. + STD_CARGO_KG #1730
       ret.wheelbase = 2.67
       tire_stiffness_factor = 0.7
       ret.centerToFront = ret.wheelbase * 0.4
+      ret.steerRatio = 14.00
     # kia
     elif candidate == CAR.SORENTO:
       ret.mass = 1985. + STD_CARGO_KG
       ret.wheelbase = 2.78
       tire_stiffness_factor = 0.7
       ret.centerToFront = ret.wheelbase * 0.4
+      ret.steerRatio = 14.4
     elif candidate in [CAR.K5, CAR.K5_HEV]:
       ret.mass = 3558. * CV.LB_TO_KG
       ret.wheelbase = 2.80
       tire_stiffness_factor = 0.7
       ret.centerToFront = ret.wheelbase * 0.4
+      ret.steerRatio = 13.27
     elif candidate in [CAR.K5_2021]:
       ret.mass = 3228. * CV.LB_TO_KG
       ret.wheelbase = 2.85
       tire_stiffness_factor = 0.7
+      ret.steerRatio = 13.27
     elif candidate == CAR.STINGER:
       tire_stiffness_factor = 1.125 # LiveParameters (Tunder's 2020)
       ret.mass = 1825.0 + STD_CARGO_KG
       ret.wheelbase = 2.906
       ret.centerToFront = ret.wheelbase * 0.4
+      ret.steerRatio = 14.4
     elif candidate == CAR.FORTE:
       ret.mass = 3558. * CV.LB_TO_KG
       ret.wheelbase = 2.80
       tire_stiffness_factor = 0.7
       ret.centerToFront = ret.wheelbase * 0.4
+      ret.steerRatio = 13.75
     elif candidate == CAR.CEED:
       ret.mass = 1350. + STD_CARGO_KG
       ret.wheelbase = 2.65
       tire_stiffness_factor = 0.6
       ret.centerToFront = ret.wheelbase * 0.4
+      ret.steerRatio = 13.75
     elif candidate == CAR.SPORTAGE:
       ret.mass = 1985. + STD_CARGO_KG
       ret.wheelbase = 2.78
       tire_stiffness_factor = 0.7
       ret.centerToFront = ret.wheelbase * 0.4
+      ret.steerRatio = 14.4
     elif candidate in [CAR.NIRO_EV, CAR.NIRO_HEV, CAR.NIRO_HEV_2021]:
       ret.mass = 1737. + STD_CARGO_KG
       ret.wheelbase = 2.7
       tire_stiffness_factor = 0.7
       ret.centerToFront = ret.wheelbase * 0.4
+      ret.steerRatio = 13.3
     elif candidate == CAR.SELTOS:
       ret.mass = 1310. + STD_CARGO_KG
       ret.wheelbase = 2.6
       tire_stiffness_factor = 0.7
+      ret.steerRatio = 14.56
       ret.centerToFront = ret.wheelbase * 0.4
     elif candidate == CAR.MOHAVE:
       ret.mass = 2285. + STD_CARGO_KG
       ret.wheelbase = 2.895
       ret.centerToFront = ret.wheelbase * 0.5
       tire_stiffness_factor = 0.8
+      ret.steerRatio = 16.5
     elif candidate in [CAR.K7, CAR.K7_HEV]:
       tire_stiffness_factor = 0.7
       ret.mass = 1650. + STD_CARGO_KG
@@ -287,11 +317,10 @@ class CarInterface(CarInterfaceBase):
     if params.get_bool("UseNpilotManager"):
       ret.steerRatio = max(ntune_common_get('steerRatio'), 12.0)
     else:
-      ret.steerRatio = float(Decimal(params.get("SteerRatioAdj", encoding="utf8")) * Decimal('0.01'))
+      if not params.get_bool("UseBaseTorqueValues"):
+        ret.steerRatio = float(Decimal(params.get("SteerRatioAdj", encoding="utf8")) * Decimal('0.01'))
 
     if ret.lateralTuning.which() == 'torque':
-      #TORQUE ONLY
-      #selfdrive/car/torque_data/params.yaml 참조해서 값 입력 https://codebeautify.org/jsonviewer/y220b1623
 
       if params.get_bool("UseNpilotManager"):
         try:
@@ -304,6 +333,16 @@ class CarInterface(CarInterfaceBase):
       else:
         torque_lat_accel_factor = float(Decimal(params.get("TorqueMaxLatAccel", encoding="utf8")) * Decimal('0.1')) #LAT_ACCEL_FACTOR
         torque_friction = float(Decimal(params.get("TorqueFriction", encoding="utf8")) * Decimal('0.001')) #FRICTION
+
+        if params.get_bool("UseBaseTorqueValues"):
+          try:
+            torque_params = CarInterfaceBase.get_torque_params(candidate) #selfdrive/car/torque_data 자동으로 가져오기
+            torque_lat_accel_factor = torque_params['LAT_ACCEL_FACTOR']
+            torque_friction = torque_params['FRICTION']
+          except:
+            params.put_bool("UseBaseTorqueValues", False)
+            torque_lat_accel_factor = float(Decimal(params.get("TorqueMaxLatAccel", encoding="utf8")) * Decimal('0.1')) #LAT_ACCEL_FACTOR
+            torque_friction = float(Decimal(params.get("TorqueFriction", encoding="utf8")) * Decimal('0.001')) #FRICTION
 
       #토크
       CarInterfaceBase.configure_torque_tune(ret.lateralTuning, torque_lat_accel_factor, torque_friction)

@@ -24,7 +24,7 @@ from selfdrive.swaglog import cloudlog
 from selfdrive.thermald.power_monitoring import PowerMonitoring
 from selfdrive.thermald.fan_controller import EonFanController, UnoFanController, TiciFanController
 from selfdrive.version import terms_version, training_version
-from selfdrive.ntune import ntune_option_enabled
+from selfdrive.ntune import ntune_option_enabled, ntune_option_get
 
 ThermalStatus = log.DeviceState.ThermalStatus
 NetworkType = log.DeviceState.NetworkType
@@ -210,11 +210,15 @@ def thermald_thread(end_event, hw_queue):
   shutdown_trigger = 1
 
   #OPKR
+  hotspot_run = False
+
   if params.get_bool("UseNpilotManager"):
+    hotspot_on_boot = ntune_option_enabled('OpkrHotspotOnBoot')
     battery_charging_control = ntune_option_enabled('batteryChargingControl')
-    battery_charging_min = int(ntune_option_enabled('batteryChargingMin'))
-    battery_charging_max = int(ntune_option_enabled('batteryChargingMax'))
+    battery_charging_min = int(ntune_option_get('batteryChargingMin'))
+    battery_charging_max = int(ntune_option_get('batteryChargingMax'))
   else:
+    hotspot_on_boot = params.get_bool("OpkrHotspotOnBoot")
     battery_charging_control = params.get_bool("OpkrBatteryChargingControl")
     battery_charging_min = int(params.get("OpkrBatteryChargingMin", encoding="utf8"))
     battery_charging_max = int(params.get("OpkrBatteryChargingMax", encoding="utf8"))
@@ -395,6 +399,11 @@ def thermald_thread(end_event, hw_queue):
       started_ts = None
       if off_ts is None:
         off_ts = sec_since_boot()
+        
+    # opkr hotspot
+    if hotspot_on_boot and not hotspot_run and sec_since_boot() > 80:
+      os.system("service call wifi 37 i32 0 i32 1 &")
+      hotspot_run = True
 
     # Offroad power monitoring
     power_monitor.calculate(peripheralState, onroad_conditions["ignition"])

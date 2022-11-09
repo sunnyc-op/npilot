@@ -237,9 +237,20 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"OPKRServer", PERSISTENT},
     {"OPKRServerAPI", PERSISTENT},
     {"OPKRTimeZone", PERSISTENT},
+    {"UseBaseTorqueValues", PERSISTENT},
+    {"StopAtStopSign", PERSISTENT},
+    {"OpkrHotspotOnBoot", PERSISTENT},
+
     //npilot_manager
     {"UseNpilotManager", PERSISTENT},
 
+    //sunny Speed Control
+    {"SpeedLimitControl", PERSISTENT},
+    {"SpeedLimitPercOffset", PERSISTENT},
+    {"TurnSpeedControl", PERSISTENT},
+    {"TurnVisionControl", PERSISTENT},
+
+    {"ShowTrafficSignal", PERSISTENT},
 
 };
 

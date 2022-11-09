@@ -123,7 +123,7 @@ def create_mdps12(packer, frame, mdps12):
 
   return packer.make_can_msg("MDPS12", 2, values)
 
-def create_scc11(packer, frame, enabled, set_speed, lead_visible, scc_live, scc11, active_cam, stock_cam):
+def create_scc11(packer, frame, enabled, set_speed, lead_visible, scc_live, scc11, active_cam, stock_cam, softHold):
   values = copy.copy(scc11)
   values["AliveCounterACC"] = frame // 2 % 0x10
 
@@ -135,37 +135,54 @@ def create_scc11(packer, frame, enabled, set_speed, lead_visible, scc_live, scc1
     values["MainMode_ACC"] = 1
     values["VSetDis"] = set_speed
     values["ObjValid"] = 1 if enabled else 0
-#  values["ACC_ObjStatus"] = lead_visible
+    # values["ACC_ObjStatus"] = lead_visible
+    values["SCCInfoDisplay"] = 4 if enabled and softHold else 2 if enabled else 0   #3: 전방상황주의, 4: 출발준비
 
   return packer.make_can_msg("SCC11", 0, values)
 
 def create_scc12(packer, apply_accel, enabled, cnt, scc_live, scc12, gaspressed, brakepressed,
-                 standstill, car_fingerprint):
+                 standstill, car_fingerprint, stopping, radar_recognition, aebcmdact):
   values = copy.copy(scc12)
 
-  if car_fingerprint in EV_HYBRID_CAR:
-    # from xps-genesis
-    if enabled and not brakepressed:
+  if not aebcmdact:
+    if enabled and car_fingerprint == CAR.NIRO_EV:
       values["ACCMode"] = 2 if gaspressed and (apply_accel > -0.2) else 1
-      if apply_accel < 0.0 and standstill:
-        values["StopReq"] = 1
       values["aReqRaw"] = apply_accel
       values["aReqValue"] = apply_accel
+      if not radar_recognition and standstill and stopping:
+        if stopping:
+          values["StopReq"] = 1
+        else:
+          values["StopReq"] = 0
+    elif enabled and not brakepressed:
+      values["ACCMode"] = 2 if gaspressed and (apply_accel > -0.2) else 1
+      values["aReqRaw"] = apply_accel
+      values["aReqValue"] = apply_accel
+      if not radar_recognition and standstill and stopping:
+        values["aReqRaw"] = 0
+        values["aReqValue"] = 0
+        if stopping:
+          values["StopReq"] = 1
+        else:
+          values["StopReq"] = 0
+      else:
+        if stopping:
+          values["StopReq"] = 1
+        else:
+          values["StopReq"] = 0
     else:
       values["ACCMode"] = 0
       values["aReqRaw"] = 0
       values["aReqValue"] = 0
 
-    if not scc_live:
-      values["CR_VSM_Alive"] = cnt
+  if not scc_live:
+    if apply_accel < 0.0 and standstill:
+      values["StopReq"] = 1
+    else:
+      values["StopReq"] = 0
+    values["ACCMode"] = 1 if enabled else 0 # 2 if gas padel pressed
 
-  else:
-    values["aReqRaw"] = apply_accel if enabled else 0  # aReqMax
-    values["aReqValue"] = apply_accel if enabled else 0  # aReqMin
-    values["CR_VSM_Alive"] = cnt
-    if not scc_live:
-      values["ACCMode"] = 1 if enabled else 0  # 2 if gas padel pressed
-
+  values["CR_VSM_Alive"] = cnt
   values["CR_VSM_ChkSum"] = 0
   dat = packer.make_can_msg("SCC12", 0, values)[2]
   values["CR_VSM_ChkSum"] = 16 - sum([sum(divmod(i, 16)) for i in dat]) % 16
