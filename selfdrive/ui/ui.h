@@ -113,9 +113,22 @@ typedef struct UIScene {
   QPointF lead_vertices[2];
   bool lead_radar[2] = {false, false};
 
+  QPolygonF stop_line_vertices;
+
   float light_sensor, accel_sensor, gyro_sensor;
   bool started, ignition, is_metric, longitudinal_control, end_to_end;
   uint64_t started_frame;
+
+  struct _LongitudinalPlan
+  {
+    float e2ex[13] = {0};
+    float lead0[13] = {0};
+    float lead1[13] = {0};
+    float cruisetg[13] = {0};
+    float stopline[13] = {0};
+    float stopprob;
+  } longitudinalPlan;
+
 } UIScene;
 
 class UIState : public QObject {
@@ -148,6 +161,7 @@ public:
 
   bool recording = false;
   bool show_debug = false;
+  bool show_signal = false;
   std::string lat_control;
 
 signals:

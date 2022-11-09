@@ -11,7 +11,6 @@
 #include "selfdrive/common/clutil.h"
 #include "selfdrive/common/params.h"
 #include "selfdrive/common/timing.h"
-#include "selfdrive/common/swaglog.h"
 
 constexpr float FCW_THRESHOLD_5MS2_HIGH = 0.15;
 constexpr float FCW_THRESHOLD_5MS2_LOW = 0.05;
@@ -75,15 +74,12 @@ ModelOutput* model_eval_frame(ModelState* s, VisionBuf* buf, VisionBuf* wbuf,
   // if getInputBuf is not NULL, net_input_buf will be
   auto net_input_buf = s->frame->prepare(buf->buf_cl, buf->width, buf->height, transform, static_cast<cl_mem*>(s->m->getInputBuf()));
   s->m->addImage(net_input_buf, s->frame->buf_size);
-  LOGT("Image added");
 
   if (wbuf != nullptr) {
     auto net_extra_buf = s->wide_frame->prepare(wbuf->buf_cl, wbuf->width, wbuf->height, transform_wide, static_cast<cl_mem*>(s->m->getExtraBuf()));
     s->m->addExtra(net_extra_buf, s->wide_frame->buf_size);
-    LOGT("Extra image added");
   }
   s->m->execute();
-  LOGT("Execution finished");
 
   return (ModelOutput*)&s->output;
 }
@@ -118,6 +114,30 @@ void fill_lead(cereal::ModelDataV2::LeadDataV3::Builder lead, const ModelOutputL
   lead.setYStd(to_kj_array_ptr(lead_y_std));
   lead.setVStd(to_kj_array_ptr(lead_v_std));
   lead.setAStd(to_kj_array_ptr(lead_a_std));
+}
+
+// added by opkr
+void fill_stop_line(cereal::ModelDataV2::StopLineData::Builder stop_line, const ModelOutputStopLines &stop_lines) {
+  const auto &best_data = stop_lines.get_best_prediction();
+  stop_line.setProb(sigmoid(stop_lines.prob));
+
+  stop_line.setX(best_data.mean.position.x);
+  stop_line.setY(best_data.mean.position.y);
+  stop_line.setZ(best_data.mean.position.z);
+  stop_line.setRoll(best_data.mean.rotation.x);
+  stop_line.setPitch(best_data.mean.rotation.y);
+  stop_line.setYaw(best_data.mean.rotation.z);
+  stop_line.setSpeedAtLine(best_data.mean.speed);
+  stop_line.setSecondsUntilLine(best_data.mean.time);
+
+  stop_line.setXStd(best_data.std.position.x);
+  stop_line.setYStd(best_data.std.position.y);
+  stop_line.setZStd(best_data.std.position.z);
+  stop_line.setRollStd(best_data.std.rotation.x);
+  stop_line.setPitchStd(best_data.std.rotation.y);
+  stop_line.setYawStd(best_data.std.rotation.z);
+  stop_line.setSpeedAtLineStd(best_data.std.speed);
+  stop_line.setSecondsUntilLineStd(best_data.std.time);
 }
 
 void fill_meta(cereal::ModelDataV2::MetaData::Builder meta, const ModelOutputMeta &meta_data) {
@@ -195,6 +215,7 @@ void fill_plan(cereal::ModelDataV2::Builder &framed, const ModelOutputPlanPredic
   std::array<float, TRAJECTORY_SIZE> pos_x_std, pos_y_std, pos_z_std;
   std::array<float, TRAJECTORY_SIZE> vel_x, vel_y, vel_z;
   std::array<float, TRAJECTORY_SIZE> rot_x, rot_y, rot_z;
+  std::array<float, TRAJECTORY_SIZE> acc_x, acc_y, acc_z;
   std::array<float, TRAJECTORY_SIZE> rot_rate_x, rot_rate_y, rot_rate_z;
 
   for(int i=0; i<TRAJECTORY_SIZE; i++) {
@@ -207,6 +228,9 @@ void fill_plan(cereal::ModelDataV2::Builder &framed, const ModelOutputPlanPredic
     vel_x[i] = plan.mean[i].velocity.x;
     vel_y[i] = plan.mean[i].velocity.y;
     vel_z[i] = plan.mean[i].velocity.z;
+    acc_x[i] = plan.mean[i].acceleration.x;
+    acc_y[i] = plan.mean[i].acceleration.y;
+    acc_z[i] = plan.mean[i].acceleration.z;
     rot_x[i] = plan.mean[i].rotation.x;
     rot_y[i] = plan.mean[i].rotation.y;
     rot_z[i] = plan.mean[i].rotation.z;
@@ -217,6 +241,7 @@ void fill_plan(cereal::ModelDataV2::Builder &framed, const ModelOutputPlanPredic
 
   fill_xyzt(framed.initPosition(), T_IDXS_FLOAT, pos_x, pos_y, pos_z, pos_x_std, pos_y_std, pos_z_std);
   fill_xyzt(framed.initVelocity(), T_IDXS_FLOAT, vel_x, vel_y, vel_z);
+  fill_xyzt(framed.initAcceleration(), T_IDXS_FLOAT, acc_x, acc_y, acc_z);
   fill_xyzt(framed.initOrientation(), T_IDXS_FLOAT, rot_x, rot_y, rot_z);
   fill_xyzt(framed.initOrientationRate(), T_IDXS_FLOAT, rot_rate_x, rot_rate_y, rot_rate_z);
 }
@@ -309,6 +334,9 @@ void fill_model(cereal::ModelDataV2::Builder &framed, const ModelOutput &net_out
 
   // meta
   fill_meta(framed.initMeta(), net_outputs.meta);
+
+  // stop line, added by opkr
+  fill_stop_line(framed.initStopLine(), net_outputs.stop_lines);
 
   // leads
   auto leads = framed.initLeadsV3(LEAD_MHP_SELECTION);

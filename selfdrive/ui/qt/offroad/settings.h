@@ -576,6 +576,18 @@ public:
   }
 };
 
+class HotspotOnBootToggle : public ToggleControl {
+  Q_OBJECT
+
+public:
+  HotspotOnBootToggle() : ToggleControl(tr("HotSpot on Boot"), tr("It automatically runs a hotspot when booting."), "", Params().getBool("OpkrHotspotOnBoot")) {
+    QObject::connect(this, &HotspotOnBootToggle::toggleFlipped, [=](int state) {
+      bool status = state ? true : false;
+      Params().putBool("OpkrHotspotOnBoot", status);
+    });
+  }
+};
+
 class LowSpeedFactorToggle : public ToggleControl {
   Q_OBJECT
 

@@ -46,8 +46,8 @@ def manager_init() -> None:
 
     # HKG
     ("LateralControl", "TORQUE"),
-    ("UseClusterSpeed", "0"),
-    ("LongControlEnabled", "0"),
+    ("UseClusterSpeed", "1"),
+    ("LongControlEnabled", "1"),
     ("MadModeEnabled", "1"),
     ("IsLdwsCar", "0"),
     ("LaneChangeEnabled", "0"),
@@ -56,9 +56,9 @@ def manager_init() -> None:
     ("SccSmootherSlowOnCurves", "0"),
     ("SccSmootherSyncGasPressed", "0"),
     ("StockNaviDecelEnabled", "0"),
-    ("KeepSteeringTurnSignals", "0"),
+    ("KeepSteeringTurnSignals", "1"),
     ("HapticFeedbackWhenSpeedCamera", "0"),
-    ("DisableOpFcw", "0"),
+    ("DisableOpFcw", "1"),
     ("ShowDebugUI", "0"),
     ("NewRadarInterface", "0"),
 
@@ -93,9 +93,19 @@ def manager_init() -> None:
     ("AutoCruiseSetDependsOnNda", "0"),
     ("OPKRServer", "0"),
     ("UseBaseTorqueValues", "1"),
+    ("StopAtStopSign", "0"),
+    ("OpkrHotspotOnBoot", "0"),
 
     #nPilot_Manager
     ("UseNpilotManager", "0"),
+
+    #sunny Speed Control
+    ("SpeedLimitControl", "0"),
+    ("SpeedLimitPercOffset", "0"),
+    ("TurnSpeedControl", "0"),
+    ("TurnVisionControl", "0"),
+
+    ("ShowTrafficSignal", "0"),
 
 
   ]

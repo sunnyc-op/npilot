@@ -214,6 +214,7 @@ CAPNP_DECLARE_SCHEMA(c4713f6b0d36abe9);
 CAPNP_DECLARE_SCHEMA(c3cbae1fd505ae80);
 CAPNP_DECLARE_SCHEMA(a444ed2b2187af28);
 CAPNP_DECLARE_SCHEMA(d698881ad0ce7feb);
+CAPNP_DECLARE_SCHEMA(b81b02e5029fee60);
 CAPNP_DECLARE_SCHEMA(d1646ab3b45cfabd);
 CAPNP_DECLARE_SCHEMA(860aa5ddbcdc8d25);
 CAPNP_DECLARE_SCHEMA(89d394e3541735fc);
@@ -239,6 +240,7 @@ enum class LongitudinalPlanSource_b231a753cc079120: uint16_t {
   TURN,
   LIMIT,
   TURNLIMIT,
+  STOP,
 };
 CAPNP_DECLARE_ENUM(LongitudinalPlanSource, b231a753cc079120);
 CAPNP_DECLARE_SCHEMA(8cfeb072f5301000);
@@ -992,11 +994,12 @@ struct ModelDataV2 {
   struct XYZTData;
   struct LeadDataV2;
   struct LeadDataV3;
+  struct StopLineData;
   struct MetaData;
   struct DisengagePredictions;
 
   struct _capnpPrivate {
-    CAPNP_DECLARE_STRUCT_HEADER(c4713f6b0d36abe9, 4, 14)
+    CAPNP_DECLARE_STRUCT_HEADER(c4713f6b0d36abe9, 4, 15)
     #if !CAPNP_LITE
     static constexpr ::capnp::_::RawBrandedSchema const* brand() { return &schema->defaultBrand; }
     #endif  // !CAPNP_LITE
@@ -1042,6 +1045,21 @@ struct ModelDataV2::LeadDataV3 {
 
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(d698881ad0ce7feb, 1, 9)
+    #if !CAPNP_LITE
+    static constexpr ::capnp::_::RawBrandedSchema const* brand() { return &schema->defaultBrand; }
+    #endif  // !CAPNP_LITE
+  };
+};
+
+struct ModelDataV2::StopLineData {
+  StopLineData() = delete;
+
+  class Reader;
+  class Builder;
+  class Pipeline;
+
+  struct _capnpPrivate {
+    CAPNP_DECLARE_STRUCT_HEADER(b81b02e5029fee60, 9, 0)
     #if !CAPNP_LITE
     static constexpr ::capnp::_::RawBrandedSchema const* brand() { return &schema->defaultBrand; }
     #endif  // !CAPNP_LITE
@@ -1125,7 +1143,7 @@ struct LongitudinalPlan {
 
 
   struct _capnpPrivate {
-    CAPNP_DECLARE_STRUCT_HEADER(e00b5b3eba12876c, 14, 6)
+    CAPNP_DECLARE_STRUCT_HEADER(e00b5b3eba12876c, 15, 11)
     #if !CAPNP_LITE
     static constexpr ::capnp::_::RawBrandedSchema const* brand() { return &schema->defaultBrand; }
     #endif  // !CAPNP_LITE
@@ -7075,6 +7093,9 @@ public:
 
   inline  ::uint32_t getFrameIdExtra() const;
 
+  inline bool hasStopLine() const;
+  inline  ::cereal::ModelDataV2::StopLineData::Reader getStopLine() const;
+
 private:
   ::capnp::_::StructReader _reader;
   template <typename, ::capnp::Kind>
@@ -7225,6 +7246,13 @@ public:
   inline  ::uint32_t getFrameIdExtra();
   inline void setFrameIdExtra( ::uint32_t value);
 
+  inline bool hasStopLine();
+  inline  ::cereal::ModelDataV2::StopLineData::Builder getStopLine();
+  inline void setStopLine( ::cereal::ModelDataV2::StopLineData::Reader value);
+  inline  ::cereal::ModelDataV2::StopLineData::Builder initStopLine();
+  inline void adoptStopLine(::capnp::Orphan< ::cereal::ModelDataV2::StopLineData>&& value);
+  inline ::capnp::Orphan< ::cereal::ModelDataV2::StopLineData> disownStopLine();
+
 private:
   ::capnp::_::StructBuilder _builder;
   template <typename, ::capnp::Kind>
@@ -7249,6 +7277,7 @@ public:
   inline  ::cereal::ModelDataV2::XYZTData::Pipeline getOrientationRate();
   inline  ::cereal::ModelDataV2::MetaData::Pipeline getMeta();
   inline  ::cereal::ModelDataV2::XYZTData::Pipeline getAcceleration();
+  inline  ::cereal::ModelDataV2::StopLineData::Pipeline getStopLine();
 private:
   ::capnp::AnyPointer::Pipeline _typeless;
   friend class ::capnp::PipelineHook;
@@ -7675,6 +7704,162 @@ private:
 class ModelDataV2::LeadDataV3::Pipeline {
 public:
   typedef LeadDataV3 Pipelines;
+
+  inline Pipeline(decltype(nullptr)): _typeless(nullptr) {}
+  inline explicit Pipeline(::capnp::AnyPointer::Pipeline&& typeless)
+      : _typeless(kj::mv(typeless)) {}
+
+private:
+  ::capnp::AnyPointer::Pipeline _typeless;
+  friend class ::capnp::PipelineHook;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+};
+#endif  // !CAPNP_LITE
+
+class ModelDataV2::StopLineData::Reader {
+public:
+  typedef StopLineData Reads;
+
+  Reader() = default;
+  inline explicit Reader(::capnp::_::StructReader base): _reader(base) {}
+
+  inline ::capnp::MessageSize totalSize() const {
+    return _reader.totalSize().asPublic();
+  }
+
+#if !CAPNP_LITE
+  inline ::kj::StringTree toString() const {
+    return ::capnp::_::structString(_reader, *_capnpPrivate::brand());
+  }
+#endif  // !CAPNP_LITE
+
+  inline float getProb() const;
+
+  inline float getX() const;
+
+  inline float getXStd() const;
+
+  inline float getY() const;
+
+  inline float getYStd() const;
+
+  inline float getZ() const;
+
+  inline float getZStd() const;
+
+  inline float getRoll() const;
+
+  inline float getRollStd() const;
+
+  inline float getPitch() const;
+
+  inline float getPitchStd() const;
+
+  inline float getYaw() const;
+
+  inline float getYawStd() const;
+
+  inline float getSpeedAtLine() const;
+
+  inline float getSpeedAtLineStd() const;
+
+  inline float getSecondsUntilLine() const;
+
+  inline float getSecondsUntilLineStd() const;
+
+private:
+  ::capnp::_::StructReader _reader;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::_::PointerHelpers;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::List;
+  friend class ::capnp::MessageBuilder;
+  friend class ::capnp::Orphanage;
+};
+
+class ModelDataV2::StopLineData::Builder {
+public:
+  typedef StopLineData Builds;
+
+  Builder() = delete;  // Deleted to discourage incorrect usage.
+                       // You can explicitly initialize to nullptr instead.
+  inline Builder(decltype(nullptr)) {}
+  inline explicit Builder(::capnp::_::StructBuilder base): _builder(base) {}
+  inline operator Reader() const { return Reader(_builder.asReader()); }
+  inline Reader asReader() const { return *this; }
+
+  inline ::capnp::MessageSize totalSize() const { return asReader().totalSize(); }
+#if !CAPNP_LITE
+  inline ::kj::StringTree toString() const { return asReader().toString(); }
+#endif  // !CAPNP_LITE
+
+  inline float getProb();
+  inline void setProb(float value);
+
+  inline float getX();
+  inline void setX(float value);
+
+  inline float getXStd();
+  inline void setXStd(float value);
+
+  inline float getY();
+  inline void setY(float value);
+
+  inline float getYStd();
+  inline void setYStd(float value);
+
+  inline float getZ();
+  inline void setZ(float value);
+
+  inline float getZStd();
+  inline void setZStd(float value);
+
+  inline float getRoll();
+  inline void setRoll(float value);
+
+  inline float getRollStd();
+  inline void setRollStd(float value);
+
+  inline float getPitch();
+  inline void setPitch(float value);
+
+  inline float getPitchStd();
+  inline void setPitchStd(float value);
+
+  inline float getYaw();
+  inline void setYaw(float value);
+
+  inline float getYawStd();
+  inline void setYawStd(float value);
+
+  inline float getSpeedAtLine();
+  inline void setSpeedAtLine(float value);
+
+  inline float getSpeedAtLineStd();
+  inline void setSpeedAtLineStd(float value);
+
+  inline float getSecondsUntilLine();
+  inline void setSecondsUntilLine(float value);
+
+  inline float getSecondsUntilLineStd();
+  inline void setSecondsUntilLineStd(float value);
+
+private:
+  ::capnp::_::StructBuilder _builder;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+  friend class ::capnp::Orphanage;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::_::PointerHelpers;
+};
+
+#if !CAPNP_LITE
+class ModelDataV2::StopLineData::Pipeline {
+public:
+  typedef StopLineData Pipelines;
 
   inline Pipeline(decltype(nullptr)): _typeless(nullptr) {}
   inline explicit Pipeline(::capnp::AnyPointer::Pipeline&& typeless)
@@ -8309,6 +8494,27 @@ public:
 
   inline  ::int16_t getTurnSign() const;
 
+  inline bool hasStopLine() const;
+  inline  ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>::Reader getStopLine() const;
+
+  inline float getStoplineProb() const;
+
+  inline  ::int32_t getTrafficState() const;
+
+  inline bool hasE2eX() const;
+  inline  ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>::Reader getE2eX() const;
+
+  inline bool hasLead0Obstacle() const;
+  inline  ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>::Reader getLead0Obstacle() const;
+
+  inline bool hasLead1Obstacle() const;
+  inline  ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>::Reader getLead1Obstacle() const;
+
+  inline bool hasCruiseTarget() const;
+  inline  ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>::Reader getCruiseTarget() const;
+
+  inline bool getOnStop() const;
+
 private:
   ::capnp::_::StructReader _reader;
   template <typename, ::capnp::Kind>
@@ -8505,6 +8711,55 @@ public:
 
   inline  ::int16_t getTurnSign();
   inline void setTurnSign( ::int16_t value);
+
+  inline bool hasStopLine();
+  inline  ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>::Builder getStopLine();
+  inline void setStopLine( ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>::Reader value);
+  inline void setStopLine(::kj::ArrayPtr<const double> value);
+  inline  ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>::Builder initStopLine(unsigned int size);
+  inline void adoptStopLine(::capnp::Orphan< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>&& value);
+  inline ::capnp::Orphan< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>> disownStopLine();
+
+  inline float getStoplineProb();
+  inline void setStoplineProb(float value);
+
+  inline  ::int32_t getTrafficState();
+  inline void setTrafficState( ::int32_t value);
+
+  inline bool hasE2eX();
+  inline  ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>::Builder getE2eX();
+  inline void setE2eX( ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>::Reader value);
+  inline void setE2eX(::kj::ArrayPtr<const double> value);
+  inline  ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>::Builder initE2eX(unsigned int size);
+  inline void adoptE2eX(::capnp::Orphan< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>&& value);
+  inline ::capnp::Orphan< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>> disownE2eX();
+
+  inline bool hasLead0Obstacle();
+  inline  ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>::Builder getLead0Obstacle();
+  inline void setLead0Obstacle( ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>::Reader value);
+  inline void setLead0Obstacle(::kj::ArrayPtr<const double> value);
+  inline  ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>::Builder initLead0Obstacle(unsigned int size);
+  inline void adoptLead0Obstacle(::capnp::Orphan< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>&& value);
+  inline ::capnp::Orphan< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>> disownLead0Obstacle();
+
+  inline bool hasLead1Obstacle();
+  inline  ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>::Builder getLead1Obstacle();
+  inline void setLead1Obstacle( ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>::Reader value);
+  inline void setLead1Obstacle(::kj::ArrayPtr<const double> value);
+  inline  ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>::Builder initLead1Obstacle(unsigned int size);
+  inline void adoptLead1Obstacle(::capnp::Orphan< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>&& value);
+  inline ::capnp::Orphan< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>> disownLead1Obstacle();
+
+  inline bool hasCruiseTarget();
+  inline  ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>::Builder getCruiseTarget();
+  inline void setCruiseTarget( ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>::Reader value);
+  inline void setCruiseTarget(::kj::ArrayPtr<const double> value);
+  inline  ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>::Builder initCruiseTarget(unsigned int size);
+  inline void adoptCruiseTarget(::capnp::Orphan< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>&& value);
+  inline ::capnp::Orphan< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>> disownCruiseTarget();
+
+  inline bool getOnStop();
+  inline void setOnStop(bool value);
 
 private:
   ::capnp::_::StructBuilder _builder;
@@ -25515,6 +25770,45 @@ inline void ModelDataV2::Builder::setFrameIdExtra( ::uint32_t value) {
       ::capnp::bounded<7>() * ::capnp::ELEMENTS, value);
 }
 
+inline bool ModelDataV2::Reader::hasStopLine() const {
+  return !_reader.getPointerField(
+      ::capnp::bounded<14>() * ::capnp::POINTERS).isNull();
+}
+inline bool ModelDataV2::Builder::hasStopLine() {
+  return !_builder.getPointerField(
+      ::capnp::bounded<14>() * ::capnp::POINTERS).isNull();
+}
+inline  ::cereal::ModelDataV2::StopLineData::Reader ModelDataV2::Reader::getStopLine() const {
+  return ::capnp::_::PointerHelpers< ::cereal::ModelDataV2::StopLineData>::get(_reader.getPointerField(
+      ::capnp::bounded<14>() * ::capnp::POINTERS));
+}
+inline  ::cereal::ModelDataV2::StopLineData::Builder ModelDataV2::Builder::getStopLine() {
+  return ::capnp::_::PointerHelpers< ::cereal::ModelDataV2::StopLineData>::get(_builder.getPointerField(
+      ::capnp::bounded<14>() * ::capnp::POINTERS));
+}
+#if !CAPNP_LITE
+inline  ::cereal::ModelDataV2::StopLineData::Pipeline ModelDataV2::Pipeline::getStopLine() {
+  return  ::cereal::ModelDataV2::StopLineData::Pipeline(_typeless.getPointerField(14));
+}
+#endif  // !CAPNP_LITE
+inline void ModelDataV2::Builder::setStopLine( ::cereal::ModelDataV2::StopLineData::Reader value) {
+  ::capnp::_::PointerHelpers< ::cereal::ModelDataV2::StopLineData>::set(_builder.getPointerField(
+      ::capnp::bounded<14>() * ::capnp::POINTERS), value);
+}
+inline  ::cereal::ModelDataV2::StopLineData::Builder ModelDataV2::Builder::initStopLine() {
+  return ::capnp::_::PointerHelpers< ::cereal::ModelDataV2::StopLineData>::init(_builder.getPointerField(
+      ::capnp::bounded<14>() * ::capnp::POINTERS));
+}
+inline void ModelDataV2::Builder::adoptStopLine(
+    ::capnp::Orphan< ::cereal::ModelDataV2::StopLineData>&& value) {
+  ::capnp::_::PointerHelpers< ::cereal::ModelDataV2::StopLineData>::adopt(_builder.getPointerField(
+      ::capnp::bounded<14>() * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::cereal::ModelDataV2::StopLineData> ModelDataV2::Builder::disownStopLine() {
+  return ::capnp::_::PointerHelpers< ::cereal::ModelDataV2::StopLineData>::disown(_builder.getPointerField(
+      ::capnp::bounded<14>() * ::capnp::POINTERS));
+}
+
 inline bool ModelDataV2::XYZTData::Reader::hasX() const {
   return !_reader.getPointerField(
       ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
@@ -26253,6 +26547,244 @@ inline void ModelDataV2::LeadDataV3::Builder::adoptAStd(
 inline ::capnp::Orphan< ::capnp::List<float,  ::capnp::Kind::PRIMITIVE>> ModelDataV2::LeadDataV3::Builder::disownAStd() {
   return ::capnp::_::PointerHelpers< ::capnp::List<float,  ::capnp::Kind::PRIMITIVE>>::disown(_builder.getPointerField(
       ::capnp::bounded<8>() * ::capnp::POINTERS));
+}
+
+inline float ModelDataV2::StopLineData::Reader::getProb() const {
+  return _reader.getDataField<float>(
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
+}
+
+inline float ModelDataV2::StopLineData::Builder::getProb() {
+  return _builder.getDataField<float>(
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
+}
+inline void ModelDataV2::StopLineData::Builder::setProb(float value) {
+  _builder.setDataField<float>(
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, value);
+}
+
+inline float ModelDataV2::StopLineData::Reader::getX() const {
+  return _reader.getDataField<float>(
+      ::capnp::bounded<1>() * ::capnp::ELEMENTS);
+}
+
+inline float ModelDataV2::StopLineData::Builder::getX() {
+  return _builder.getDataField<float>(
+      ::capnp::bounded<1>() * ::capnp::ELEMENTS);
+}
+inline void ModelDataV2::StopLineData::Builder::setX(float value) {
+  _builder.setDataField<float>(
+      ::capnp::bounded<1>() * ::capnp::ELEMENTS, value);
+}
+
+inline float ModelDataV2::StopLineData::Reader::getXStd() const {
+  return _reader.getDataField<float>(
+      ::capnp::bounded<2>() * ::capnp::ELEMENTS);
+}
+
+inline float ModelDataV2::StopLineData::Builder::getXStd() {
+  return _builder.getDataField<float>(
+      ::capnp::bounded<2>() * ::capnp::ELEMENTS);
+}
+inline void ModelDataV2::StopLineData::Builder::setXStd(float value) {
+  _builder.setDataField<float>(
+      ::capnp::bounded<2>() * ::capnp::ELEMENTS, value);
+}
+
+inline float ModelDataV2::StopLineData::Reader::getY() const {
+  return _reader.getDataField<float>(
+      ::capnp::bounded<3>() * ::capnp::ELEMENTS);
+}
+
+inline float ModelDataV2::StopLineData::Builder::getY() {
+  return _builder.getDataField<float>(
+      ::capnp::bounded<3>() * ::capnp::ELEMENTS);
+}
+inline void ModelDataV2::StopLineData::Builder::setY(float value) {
+  _builder.setDataField<float>(
+      ::capnp::bounded<3>() * ::capnp::ELEMENTS, value);
+}
+
+inline float ModelDataV2::StopLineData::Reader::getYStd() const {
+  return _reader.getDataField<float>(
+      ::capnp::bounded<4>() * ::capnp::ELEMENTS);
+}
+
+inline float ModelDataV2::StopLineData::Builder::getYStd() {
+  return _builder.getDataField<float>(
+      ::capnp::bounded<4>() * ::capnp::ELEMENTS);
+}
+inline void ModelDataV2::StopLineData::Builder::setYStd(float value) {
+  _builder.setDataField<float>(
+      ::capnp::bounded<4>() * ::capnp::ELEMENTS, value);
+}
+
+inline float ModelDataV2::StopLineData::Reader::getZ() const {
+  return _reader.getDataField<float>(
+      ::capnp::bounded<5>() * ::capnp::ELEMENTS);
+}
+
+inline float ModelDataV2::StopLineData::Builder::getZ() {
+  return _builder.getDataField<float>(
+      ::capnp::bounded<5>() * ::capnp::ELEMENTS);
+}
+inline void ModelDataV2::StopLineData::Builder::setZ(float value) {
+  _builder.setDataField<float>(
+      ::capnp::bounded<5>() * ::capnp::ELEMENTS, value);
+}
+
+inline float ModelDataV2::StopLineData::Reader::getZStd() const {
+  return _reader.getDataField<float>(
+      ::capnp::bounded<6>() * ::capnp::ELEMENTS);
+}
+
+inline float ModelDataV2::StopLineData::Builder::getZStd() {
+  return _builder.getDataField<float>(
+      ::capnp::bounded<6>() * ::capnp::ELEMENTS);
+}
+inline void ModelDataV2::StopLineData::Builder::setZStd(float value) {
+  _builder.setDataField<float>(
+      ::capnp::bounded<6>() * ::capnp::ELEMENTS, value);
+}
+
+inline float ModelDataV2::StopLineData::Reader::getRoll() const {
+  return _reader.getDataField<float>(
+      ::capnp::bounded<7>() * ::capnp::ELEMENTS);
+}
+
+inline float ModelDataV2::StopLineData::Builder::getRoll() {
+  return _builder.getDataField<float>(
+      ::capnp::bounded<7>() * ::capnp::ELEMENTS);
+}
+inline void ModelDataV2::StopLineData::Builder::setRoll(float value) {
+  _builder.setDataField<float>(
+      ::capnp::bounded<7>() * ::capnp::ELEMENTS, value);
+}
+
+inline float ModelDataV2::StopLineData::Reader::getRollStd() const {
+  return _reader.getDataField<float>(
+      ::capnp::bounded<8>() * ::capnp::ELEMENTS);
+}
+
+inline float ModelDataV2::StopLineData::Builder::getRollStd() {
+  return _builder.getDataField<float>(
+      ::capnp::bounded<8>() * ::capnp::ELEMENTS);
+}
+inline void ModelDataV2::StopLineData::Builder::setRollStd(float value) {
+  _builder.setDataField<float>(
+      ::capnp::bounded<8>() * ::capnp::ELEMENTS, value);
+}
+
+inline float ModelDataV2::StopLineData::Reader::getPitch() const {
+  return _reader.getDataField<float>(
+      ::capnp::bounded<9>() * ::capnp::ELEMENTS);
+}
+
+inline float ModelDataV2::StopLineData::Builder::getPitch() {
+  return _builder.getDataField<float>(
+      ::capnp::bounded<9>() * ::capnp::ELEMENTS);
+}
+inline void ModelDataV2::StopLineData::Builder::setPitch(float value) {
+  _builder.setDataField<float>(
+      ::capnp::bounded<9>() * ::capnp::ELEMENTS, value);
+}
+
+inline float ModelDataV2::StopLineData::Reader::getPitchStd() const {
+  return _reader.getDataField<float>(
+      ::capnp::bounded<10>() * ::capnp::ELEMENTS);
+}
+
+inline float ModelDataV2::StopLineData::Builder::getPitchStd() {
+  return _builder.getDataField<float>(
+      ::capnp::bounded<10>() * ::capnp::ELEMENTS);
+}
+inline void ModelDataV2::StopLineData::Builder::setPitchStd(float value) {
+  _builder.setDataField<float>(
+      ::capnp::bounded<10>() * ::capnp::ELEMENTS, value);
+}
+
+inline float ModelDataV2::StopLineData::Reader::getYaw() const {
+  return _reader.getDataField<float>(
+      ::capnp::bounded<11>() * ::capnp::ELEMENTS);
+}
+
+inline float ModelDataV2::StopLineData::Builder::getYaw() {
+  return _builder.getDataField<float>(
+      ::capnp::bounded<11>() * ::capnp::ELEMENTS);
+}
+inline void ModelDataV2::StopLineData::Builder::setYaw(float value) {
+  _builder.setDataField<float>(
+      ::capnp::bounded<11>() * ::capnp::ELEMENTS, value);
+}
+
+inline float ModelDataV2::StopLineData::Reader::getYawStd() const {
+  return _reader.getDataField<float>(
+      ::capnp::bounded<12>() * ::capnp::ELEMENTS);
+}
+
+inline float ModelDataV2::StopLineData::Builder::getYawStd() {
+  return _builder.getDataField<float>(
+      ::capnp::bounded<12>() * ::capnp::ELEMENTS);
+}
+inline void ModelDataV2::StopLineData::Builder::setYawStd(float value) {
+  _builder.setDataField<float>(
+      ::capnp::bounded<12>() * ::capnp::ELEMENTS, value);
+}
+
+inline float ModelDataV2::StopLineData::Reader::getSpeedAtLine() const {
+  return _reader.getDataField<float>(
+      ::capnp::bounded<13>() * ::capnp::ELEMENTS);
+}
+
+inline float ModelDataV2::StopLineData::Builder::getSpeedAtLine() {
+  return _builder.getDataField<float>(
+      ::capnp::bounded<13>() * ::capnp::ELEMENTS);
+}
+inline void ModelDataV2::StopLineData::Builder::setSpeedAtLine(float value) {
+  _builder.setDataField<float>(
+      ::capnp::bounded<13>() * ::capnp::ELEMENTS, value);
+}
+
+inline float ModelDataV2::StopLineData::Reader::getSpeedAtLineStd() const {
+  return _reader.getDataField<float>(
+      ::capnp::bounded<14>() * ::capnp::ELEMENTS);
+}
+
+inline float ModelDataV2::StopLineData::Builder::getSpeedAtLineStd() {
+  return _builder.getDataField<float>(
+      ::capnp::bounded<14>() * ::capnp::ELEMENTS);
+}
+inline void ModelDataV2::StopLineData::Builder::setSpeedAtLineStd(float value) {
+  _builder.setDataField<float>(
+      ::capnp::bounded<14>() * ::capnp::ELEMENTS, value);
+}
+
+inline float ModelDataV2::StopLineData::Reader::getSecondsUntilLine() const {
+  return _reader.getDataField<float>(
+      ::capnp::bounded<15>() * ::capnp::ELEMENTS);
+}
+
+inline float ModelDataV2::StopLineData::Builder::getSecondsUntilLine() {
+  return _builder.getDataField<float>(
+      ::capnp::bounded<15>() * ::capnp::ELEMENTS);
+}
+inline void ModelDataV2::StopLineData::Builder::setSecondsUntilLine(float value) {
+  _builder.setDataField<float>(
+      ::capnp::bounded<15>() * ::capnp::ELEMENTS, value);
+}
+
+inline float ModelDataV2::StopLineData::Reader::getSecondsUntilLineStd() const {
+  return _reader.getDataField<float>(
+      ::capnp::bounded<16>() * ::capnp::ELEMENTS);
+}
+
+inline float ModelDataV2::StopLineData::Builder::getSecondsUntilLineStd() {
+  return _builder.getDataField<float>(
+      ::capnp::bounded<16>() * ::capnp::ELEMENTS);
+}
+inline void ModelDataV2::StopLineData::Builder::setSecondsUntilLineStd(float value) {
+  _builder.setDataField<float>(
+      ::capnp::bounded<16>() * ::capnp::ELEMENTS, value);
 }
 
 inline float ModelDataV2::MetaData::Reader::getEngagedProb() const {
@@ -27753,6 +28285,248 @@ inline  ::int16_t LongitudinalPlan::Builder::getTurnSign() {
 inline void LongitudinalPlan::Builder::setTurnSign( ::int16_t value) {
   _builder.setDataField< ::int16_t>(
       ::capnp::bounded<55>() * ::capnp::ELEMENTS, value);
+}
+
+inline bool LongitudinalPlan::Reader::hasStopLine() const {
+  return !_reader.getPointerField(
+      ::capnp::bounded<6>() * ::capnp::POINTERS).isNull();
+}
+inline bool LongitudinalPlan::Builder::hasStopLine() {
+  return !_builder.getPointerField(
+      ::capnp::bounded<6>() * ::capnp::POINTERS).isNull();
+}
+inline  ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>::Reader LongitudinalPlan::Reader::getStopLine() const {
+  return ::capnp::_::PointerHelpers< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>::get(_reader.getPointerField(
+      ::capnp::bounded<6>() * ::capnp::POINTERS),
+        ::capnp::schemas::bp_e00b5b3eba12876c + 909);
+}
+inline  ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>::Builder LongitudinalPlan::Builder::getStopLine() {
+  return ::capnp::_::PointerHelpers< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>::get(_builder.getPointerField(
+      ::capnp::bounded<6>() * ::capnp::POINTERS),
+        ::capnp::schemas::bp_e00b5b3eba12876c + 909);
+}
+inline void LongitudinalPlan::Builder::setStopLine( ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>::Reader value) {
+  ::capnp::_::PointerHelpers< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>::set(_builder.getPointerField(
+      ::capnp::bounded<6>() * ::capnp::POINTERS), value);
+}
+inline void LongitudinalPlan::Builder::setStopLine(::kj::ArrayPtr<const double> value) {
+  ::capnp::_::PointerHelpers< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>::set(_builder.getPointerField(
+      ::capnp::bounded<6>() * ::capnp::POINTERS), value);
+}
+inline  ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>::Builder LongitudinalPlan::Builder::initStopLine(unsigned int size) {
+  return ::capnp::_::PointerHelpers< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>::init(_builder.getPointerField(
+      ::capnp::bounded<6>() * ::capnp::POINTERS), size);
+}
+inline void LongitudinalPlan::Builder::adoptStopLine(
+    ::capnp::Orphan< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>&& value) {
+  ::capnp::_::PointerHelpers< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>::adopt(_builder.getPointerField(
+      ::capnp::bounded<6>() * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>> LongitudinalPlan::Builder::disownStopLine() {
+  return ::capnp::_::PointerHelpers< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>::disown(_builder.getPointerField(
+      ::capnp::bounded<6>() * ::capnp::POINTERS));
+}
+
+inline float LongitudinalPlan::Reader::getStoplineProb() const {
+  return _reader.getDataField<float>(
+      ::capnp::bounded<28>() * ::capnp::ELEMENTS);
+}
+
+inline float LongitudinalPlan::Builder::getStoplineProb() {
+  return _builder.getDataField<float>(
+      ::capnp::bounded<28>() * ::capnp::ELEMENTS);
+}
+inline void LongitudinalPlan::Builder::setStoplineProb(float value) {
+  _builder.setDataField<float>(
+      ::capnp::bounded<28>() * ::capnp::ELEMENTS, value);
+}
+
+inline  ::int32_t LongitudinalPlan::Reader::getTrafficState() const {
+  return _reader.getDataField< ::int32_t>(
+      ::capnp::bounded<29>() * ::capnp::ELEMENTS);
+}
+
+inline  ::int32_t LongitudinalPlan::Builder::getTrafficState() {
+  return _builder.getDataField< ::int32_t>(
+      ::capnp::bounded<29>() * ::capnp::ELEMENTS);
+}
+inline void LongitudinalPlan::Builder::setTrafficState( ::int32_t value) {
+  _builder.setDataField< ::int32_t>(
+      ::capnp::bounded<29>() * ::capnp::ELEMENTS, value);
+}
+
+inline bool LongitudinalPlan::Reader::hasE2eX() const {
+  return !_reader.getPointerField(
+      ::capnp::bounded<7>() * ::capnp::POINTERS).isNull();
+}
+inline bool LongitudinalPlan::Builder::hasE2eX() {
+  return !_builder.getPointerField(
+      ::capnp::bounded<7>() * ::capnp::POINTERS).isNull();
+}
+inline  ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>::Reader LongitudinalPlan::Reader::getE2eX() const {
+  return ::capnp::_::PointerHelpers< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>::get(_reader.getPointerField(
+      ::capnp::bounded<7>() * ::capnp::POINTERS),
+        ::capnp::schemas::bp_e00b5b3eba12876c + 940);
+}
+inline  ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>::Builder LongitudinalPlan::Builder::getE2eX() {
+  return ::capnp::_::PointerHelpers< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>::get(_builder.getPointerField(
+      ::capnp::bounded<7>() * ::capnp::POINTERS),
+        ::capnp::schemas::bp_e00b5b3eba12876c + 940);
+}
+inline void LongitudinalPlan::Builder::setE2eX( ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>::Reader value) {
+  ::capnp::_::PointerHelpers< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>::set(_builder.getPointerField(
+      ::capnp::bounded<7>() * ::capnp::POINTERS), value);
+}
+inline void LongitudinalPlan::Builder::setE2eX(::kj::ArrayPtr<const double> value) {
+  ::capnp::_::PointerHelpers< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>::set(_builder.getPointerField(
+      ::capnp::bounded<7>() * ::capnp::POINTERS), value);
+}
+inline  ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>::Builder LongitudinalPlan::Builder::initE2eX(unsigned int size) {
+  return ::capnp::_::PointerHelpers< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>::init(_builder.getPointerField(
+      ::capnp::bounded<7>() * ::capnp::POINTERS), size);
+}
+inline void LongitudinalPlan::Builder::adoptE2eX(
+    ::capnp::Orphan< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>&& value) {
+  ::capnp::_::PointerHelpers< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>::adopt(_builder.getPointerField(
+      ::capnp::bounded<7>() * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>> LongitudinalPlan::Builder::disownE2eX() {
+  return ::capnp::_::PointerHelpers< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>::disown(_builder.getPointerField(
+      ::capnp::bounded<7>() * ::capnp::POINTERS));
+}
+
+inline bool LongitudinalPlan::Reader::hasLead0Obstacle() const {
+  return !_reader.getPointerField(
+      ::capnp::bounded<8>() * ::capnp::POINTERS).isNull();
+}
+inline bool LongitudinalPlan::Builder::hasLead0Obstacle() {
+  return !_builder.getPointerField(
+      ::capnp::bounded<8>() * ::capnp::POINTERS).isNull();
+}
+inline  ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>::Reader LongitudinalPlan::Reader::getLead0Obstacle() const {
+  return ::capnp::_::PointerHelpers< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>::get(_reader.getPointerField(
+      ::capnp::bounded<8>() * ::capnp::POINTERS),
+        ::capnp::schemas::bp_e00b5b3eba12876c + 954);
+}
+inline  ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>::Builder LongitudinalPlan::Builder::getLead0Obstacle() {
+  return ::capnp::_::PointerHelpers< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>::get(_builder.getPointerField(
+      ::capnp::bounded<8>() * ::capnp::POINTERS),
+        ::capnp::schemas::bp_e00b5b3eba12876c + 954);
+}
+inline void LongitudinalPlan::Builder::setLead0Obstacle( ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>::Reader value) {
+  ::capnp::_::PointerHelpers< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>::set(_builder.getPointerField(
+      ::capnp::bounded<8>() * ::capnp::POINTERS), value);
+}
+inline void LongitudinalPlan::Builder::setLead0Obstacle(::kj::ArrayPtr<const double> value) {
+  ::capnp::_::PointerHelpers< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>::set(_builder.getPointerField(
+      ::capnp::bounded<8>() * ::capnp::POINTERS), value);
+}
+inline  ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>::Builder LongitudinalPlan::Builder::initLead0Obstacle(unsigned int size) {
+  return ::capnp::_::PointerHelpers< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>::init(_builder.getPointerField(
+      ::capnp::bounded<8>() * ::capnp::POINTERS), size);
+}
+inline void LongitudinalPlan::Builder::adoptLead0Obstacle(
+    ::capnp::Orphan< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>&& value) {
+  ::capnp::_::PointerHelpers< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>::adopt(_builder.getPointerField(
+      ::capnp::bounded<8>() * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>> LongitudinalPlan::Builder::disownLead0Obstacle() {
+  return ::capnp::_::PointerHelpers< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>::disown(_builder.getPointerField(
+      ::capnp::bounded<8>() * ::capnp::POINTERS));
+}
+
+inline bool LongitudinalPlan::Reader::hasLead1Obstacle() const {
+  return !_reader.getPointerField(
+      ::capnp::bounded<9>() * ::capnp::POINTERS).isNull();
+}
+inline bool LongitudinalPlan::Builder::hasLead1Obstacle() {
+  return !_builder.getPointerField(
+      ::capnp::bounded<9>() * ::capnp::POINTERS).isNull();
+}
+inline  ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>::Reader LongitudinalPlan::Reader::getLead1Obstacle() const {
+  return ::capnp::_::PointerHelpers< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>::get(_reader.getPointerField(
+      ::capnp::bounded<9>() * ::capnp::POINTERS),
+        ::capnp::schemas::bp_e00b5b3eba12876c + 968);
+}
+inline  ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>::Builder LongitudinalPlan::Builder::getLead1Obstacle() {
+  return ::capnp::_::PointerHelpers< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>::get(_builder.getPointerField(
+      ::capnp::bounded<9>() * ::capnp::POINTERS),
+        ::capnp::schemas::bp_e00b5b3eba12876c + 968);
+}
+inline void LongitudinalPlan::Builder::setLead1Obstacle( ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>::Reader value) {
+  ::capnp::_::PointerHelpers< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>::set(_builder.getPointerField(
+      ::capnp::bounded<9>() * ::capnp::POINTERS), value);
+}
+inline void LongitudinalPlan::Builder::setLead1Obstacle(::kj::ArrayPtr<const double> value) {
+  ::capnp::_::PointerHelpers< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>::set(_builder.getPointerField(
+      ::capnp::bounded<9>() * ::capnp::POINTERS), value);
+}
+inline  ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>::Builder LongitudinalPlan::Builder::initLead1Obstacle(unsigned int size) {
+  return ::capnp::_::PointerHelpers< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>::init(_builder.getPointerField(
+      ::capnp::bounded<9>() * ::capnp::POINTERS), size);
+}
+inline void LongitudinalPlan::Builder::adoptLead1Obstacle(
+    ::capnp::Orphan< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>&& value) {
+  ::capnp::_::PointerHelpers< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>::adopt(_builder.getPointerField(
+      ::capnp::bounded<9>() * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>> LongitudinalPlan::Builder::disownLead1Obstacle() {
+  return ::capnp::_::PointerHelpers< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>::disown(_builder.getPointerField(
+      ::capnp::bounded<9>() * ::capnp::POINTERS));
+}
+
+inline bool LongitudinalPlan::Reader::hasCruiseTarget() const {
+  return !_reader.getPointerField(
+      ::capnp::bounded<10>() * ::capnp::POINTERS).isNull();
+}
+inline bool LongitudinalPlan::Builder::hasCruiseTarget() {
+  return !_builder.getPointerField(
+      ::capnp::bounded<10>() * ::capnp::POINTERS).isNull();
+}
+inline  ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>::Reader LongitudinalPlan::Reader::getCruiseTarget() const {
+  return ::capnp::_::PointerHelpers< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>::get(_reader.getPointerField(
+      ::capnp::bounded<10>() * ::capnp::POINTERS),
+        ::capnp::schemas::bp_e00b5b3eba12876c + 982);
+}
+inline  ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>::Builder LongitudinalPlan::Builder::getCruiseTarget() {
+  return ::capnp::_::PointerHelpers< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>::get(_builder.getPointerField(
+      ::capnp::bounded<10>() * ::capnp::POINTERS),
+        ::capnp::schemas::bp_e00b5b3eba12876c + 982);
+}
+inline void LongitudinalPlan::Builder::setCruiseTarget( ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>::Reader value) {
+  ::capnp::_::PointerHelpers< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>::set(_builder.getPointerField(
+      ::capnp::bounded<10>() * ::capnp::POINTERS), value);
+}
+inline void LongitudinalPlan::Builder::setCruiseTarget(::kj::ArrayPtr<const double> value) {
+  ::capnp::_::PointerHelpers< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>::set(_builder.getPointerField(
+      ::capnp::bounded<10>() * ::capnp::POINTERS), value);
+}
+inline  ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>::Builder LongitudinalPlan::Builder::initCruiseTarget(unsigned int size) {
+  return ::capnp::_::PointerHelpers< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>::init(_builder.getPointerField(
+      ::capnp::bounded<10>() * ::capnp::POINTERS), size);
+}
+inline void LongitudinalPlan::Builder::adoptCruiseTarget(
+    ::capnp::Orphan< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>&& value) {
+  ::capnp::_::PointerHelpers< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>::adopt(_builder.getPointerField(
+      ::capnp::bounded<10>() * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>> LongitudinalPlan::Builder::disownCruiseTarget() {
+  return ::capnp::_::PointerHelpers< ::capnp::List<double,  ::capnp::Kind::PRIMITIVE>>::disown(_builder.getPointerField(
+      ::capnp::bounded<10>() * ::capnp::POINTERS));
+}
+
+inline bool LongitudinalPlan::Reader::getOnStop() const {
+  return _reader.getDataField<bool>(
+      ::capnp::bounded<13>() * ::capnp::ELEMENTS);
+}
+
+inline bool LongitudinalPlan::Builder::getOnStop() {
+  return _builder.getDataField<bool>(
+      ::capnp::bounded<13>() * ::capnp::ELEMENTS);
+}
+inline void LongitudinalPlan::Builder::setOnStop(bool value) {
+  _builder.setDataField<bool>(
+      ::capnp::bounded<13>() * ::capnp::ELEMENTS, value);
 }
 
 inline bool LongitudinalPlan::GpsTrajectory::Reader::hasX() const {

@@ -177,14 +177,14 @@ class PowerMonitoring:
   def charging_ctrl(self, msg, ts, to_discharge, to_charge ):
     if self.ts_last_charging_ctrl is None or (ts - self.ts_last_charging_ctrl) >= 30.:
       battery_changing = HARDWARE.get_battery_charging()
-      print('Battery charging', battery_changing)
+      #print('Battery charging', battery_changing)
       if self.ts_last_charging_ctrl:
         if msg.deviceState.batteryPercent >= to_discharge and battery_changing:
           HARDWARE.set_battery_charging(False)
-          print('charging off')
+          #print('charging off')
         elif msg.deviceState.batteryPercent <= to_charge and not battery_changing:
           HARDWARE.set_battery_charging(True)
-          print('charging on')
+          #print('charging on')
       self.ts_last_charging_ctrl = ts
 
   # See if we need to shutdown

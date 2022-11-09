@@ -63,7 +63,7 @@ class PointBuckets:
     self.buckets = {bounds: NPQueue(maxlen=POINTS_PER_BUCKET, rowsize=3) for bounds in x_bounds}
     self.buckets_min_points = {bounds: min_point for bounds, min_point in zip(x_bounds, min_points)}
     self.min_points_total = min_points_total
-    
+
   def bucket_lengths(self):
     return [len(v) for v in self.buckets.values()]
 

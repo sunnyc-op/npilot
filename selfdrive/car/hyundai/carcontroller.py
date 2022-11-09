@@ -1,6 +1,6 @@
 from random import randint
-
-from cereal import car
+from common.log import Loger
+from cereal import car, log, messaging
 from common.realtime import DT_CTRL
 from common.numpy_fast import clip, interp
 from selfdrive.car import apply_std_steer_torque_limits
@@ -14,7 +14,9 @@ from common.conversions import Conversions as CV
 from common.params import Params
 from selfdrive.controls.lib.longcontrol import LongCtrlState
 from selfdrive.road_speed_limiter import road_speed_limiter_get_active
+from selfdrive.ntune import ntune_scc_get, ntune_scc_enabled
 
+LongitudinalPlanSource = log.LongitudinalPlan.LongitudinalPlanSource
 VisualAlert = car.CarControl.HUDControl.VisualAlert
 min_set_speed = 30 * CV.KPH_TO_MS
 
@@ -72,6 +74,28 @@ class CarController:
     self.stock_navi_decel_enabled = param.get_bool('StockNaviDecelEnabled')
     self.keep_steering_turn_signals = param.get_bool('KeepSteeringTurnSignals')
     self.haptic_feedback_speed_camera = param.get_bool('HapticFeedbackWhenSpeedCamera')
+
+    # npilot_manager
+    #if param.get_bool("UseNpilotManager"):
+    #  self.stopsign_enabled = ntune_scc_get('StopAtStopSign')
+    #else:
+    #  self.stopsign_enabled = param.get_bool("StopAtStopSign")
+
+    self.stopsign_enabled = ntune_scc_enabled('StopAtStopSign')
+
+    #opkr
+    self.prev_dist = 150
+    self.decel_zone1 = False
+    self.decel_zone2 = False
+    self.decel_zone3 = False
+    # self.stopping_zone_1 = ntune_scc_get('StoppingZone_1')
+    # self.stopping_zone_2 = ntune_scc_get('StoppingZone_2')
+    self.lo_timer = 0
+    self.stopped = False
+    self.smooth_start = False
+    self.change_accel_fast = False
+    self.sm = messaging.SubMaster(['controlsState', 'radarState', 'longitudinalPlan'])
+    self.log = Loger()
 
     self.scc_smoother = SccSmoother()
     self.last_blinker_frame = 0
@@ -227,22 +251,29 @@ class CarController:
     # send scc to car if longcontrol enabled and SCC not on bus 0 or ont live
     if self.longcontrol and CS.cruiseState_enabled and (CS.scc_bus or not self.scc_live):
 
-      if self.frame % 2 == 0:
+      # self.lo_timer += 1
+      # if self.lo_timer > 200:
+      #   self.lo_timer = 0
+      #   self.stopping_zone_1 = ntune_scc_get('StoppingZone_1')
+      #   self.stopping_zone_2 = ntune_scc_get('StoppingZone_2')
 
+      if self.frame % 2 == 0:
         set_speed = hud_control.setSpeed
+
         if not (min_set_speed < set_speed < 255 * CV.KPH_TO_MS):
           set_speed = min_set_speed
         set_speed *= CV.MS_TO_MPH if CS.is_set_speed_in_mph else CV.MS_TO_KPH
 
+        #opkr
+        #setSpeed = round(set_speed)
+
         stopping = controls.LoC.long_control_state == LongCtrlState.stopping
+        radar_recog = (0 < CS.lead_distance <= 149)
+
+        #opkr
+        aReqValue = CS.scc12["aReqValue"]
 
         apply_accel = self.scc_smoother.get_apply_accel(CS, controls.sm, actuators.accel, stopping)
-        apply_accel = clip(apply_accel if CC.longActive else 0,
-                           CarControllerParams.ACCEL_MIN, CarControllerParams.ACCEL_MAX)
-
-        last_accel = apply_accel
-
-        aReqValue = CS.scc12["aReqValue"]
 
         if 0 < CS.lead_distance <= 149:
           # neokii's logic, opkr mod
@@ -262,10 +293,31 @@ class CarController:
           if 5.5 < CS.lead_distance <= 6.5 and aReqValue < 0.0 and not CS.out.cruiseState.standstill:
             stock_weight = interp(CS.lead_distance, [5.5, 6.5], [0.2, 1.0])
 
+          if stopping:
+            self.stopped = True
+          else:
+            self.stopped = False
+
           apply_accel = apply_accel * (1.0 - stock_weight) + aReqValue * stock_weight
 
         else:
-          apply_accel = last_accel
+          # self.stopped = False
+          # if self.stopsign_enabled:
+          #   self.sm.update(0)
+
+          #   if self.sm['longitudinalPlan'].onStop:
+          #     stop_distance = self.sm['longitudinalPlan'].stopLine[12]
+
+              #Add Deceleration profiles.
+
+              # str_log = ', {:03.0f}, {:02.0f}, {:.03f}'.format(
+              #           stop_distance, CS.out.vEgo*CV.MS_TO_MPH, apply_accel)
+              # self.log.add( '{}'.format( str_log ) )
+
+          if stopping:
+            self.stopped = True
+          else:
+            self.stopped = False
 
         apply_accel = clip(apply_accel if CC.longActive else 0, CarControllerParams.ACCEL_MIN, CarControllerParams.ACCEL_MAX)
 
@@ -298,10 +350,10 @@ class CarController:
 
         can_sends.append(create_scc12(self.packer, apply_accel, CC.enabled, self.scc12_cnt, self.scc_live, CS.scc12,
                                       CS.out.gasPressed, CS.out.brakePressed, CS.out.cruiseState.standstill,
-                                      self.car_fingerprint, stopping))
+                                      self.car_fingerprint, self.stopped, radar_recog, CS.out.stockAeb))
 
         can_sends.append(create_scc11(self.packer, self.frame, CC.enabled, set_speed, hud_control.leadVisible, self.scc_live, CS.scc11,
-                       self.scc_smoother.active_cam, stock_cam))
+                       self.scc_smoother.active_cam, stock_cam, self.stopped))
 
         if self.frame % 20 == 0 and CS.has_scc13:
           can_sends.append(create_scc13(self.packer, CS.scc13))

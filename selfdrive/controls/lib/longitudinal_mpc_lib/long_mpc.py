@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import os
 import numpy as np
+from common.log import Loger
 
 from common.realtime import sec_since_boot
 from common.numpy_fast import clip, interp
@@ -8,7 +9,8 @@ from selfdrive.swaglog import cloudlog
 from selfdrive.modeld.constants import index_function
 from selfdrive.controls.lib.radar_helpers import _LEAD_ACCEL_TAU
 from common.conversions import Conversions as CV
-from selfdrive.ntune import ntune_scc_get
+from selfdrive.ntune import ntune_scc_get, ntune_scc_enabled
+
 
 if __name__ == '__main__':  # generating code
   from pyextra.acados_template import AcadosModel, AcadosOcp, AcadosOcpSolver
@@ -22,7 +24,7 @@ LONG_MPC_DIR = os.path.dirname(os.path.abspath(__file__))
 EXPORT_DIR = os.path.join(LONG_MPC_DIR, "c_generated_code")
 JSON_FILE = os.path.join(LONG_MPC_DIR, "acados_ocp_long.json")
 
-SOURCES = ['lead0', 'lead1', 'cruise']
+SOURCES = ['lead0', 'lead1', 'cruise', 'stop']
 
 X_DIM = 3
 U_DIM = 1
@@ -36,7 +38,7 @@ X_EGO_COST = 0.
 V_EGO_COST = 0.
 A_EGO_COST = 0.
 J_EGO_COST = 5.0
-A_CHANGE_COST = 50. # 200.
+A_CHANGE_COST = 50. # 200.# 낮을수록 선행차에 민강하게 반응. def:0.5
 DANGER_ZONE_COST = 100.
 CRASH_DISTANCE = .5
 LIMIT_COST = 1e6
@@ -209,6 +211,22 @@ class LongitudinalMpc:
     self.solver = AcadosOcpSolverCython(MODEL_NAME, ACADOS_SOLVER_TYPE, N)
     self.reset()
     self.source = SOURCES[2]
+    #apilot
+    self.trafficState = 0
+    #oprk
+    self.v_ego = 0.
+    self.lead_0_obstacle = np.zeros(13, dtype=np.float64)
+    self.lead_1_obstacle = np.zeros(13, dtype=np.float64)
+    self.e2e_x = np.zeros(13, dtype=np.float64)
+    self.cruise_target = np.zeros(13, dtype=np.float64)
+    self.stopline = np.zeros(13, dtype=np.float64)
+    self.stop_prob = 0.0
+    self.on_stopping = False
+    self.stop_line = ntune_scc_enabled("StopAtStopSign")
+    self.x_ego_obstacle_cost = 3
+    self.stop_line_x_offset = 0.
+    self.lo_timer = 0
+    self.log = Loger()
 
   def reset(self):
     # self.solver = AcadosOcpSolverCython(MODEL_NAME, ACADOS_SOLVER_TYPE, N)
@@ -226,6 +244,8 @@ class LongitudinalMpc:
     self.u_sol = np.zeros((N,1))
     self.params = np.zeros((N+1, PARAM_DIM))
     self.param_tr = T_FOLLOW
+    self.x_ego_obstacle_cost = X_EGO_OBSTACLE_COST
+    self.stop_line_x_offset = 0.
     for i in range(N+1):
       self.solver.set(i, 'x', np.zeros(X_DIM))
     self.last_cloudlog_t = 0
@@ -238,45 +258,31 @@ class LongitudinalMpc:
     self.time_linearization = 0.0
     self.time_integrator = 0.0
     self.x0 = np.zeros(X_DIM)
+    self.on_stopping = False
     self.set_weights()
 
-  def set_weights(self, prev_accel_constraint=True):
-    if self.e2e:
-      self.set_weights_for_xva_policy()
-      self.params[:,0] = -10.
-      self.params[:,1] = 10.
-      self.params[:,2] = 1e5
-    else:
-      self.set_weights_for_lead_policy(prev_accel_constraint)
-
-  def set_weights_for_lead_policy(self, prev_accel_constraint=True):
-    a_change_cost = A_CHANGE_COST if prev_accel_constraint else 0
-    W = np.asfortranarray(np.diag([X_EGO_OBSTACLE_COST, X_EGO_COST, V_EGO_COST, A_EGO_COST, a_change_cost, J_EGO_COST]))
+  def set_cost_weights(self, cost_weights, constraint_cost_weights):
+    W = np.asfortranarray(np.diag(cost_weights))
     for i in range(N):
+      # TODO don't hardcode A_CHANGE_COST idx
       # reduce the cost on (a-a_prev) later in the horizon.
-      W[4,4] = a_change_cost * np.interp(T_IDXS[i], [0.0, 1.0, 2.0], [1.0, 1.0, 0.0])
+      W[4,4] = cost_weights[4] * np.interp(T_IDXS[i], [0.0, 1.0, 2.0], [1.0, 1.0, 0.0])
       self.solver.cost_set(i, 'W', W)
     # Setting the slice without the copy make the array not contiguous,
     # causing issues with the C interface.
     self.solver.cost_set(N, 'W', np.copy(W[:COST_E_DIM, :COST_E_DIM]))
 
     # Set L2 slack cost on lower bound constraints
-    Zl = np.array([LIMIT_COST, LIMIT_COST, LIMIT_COST, DANGER_ZONE_COST])
+    Zl = np.array(constraint_cost_weights)
     for i in range(N):
       self.solver.cost_set(i, 'Zl', Zl)
 
-  def set_weights_for_xva_policy(self):
-    W = np.asfortranarray(np.diag([0., 10., 1., 10., 0.0, 1.]))
-    for i in range(N):
-      self.solver.cost_set(i, 'W', W)
-    # Setting the slice without the copy make the array not contiguous,
-    # causing issues with the C interface.
-    self.solver.cost_set(N, 'W', np.copy(W[:COST_E_DIM, :COST_E_DIM]))
+  def set_weights(self, prev_accel_constraint=True):
+    a_change_cost = A_CHANGE_COST if prev_accel_constraint else 0
+    cost_weights = [self.x_ego_obstacle_cost, X_EGO_COST, V_EGO_COST, A_EGO_COST, a_change_cost, J_EGO_COST]
+    constraint_cost_weights = [LIMIT_COST, LIMIT_COST, LIMIT_COST, DANGER_ZONE_COST]
 
-    # Set L2 slack cost on lower bound constraints
-    Zl = np.array([LIMIT_COST, LIMIT_COST, LIMIT_COST, 0.0])
-    for i in range(N):
-      self.solver.cost_set(i, 'Zl', Zl)
+    self.set_cost_weights(cost_weights, constraint_cost_weights)
 
   def set_cur_state(self, v, a):
     v_prev = self.x0[1]
@@ -321,8 +327,25 @@ class LongitudinalMpc:
     self.cruise_min_a = min_a
     self.cruise_max_a = max_a
 
-  def update(self, carstate, radarstate, v_cruise):
+  def update(self, carstate, radarstate, model, v_cruise, x, v, a, j, prev_accel_constraint):
+    #opkr
+    self.lo_timer += 1
+    if self.lo_timer > 200:
+      self.lo_timer = 0
+      self.stop_line_x_offset = ntune_scc_get("STOP_LINE_X_OFFSET")
+
+    self.trafficState = 0
     v_ego = self.x0[1]
+
+    #opkr
+    #####################################################################
+    xforward = ((v[1:] + v[:-1]) / 2) * (T_IDXS[1:] - T_IDXS[:-1])
+    x = np.cumsum(np.insert(xforward, 0, x[0]))
+    self.yref[:,1] = x
+    self.yref[:,2] = v
+    self.yref[:,3] = a
+    #####################################################################
+
     self.status = radarstate.leadOne.status or radarstate.leadTwo.status
 
     lead_xv_0 = self.process_lead(radarstate.leadOne)
@@ -352,16 +375,64 @@ class LongitudinalMpc:
     v_lower = v_ego + (T_IDXS * self.cruise_min_a * 1.05)
     v_upper = v_ego + (T_IDXS * self.cruise_max_a * 1.05)
     v_cruise_clipped = np.clip(v_cruise * np.ones(N+1),
-                               v_lower,
-                               v_upper)
+                                 v_lower,
+                                 v_upper)
+
     cruise_obstacle = np.cumsum(T_DIFFS * v_cruise_clipped) + get_safe_obstacle_distance(v_cruise_clipped, tr)
 
+    self.x_ego_obstacle_cost = X_EGO_OBSTACLE_COST
+    self.set_weights(prev_accel_constraint)
     x_obstacles = np.column_stack([lead_0_obstacle, lead_1_obstacle, cruise_obstacle])
-    self.source = SOURCES[np.argmin(x_obstacles[0])]
-    self.params[:,2] = np.min(x_obstacles, axis=1)
-    self.params[:,3] = np.copy(self.prev_a)
 
+    probe = model.stopLine.prob if abs(carstate.steeringAngleDeg) < 20 else 0.0
+    startSign = v[-1] > 5.0
+    stopSign = (probe > 0.3) and ((v[-1] < 3.0) or (v[-1] < v_ego*0.95))
+    
+    if self.status and (radarstate.leadOne.dRel - x[N]) < 2.0:
+      self.trafficState = 0 # "OFF"  onroad.cc - trafficLight 
+    elif stopSign:
+      self.trafficState = 1 # "RED"
+    elif startSign:
+      self.trafficState = 2 # "GREEN"
+
+    stopline = (model.stopLine.x + 5.0) * np.ones(N+1)   
+
+    x = (x[N] + 5.0) * np.ones(N+1)
+
+    stopline3 = ((stopline*0.2)+(x*0.8)) + self.stop_line_x_offset
+
+    stopping = True if (self.stop_line and self.trafficState == 1 and v_ego*CV.MS_TO_MPH <= 50. and not self.status and not carstate.brakePressed and not carstate.gasPressed) else False
+    
+    if stopping:
+      # str_log = ', {:03.0f}, {:03.0f}, {:03.0f}, {:02.0f}, {:03.0f},'.format(
+      #           model.stopLine.x, x[0], stopline3[N], v_ego*CV.MS_TO_MPH, self.stop_line_x_offset)
+      # self.log.add( '{}'.format( str_log ) )
+
+      self.on_stopping = True
+      if v_ego < 0.5:
+        stopline3 *= 0.0
+
+      self.x_ego_obstacle_cost = 6
+      self.set_weights(prev_accel_constraint)
+
+      self.source = SOURCES[3]
+      self.params[:,2] = stopline3
+
+    else:
+      self.on_stopping = False
+      self.source = SOURCES[np.argmin(x_obstacles[N])]
+      self.params[:,2] = np.min(x_obstacles, axis=1)
+
+    self.params[:,3] = np.copy(self.prev_a)
     self.params[:,4] = self.param_tr
+
+    #opkr
+    self.e2e_x = x[:]
+    self.lead_0_obstacle = lead_0_obstacle[:]
+    self.lead_1_obstacle = lead_1_obstacle[:]
+    self.cruise_target = cruise_obstacle[:]
+    self.stopline = stopline3[:]
+    self.stop_prob = model.stopLine.prob
 
     self.run()
     if (np.any(lead_xv_0[:,0] - self.x_sol[:,0] < CRASH_DISTANCE) and
@@ -369,17 +440,6 @@ class LongitudinalMpc:
       self.crash_cnt += 1
     else:
       self.crash_cnt = 0
-
-  def update_with_xva(self, x, v, a):
-    self.yref[:,1] = x
-    self.yref[:,2] = v
-    self.yref[:,3] = a
-    for i in range(N):
-      self.solver.cost_set(i, "yref", self.yref[i])
-    self.solver.cost_set(N, "yref", self.yref[N][:COST_E_DIM])
-    self.params[:,3] = np.copy(self.prev_a)
-    self.params[:,4] = self.param_tr
-    self.run()
 
   def run(self):
     # t0 = sec_since_boot()

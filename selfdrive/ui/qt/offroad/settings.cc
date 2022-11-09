@@ -371,6 +371,8 @@ C2NetworkPanel::C2NetworkPanel(QWidget *parent) : QWidget(parent) {
   ipaddress = new LabelControl("IP Address", "");
   list->addItem(ipaddress);
 
+  list->addItem(new HotspotOnBootToggle());
+
   // SSH key management
   list->addItem(new SshToggle());
   list->addItem(new SshControl());
@@ -2209,6 +2211,18 @@ CommunityPanel::CommunityPanel(QWidget* parent) : QWidget(parent) {
                                             "../assets/offroad/icon_road.png",
                                             this));
 
+  toggles.append(new ParamControl("TurnVisionControl",
+                                  "Enable vision based turn control",
+                                  "Use vision path predictions to estimate the appropiate speed to drive through turns ahead.",
+                                  "../assets/offroad/icon_road.png",
+                                  this));                                            
+
+  // toggles.append(new ParamControl("StopAtStopSign",
+  //                                 "Stop at Stop Light",
+  //                                 "Openpilot tries to stop at stop light.",
+  //                                 "../assets/offroad/icon_road.png",
+  //                                 this));   
+
   toggles.append(new ParamControl("SccSmootherSyncGasPressed",
                                             "Sync set speed on gas pressed",
                                             "",
@@ -2243,6 +2257,12 @@ CommunityPanel::CommunityPanel(QWidget* parent) : QWidget(parent) {
                                             "",
                                             "../assets/offroad/icon_shell.png",
                                             this));
+
+  toggles.append(new ParamControl("ShowTrafficSignal",
+                                            "Show Traffic Signal",
+                                            "",
+                                            "../assets/offroad/icon_shell.png",
+                                            this));                                      
 
   if (!useNM) toggles.append(new ParamControl("OpkrBatteryChargingControl",
                                             "Enable Battery Charging Control",
