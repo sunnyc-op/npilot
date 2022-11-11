@@ -200,6 +200,7 @@ def create_scc14(packer, enabled, e_vgo, standstill, accel, gaspressed, objgap, 
   if enabled:
     values["ACCMode"] = 2 if gaspressed and (accel > -0.2) else 1
     values["ObjGap"] = objgap
+    values["ObjGap2"] = 1 if objgap else 0
     if standstill:
       values["JerkUpperLimit"] = 0.5
       values["JerkLowerLimit"] = 10.
