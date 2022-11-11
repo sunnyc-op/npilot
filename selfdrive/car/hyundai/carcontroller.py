@@ -365,7 +365,8 @@ class CarController:
 
           if lead is not None:
             d = lead.dRel
-            obj_gap = 1 if d < 25 else 2 if d < 40 else 3 if d < 60 else 4 if d < 80 else 5
+            #obj_gap = 1 if d < 25 else 2 if d < 40 else 3 if d < 60 else 4 if d < 80 else 5
+            obj_gap = 2 if d < 40 else 3 if d < 60 else 4 if d < 80 else 5
           else:
             obj_gap = 0
 
