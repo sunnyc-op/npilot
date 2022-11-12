@@ -88,8 +88,7 @@ class CarController:
     self.decel_zone1 = False
     self.decel_zone2 = False
     self.decel_zone3 = False
-    # self.stopping_zone_1 = ntune_scc_get('StoppingZone_1')
-    # self.stopping_zone_2 = ntune_scc_get('StoppingZone_2')
+
     self.lo_timer = 0
     self.stopped = False
     self.smooth_start = False
@@ -254,8 +253,6 @@ class CarController:
       # self.lo_timer += 1
       # if self.lo_timer > 200:
       #   self.lo_timer = 0
-      #   self.stopping_zone_1 = ntune_scc_get('StoppingZone_1')
-      #   self.stopping_zone_2 = ntune_scc_get('StoppingZone_2')
 
       if self.frame % 2 == 0:
         set_speed = hud_control.setSpeed
@@ -265,7 +262,7 @@ class CarController:
         set_speed *= CV.MS_TO_MPH if CS.is_set_speed_in_mph else CV.MS_TO_KPH
 
         #opkr
-        #setSpeed = round(set_speed)
+        setSpeed = round(set_speed)
 
         stopping = controls.LoC.long_control_state == LongCtrlState.stopping
         radar_recog = (0 < CS.lead_distance <= 149)
@@ -273,6 +270,7 @@ class CarController:
         #opkr
         aReqValue = CS.scc12["aReqValue"]
 
+        #neokii
         apply_accel = self.scc_smoother.get_apply_accel(CS, controls.sm, actuators.accel, stopping)
 
         if 0 < CS.lead_distance <= 149:
@@ -280,18 +278,13 @@ class CarController:
           stock_weight = 0.0
           if aReqValue > 0.0:
             stock_weight = interp(CS.lead_distance, [3.5, 8.0, 13.0, 25.0], [0.5, 1.0, 1.0, 0.0])
-          elif aReqValue < 0.0 and self.stopping_dist_adj_enabled:
-            stock_weight = interp(CS.lead_distance, [4.5, 8.0, 20.0, 25.0], [0.2, 1.0, 1.0, 0.0])
           elif aReqValue < 0.0:
             stock_weight = interp(CS.lead_distance, [4.0, 25.0], [1.0, 0.0])
           else:
             stock_weight = 0.0
 
-          if 0 < CS.lead_distance <= 4.0 and not CS.out.cruiseState.standstill: # use radar by force to stop anyway below 4.0m if lead car is detected.
-            stock_weight = interp(CS.lead_distance, [2.5, 4.0], [1., 0.])
-
-          if 5.5 < CS.lead_distance <= 6.5 and aReqValue < 0.0 and not CS.out.cruiseState.standstill:
-            stock_weight = interp(CS.lead_distance, [5.5, 6.5], [0.2, 1.0])
+          # if 5.5 < CS.lead_distance <= 6.5 and aReqValue < 0.0 and not CS.out.cruiseState.standstill:
+          #   stock_weight = interp(CS.lead_distance, [5.5, 6.5], [0.2, 1.0])
 
           if stopping:
             self.stopped = True
@@ -301,18 +294,43 @@ class CarController:
           apply_accel = apply_accel * (1.0 - stock_weight) + aReqValue * stock_weight
 
         else:
-          # self.stopped = False
-          # if self.stopsign_enabled:
-          #   self.sm.update(0)
+          self.stopped = False
+          accel = 0.0
+          accel2 = 0.0
+          if self.stopsign_enabled:
+            self.sm.update(0)
 
-          #   if self.sm['longitudinalPlan'].onStop:
-          #     stop_distance = self.sm['longitudinalPlan'].stopLine[12]
+            if self.sm['longitudinalPlan'].onStop:
+              stop_distance = self.sm['longitudinalPlan'].stopLine[12]
 
-              #Add Deceleration profiles.
+              if 0 <= stop_distance <= 100.0 and not CS.out.cruiseState.standstill:
 
-              # str_log = ', {:03.0f}, {:02.0f}, {:.03f}'.format(
-              #           stop_distance, CS.out.vEgo*CV.MS_TO_MPH, apply_accel)
-              # self.log.add( '{}'.format( str_log ) )
+                if stop_distance <= 20 and CS.out.vEgo*CV.MS_TO_MPH > 15.0 and not self.decel_zone1 and not self.decel_zone2:
+                  self.decel_zone1 = True
+                  self.decel_zone2 = False
+                elif stop_distance <= 15 and CS.out.vEgo*CV.MS_TO_MPH <= 10.0 and not self.decel_zone1 and not self.decel_zone2:
+                  self.decel_zone1 = False
+                  self.decel_zone2 = True  
+
+                if 0 < stop_distance <= 7.0: #force to stop
+                  accel2 = apply_accel * interp(CS.out.vEgo*CV.MS_TO_MPH, [0.0, 4.0], [1.0, 1.5])
+                  apply_accel = min(apply_accel, accel2)
+                elif self.decel_zone1:
+                  #accel = apply_accel * interp(CS.out.vEgo*CV.MS_TO_MPH, [5.0, 15.0, 20.0, 25.0], [1.0, 1.2, 1.3, 1.5])
+                  accel = apply_accel * interp(CS.out.vEgo*CV.MS_TO_MPH, [5.0, 10.0, 15.0, 20.0, 25.0], [1.0, 1.1, 1.2, 1.5, 2.0])
+                  apply_accel = min(apply_accel, accel)
+                elif self.decel_zone2:
+                  accel = apply_accel * interp(CS.out.vEgo*CV.MS_TO_MPH, [5.0, 10.0], [0.92, 1.0]) #0.90
+                  apply_accel = min(apply_accel, accel)
+
+
+              #str_log = ', {:03.0f}, {:02.0f}, {:.03f}, {:.03f}, {:.03f}, {:.03f}'.format(
+              #          stop_distance, CS.out.vEgo*CV.MS_TO_MPH, apply_accel, aReqValue, accel, accel2)
+              #self.log.add( '{}'.format( str_log ) )
+            else:
+              self.decel_zone1 = False
+              self.decel_zone2 = False
+              self.decel_zone3 = False
 
           if stopping:
             self.stopped = True
@@ -365,7 +383,8 @@ class CarController:
 
           if lead is not None:
             d = lead.dRel
-            obj_gap = 1 if d < 25 else 2 if d < 40 else 3 if d < 60 else 4 if d < 80 else 5
+            #obj_gap = 1 if d < 25 else 2 if d < 40 else 3 if d < 60 else 4 if d < 80 else 5
+            obj_gap = 2 if d < 40 else 3 if d < 60 else 4 if d < 80 else 5
           else:
             obj_gap = 0
 
