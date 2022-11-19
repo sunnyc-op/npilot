@@ -332,7 +332,6 @@ class LongitudinalMpc:
     self.lo_timer += 1
     if self.lo_timer > 200:
       self.lo_timer = 0
-      self.stop_line_x_offset = ntune_scc_get("STOP_LINE_X_OFFSET")
 
     self.trafficState = 0
     v_ego = self.x0[1]
@@ -399,7 +398,12 @@ class LongitudinalMpc:
 
     x = (x[N] + 5.0) * np.ones(N+1)
 
-    stopline3 = ((stopline*0.2)+(x*0.8)) + self.stop_line_x_offset
+    stopline3 = ((stopline*0.2)+(x*0.8))
+
+    if stopline3[N] >= 50.:
+      self.stop_line_x_offset = interp(v_ego, [10.0, 12.0, 13.0], [0., 1.5, 2.5])
+
+    stopline3 += self.stop_line_x_offset 
 
     stopping = True if (self.stop_line and self.trafficState == 1 and v_ego*CV.MS_TO_MPH <= 50. and not self.status and not carstate.brakePressed and not carstate.gasPressed) else False
     
@@ -412,8 +416,8 @@ class LongitudinalMpc:
       if v_ego < 0.5:
         stopline3 *= 0.0
 
-      self.x_ego_obstacle_cost = 6
-      self.set_weights(prev_accel_constraint)
+      # self.x_ego_obstacle_cost = 8
+      # self.set_weights(prev_accel_constraint)
 
       self.source = SOURCES[3]
       self.params[:,2] = stopline3
