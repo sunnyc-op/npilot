@@ -49,7 +49,8 @@ CRUISE_GAP_BP = [1., 2., 3., 4.]
 CRUISE_GAP_V = [1.1, 1.3, 1.58, 2.10]
 
 AUTO_TR_BP = [0., 30.*CV.KPH_TO_MS, 70.*CV.KPH_TO_MS, 110.*CV.KPH_TO_MS]
-AUTO_TR_V = [1.0, 1.2, 1.33, 1.45]
+#AUTO_TR_V = [1.0, 1.2, 1.33, 1.45]
+AUTO_TR_V = [1.2, 1.3, 1.4, 1.5]
 
 AUTO_TR_CRUISE_GAP = 4
 DIFF_RADAR_VISION = 1.5
@@ -401,7 +402,7 @@ class LongitudinalMpc:
     stopline3 = ((stopline*0.2)+(x*0.8))
 
     if stopline3[N] >= 50.:
-      self.stop_line_x_offset = interp(v_ego, [10.0, 12.0, 13.0], [0., 1.5, 2.5])
+      self.stop_line_x_offset = interp(v_ego, [9.0, 10.0, 12.0, 13.0], [0., 1.0, 1.5, 2.5])
 
     stopline3 += self.stop_line_x_offset 
 
