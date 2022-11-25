@@ -47,7 +47,7 @@ def manager_init() -> None:
     # HKG
     ("LateralControl", "TORQUE"),
     ("UseClusterSpeed", "1"),
-    ("LongControlEnabled", "1"),
+    ("LongControlEnabled", "0"),
     ("MadModeEnabled", "1"),
     ("IsLdwsCar", "0"),
     ("LaneChangeEnabled", "0"),
