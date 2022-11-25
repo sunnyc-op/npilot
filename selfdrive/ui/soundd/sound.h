@@ -19,6 +19,7 @@ const std::tuple<AudibleAlert, QString, int> sound_list[] = {
   {AudibleAlert::WARNING_IMMEDIATE, "warning_immediate.wav", QSoundEffect::Infinite},
 
   {AudibleAlert::SLOWING_DOWN_SPEED, "slowing_down_speed.wav", 0},
+  {AudibleAlert::DINGDONG, "dingdong.wav", 0},
 };
 
 class Sound : public QObject {

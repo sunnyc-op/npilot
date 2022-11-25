@@ -240,6 +240,7 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"UseBaseTorqueValues", PERSISTENT},
     {"StopAtStopSign", PERSISTENT},
     {"OpkrHotspotOnBoot", PERSISTENT},
+    {"DepartChimeAtResume", PERSISTENT},
 
     //npilot_manager
     {"UseNpilotManager", PERSISTENT},

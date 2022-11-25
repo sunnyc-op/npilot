@@ -146,6 +146,7 @@ struct CarEvent @0x9b1657f34caf3ad3 {
     visionTurning @119;
     visionleaving @120;
     curvespeedValueChange @121;
+    chimeAtResume @122;
   }
 }
 
@@ -424,6 +425,7 @@ struct CarControl {
       promptDistracted @8;
       
       slowingDownSpeed @9;
+      dingdong @10;
     }
   }
 

@@ -21,7 +21,8 @@ from selfdrive.ntune import ntune_torque_get
 # move it at all, this is compensated for too.
 
 LOW_SPEED_X = [0, 10, 20, 30]
-LOW_SPEED_Y = [15, 13, 10, 5]
+LOW_SPEED_Y = [15, 13, 10, 5] #comma
+#LOW_SPEED_Y = [15, 2, 2, 2] 
 
 class LatControlTorque(LatControl):
   def __init__(self, CP, CI):
@@ -71,7 +72,7 @@ class LatControlTorque(LatControl):
       if isLowSpeed:
         #low_speed_factor = interp(CS.vEgo, [0, 15], [500, 0]) # comma 1st
         low_speed_factor = interp(CS.vEgo, [0, 10, 20], [500, 500, 200]) # comma 2nd
-        #low_speed_factor = interp(CS.vEgo, LOW_SPEED_X, LOW_SPEED_Y)**2 #
+        #low_speed_factor = interp(CS.vEgo, LOW_SPEED_X, LOW_SPEED_Y)**2
       else:
         low_speed_factor = interp(CS.vEgo, [0, 5], [300, 0])
 

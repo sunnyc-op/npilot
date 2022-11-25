@@ -5876,6 +5876,18 @@ const Signal sigs_905[] = {
       .type = SignalType::DEFAULT,
     },
     {
+      .name = "ObjGap2",
+      .start_bit = 43,
+      .msb  = 43,
+      .lsb = 43,
+      .size = 1,
+      .is_signed = false,
+      .factor = 1,
+      .offset = 0,
+      .is_little_endian = true,
+      .type = SignalType::DEFAULT,
+    },
+    {
       .name = "ObjGap",
       .start_bit = 56,
       .msb  = 63,

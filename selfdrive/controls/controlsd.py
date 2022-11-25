@@ -526,6 +526,15 @@ class Controls:
 
     SccSmoother.update_cruise_buttons(self, CS, self.CP.openpilotLongitudinalControl)
 
+    #visionTurnControl	
+    vtcState = self.sm['longitudinalPlan'].visionTurnControllerState
+    if vtcState == 1:	
+      self.events.add(EventName.visionEntering)	
+    elif vtcState == 2:	
+      self.events.add(EventName.visionTurning)	
+    elif vtcState == 3:	
+      self.events.add(EventName.visionleaving)	
+    
     # decrement the soft disable timer at every step, as it's reset on
     # entrance in SOFT_DISABLING state
     self.soft_disable_timer = max(0, self.soft_disable_timer - 1)
