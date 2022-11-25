@@ -95,6 +95,7 @@ def manager_init() -> None:
     ("UseBaseTorqueValues", "1"),
     ("StopAtStopSign", "0"),
     ("OpkrHotspotOnBoot", "0"),
+    ("DepartChimeAtResume", "0"),
 
     #nPilot_Manager
     ("UseNpilotManager", "0"),

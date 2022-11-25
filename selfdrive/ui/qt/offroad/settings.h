@@ -600,3 +600,15 @@ public:
   }
 };
 
+class DepartChimeAtResume : public ToggleControl {
+  Q_OBJECT
+
+public:
+  DepartChimeAtResume() : ToggleControl(tr("Depart Chime at Resume"), tr("Use Chime for Resume. This can notify for you to get start while not using SCC."), "../assets/offroad/icon_shell.png", Params().getBool("DepartChimeAtResume")) {
+    QObject::connect(this, &DepartChimeAtResume::toggleFlipped, [=](int state) {
+      bool status = state ? true : false;
+      Params().putBool("DepartChimeAtResume", status);
+    });
+  }
+};
+

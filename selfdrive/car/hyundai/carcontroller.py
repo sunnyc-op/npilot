@@ -97,6 +97,11 @@ class CarController:
     self.sm = messaging.SubMaster(['controlsState', 'radarState', 'longitudinalPlan'])
     self.log = Loger()
 
+    self.e2e_standstill_enable = param.get_bool("DepartChimeAtResume")
+    self.e2e_standstill = False
+    self.e2e_standstill_stat = False
+    self.e2e_standstill_timer = 0
+
     self.scc_smoother = SccSmoother()
     self.last_blinker_frame = 0
     self.prev_active_cam = False
@@ -201,6 +206,34 @@ class CarController:
 
     self.update_auto_resume(CC, CS, clu11_speed, can_sends)
     self.update_scc(CC, CS, actuators, controls, hud_control, can_sends)
+
+    #opkr
+    if self.e2e_standstill_enable:
+      try:
+        self.sm.update(0)
+
+        if self.e2e_standstill:
+          self.e2e_standstill_timer += 1
+          if self.e2e_standstill_timer > 500:
+            self.e2e_standstill = False
+            self.e2e_standstill_timer = 0
+        elif CS.clu_Vanz > 0:
+          self.e2e_standstill = False
+          self.e2e_standstill_stat = False
+          self.e2e_standstill_timer = 0
+        elif self.e2e_standstill_stat and self.sm['longitudinalPlan'].trafficState != 1 and CS.clu_Vanz == 0:
+          self.e2e_standstill = True
+          self.e2e_standstill_stat = False
+          self.e2e_standstill_timer = 0
+        elif self.sm['longitudinalPlan'].trafficState == 1 and self.sm['longitudinalPlan'].stopLine[12] < 10 and CS.clu_Vanz == 0:
+          self.e2e_standstill_timer += 1
+          if self.e2e_standstill_timer > 300:
+            self.e2e_standstill_timer = 101
+            self.e2e_standstill_stat = True
+        else:
+          self.e2e_standstill_timer = 0
+      except:
+        pass
 
     # 20 Hz LFA MFA message
     if self.frame % 5 == 0:
@@ -334,6 +367,9 @@ class CarController:
                   #accel = apply_accel * interp(CS.out.vEgo*CV.MS_TO_MPH, [0.0, 4.0], [1.0, 1.5]) #ok
                   accel = apply_accel * interp(CS.out.vEgo*CV.MS_TO_MPH, [0.0, 4.0, 10.0], [1.0, 1.5, 3.0]) #test
                   apply_accel = min(apply_accel, accel)
+                elif 0 < stop_distance <= 8.0 and self.decel_zone3: #force to stop
+                  #apply_accel = self.accel - (DT_CTRL * interp(CS.out.vEgo, [0.5, 2.0], [1.0, 5.0]))
+                  apply_accel = self.accel - (DT_CTRL * interp(CS.out.vEgo, [0.5, 3.0], [1.0, 5.0]))
                 elif self.decel_zone1:
                   accel = apply_accel * interp(CS.out.vEgo*CV.MS_TO_MPH, [5.0, 10.0, 15.0, 20.0, 25.0], [1.0, 1.1, 1.2, 2.5, 3.0]) #ok
                   apply_accel = min(apply_accel, accel)
@@ -342,7 +378,7 @@ class CarController:
                   apply_accel = min(apply_accel, accel)
                 elif self.decel_zone3:
                   if (apply_accel < 0.):
-                    accel = apply_accel * interp(CS.out.vEgo*CV.MS_TO_MPH, [5.0, 10.0, 15.0, 20.0], [1.5, 5.5, 6.0, 6.0]) #test
+                    accel = apply_accel * interp(CS.out.vEgo*CV.MS_TO_MPH, [5.0, 10.0], [1.5, 3.0]) #ok
                     apply_accel = min(apply_accel, accel)   
                   else:
                     apply_accel = min(apply_accel, self.accel)
@@ -357,9 +393,9 @@ class CarController:
                 # else:
                 #   apply_accel = min(apply_accel, self.accel)
 
-              str_log = ', {:03.0f}, {:02.0f}, {:.03f}, {:}, {:}, {:}, {:}'.format(
-                        stop_distance, CS.out.vEgo*CV.MS_TO_MPH, apply_accel, self.decel_zone1, self.decel_zone2, self.decel_zone3, self.decel_zone4)
-              self.log.add( '{}'.format( str_log ) )
+              # str_log = ', {:03.0f}, {:02.0f}, {:.03f}, {:}, {:}, {:}, {:}'.format(
+              #           stop_distance, CS.out.vEgo*CV.MS_TO_MPH, apply_accel, self.decel_zone1, self.decel_zone2, self.decel_zone3, self.decel_zone4)
+              # self.log.add( '{}'.format( str_log ) )
             else:
               self.decel_zone1 = False
               self.decel_zone2 = False

@@ -2293,6 +2293,7 @@ CommunityPanel::CommunityPanel(QWidget* parent) : QWidget(parent) {
 //  toggleLayout->addWidget(new OPKRServerAPI());
   toggleLayout->addWidget(horizontal_line());
   toggleLayout->addWidget(new TimeZoneSelectCombo());
+  toggleLayout->addWidget(new DepartChimeAtResume());
 }
 
 SelectCar::SelectCar(QWidget* parent): QWidget(parent) {

@@ -454,6 +454,10 @@ class CarInterface(CarInterfaceBase):
     if self.CC.turning_indicator_alert:
       events.add(EventName.turningIndicatorOn)
 
+    #opkr
+    if self.CC.e2e_standstill:
+      events.add(EventName.chimeAtResume)  
+      
   # handle button presses
     for b in ret.buttonEvents:
       # do disable on button down
