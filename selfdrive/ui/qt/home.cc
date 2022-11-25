@@ -128,7 +128,7 @@ OffroadHome::OffroadHome(QWidget* parent) : QFrame(parent) {
   header_layout->addWidget(alert_notif, 0, Qt::AlignHCenter | Qt::AlignRight);
 
   //header_layout->addWidget(new QLabel(getBrandVersion()), 0, Qt::AlignHCenter | Qt::AlignRight);
-  header_layout->addWidget(new QLabel("HKG LONG EON"), 0, Qt::AlignHCenter | Qt::AlignRight);
+  header_layout->addWidget(new QLabel("HKG 0817 EON"), 0, Qt::AlignHCenter | Qt::AlignRight);
 
   main_layout->addLayout(header_layout);
 
