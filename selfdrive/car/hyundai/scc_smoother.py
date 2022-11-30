@@ -173,7 +173,7 @@ class SccSmoother:
           self.slowing_down_sound_alert = True
           self.slowing_down = True
 
-        ascc_enabled = CS.acc_mode and enabled and CS.cruiseState_enabled \
+        ascc_enabled = CS.acc_mode and CS.cruiseState_enabled \
                    and 1 < CS.cruiseState_speed < 255 and not CS.brake_pressed
         
         if ascc_enabled:
