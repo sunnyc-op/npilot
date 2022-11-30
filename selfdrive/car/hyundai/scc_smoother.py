@@ -178,6 +178,8 @@ class SccSmoother:
         
         if ascc_enabled:
           self.slowing_down_alert = True
+        else:
+          self.slowing_down_alert = False
 
       else:
         self.slowing_down_alert = False
