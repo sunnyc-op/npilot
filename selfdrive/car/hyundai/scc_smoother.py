@@ -159,8 +159,11 @@ class SccSmoother:
     #                                              float(lead_speed))
 
     max_speed_log = ""
+    
+    ascc_enabled = CS.acc_mode and CS.cruiseState_enabled \
+                   and 1 < CS.cruiseState_speed < 255 and not CS.brake_pressed
 
-    if apply_limit_speed >= self.kph_to_clu(10):
+    if apply_limit_speed >= self.kph_to_clu(10) and ascc_enabled:
 
       if first_started:
         self.max_speed_clu = clu11_speed
