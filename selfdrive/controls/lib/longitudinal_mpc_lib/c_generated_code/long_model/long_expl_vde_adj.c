@@ -47,10 +47,10 @@ extern "C" {
 
 static const casadi_int casadi_s0[7] = {3, 1, 0, 3, 0, 1, 2};
 static const casadi_int casadi_s1[5] = {1, 1, 0, 1, 0};
-static const casadi_int casadi_s2[9] = {5, 1, 0, 5, 0, 1, 2, 3, 4};
+static const casadi_int casadi_s2[12] = {8, 1, 0, 8, 0, 1, 2, 3, 4, 5, 6, 7};
 static const casadi_int casadi_s3[8] = {4, 1, 0, 4, 0, 1, 2, 3};
 
-/* long_expl_vde_adj:(i0[3],i1[3],i2,i3[5])->(o0[4]) */
+/* long_expl_vde_adj:(i0[3],i1[3],i2,i3[8])->(o0[4]) */
 static int casadi_f0(const casadi_real** arg, casadi_real** res, casadi_int* iw, casadi_real* w, int mem) {
   casadi_real a0;
   a0=0.;

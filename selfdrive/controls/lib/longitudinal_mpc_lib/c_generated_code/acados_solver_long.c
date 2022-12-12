@@ -306,7 +306,7 @@ void long_acados_create_3_create_and_set_functions(long_solver_capsule* capsule)
         capsule->__CAPSULE_FNC__.casadi_sparsity_in = & __MODEL_BASE_FNC__ ## _sparsity_in; \
         capsule->__CAPSULE_FNC__.casadi_sparsity_out = & __MODEL_BASE_FNC__ ## _sparsity_out; \
         capsule->__CAPSULE_FNC__.casadi_work = & __MODEL_BASE_FNC__ ## _work; \
-        external_function_param_casadi_create(&capsule->__CAPSULE_FNC__ , 5); \
+        external_function_param_casadi_create(&capsule->__CAPSULE_FNC__ , 8); \
     }while(false)
 
 
@@ -376,6 +376,9 @@ void long_acados_create_4_set_default_parameters(long_solver_capsule* capsule) {
     p[0] = -1.2;
     p[1] = 1.2;
     p[4] = 1.45;
+    p[5] = 0.75;
+    p[6] = 2.5;
+    p[7] = 6;
 
     for (int i = 0; i <= N; i++) {
         long_acados_update_params(capsule, i, p, NP);
@@ -863,7 +866,7 @@ int long_acados_update_params(long_solver_capsule* capsule, int stage, double *p
 {
     int solver_status = 0;
 
-    int casadi_np = 5;
+    int casadi_np = 8;
     if (casadi_np != np) {
         printf("acados_update_params: trying to set %i parameters for external functions."
             " External function has %i parameters. Exiting.\n", np, casadi_np);

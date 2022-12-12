@@ -143,6 +143,7 @@ enum class EventName_baa8c5d505f727de: uint16_t {
 };
 CAPNP_DECLARE_ENUM(EventName, baa8c5d505f727de);
 CAPNP_DECLARE_SCHEMA(9da4fa09e052903c);
+CAPNP_DECLARE_SCHEMA(9e58ecaf03e43c4a);
 CAPNP_DECLARE_SCHEMA(af52ab9948a04c83);
 CAPNP_DECLARE_SCHEMA(991a37a6155935a3);
 CAPNP_DECLARE_SCHEMA(e64e81478e6e60af);
@@ -347,6 +348,7 @@ struct CarState {
   class Reader;
   class Builder;
   class Pipeline;
+  struct NaviSafetyInfo;
   struct Tpms;
   struct WheelSpeeds;
   struct CruiseState;
@@ -355,7 +357,22 @@ struct CarState {
   struct ButtonEvent;
 
   struct _capnpPrivate {
-    CAPNP_DECLARE_STRUCT_HEADER(9da4fa09e052903c, 9, 7)
+    CAPNP_DECLARE_STRUCT_HEADER(9da4fa09e052903c, 9, 8)
+    #if !CAPNP_LITE
+    static constexpr ::capnp::_::RawBrandedSchema const* brand() { return &schema->defaultBrand; }
+    #endif  // !CAPNP_LITE
+  };
+};
+
+struct CarState::NaviSafetyInfo {
+  NaviSafetyInfo() = delete;
+
+  class Reader;
+  class Builder;
+  class Pipeline;
+
+  struct _capnpPrivate {
+    CAPNP_DECLARE_STRUCT_HEADER(9e58ecaf03e43c4a, 3, 0)
     #if !CAPNP_LITE
     static constexpr ::capnp::_::RawBrandedSchema const* brand() { return &schema->defaultBrand; }
     #endif  // !CAPNP_LITE
@@ -400,7 +417,7 @@ struct CarState::CruiseState {
   class Pipeline;
 
   struct _capnpPrivate {
-    CAPNP_DECLARE_STRUCT_HEADER(e64e81478e6e60af, 2, 0)
+    CAPNP_DECLARE_STRUCT_HEADER(e64e81478e6e60af, 3, 0)
     #if !CAPNP_LITE
     static constexpr ::capnp::_::RawBrandedSchema const* brand() { return &schema->defaultBrand; }
     #endif  // !CAPNP_LITE
@@ -571,7 +588,7 @@ struct CarParams {
   struct LateralTuning;
 
   struct _capnpPrivate {
-    CAPNP_DECLARE_STRUCT_HEADER(8c69372490aaa9da, 17, 14)
+    CAPNP_DECLARE_STRUCT_HEADER(8c69372490aaa9da, 18, 14)
     #if !CAPNP_LITE
     static constexpr ::capnp::_::RawBrandedSchema const* brand() { return &schema->defaultBrand; }
     #endif  // !CAPNP_LITE
@@ -712,7 +729,7 @@ struct CarParams::LateralTuning {
   };
 
   struct _capnpPrivate {
-    CAPNP_DECLARE_STRUCT_HEADER(93fc580a35339568, 17, 14)
+    CAPNP_DECLARE_STRUCT_HEADER(93fc580a35339568, 18, 14)
     #if !CAPNP_LITE
     static constexpr ::capnp::_::RawBrandedSchema const* brand() { return &schema->defaultBrand; }
     #endif  // !CAPNP_LITE
@@ -960,6 +977,9 @@ public:
 
   inline float getABasis() const;
 
+  inline bool hasNaviSafetyInfo() const;
+  inline  ::cereal::CarState::NaviSafetyInfo::Reader getNaviSafetyInfo() const;
+
 private:
   ::capnp::_::StructReader _reader;
   template <typename, ::capnp::Kind>
@@ -1159,6 +1179,13 @@ public:
   inline float getABasis();
   inline void setABasis(float value);
 
+  inline bool hasNaviSafetyInfo();
+  inline  ::cereal::CarState::NaviSafetyInfo::Builder getNaviSafetyInfo();
+  inline void setNaviSafetyInfo( ::cereal::CarState::NaviSafetyInfo::Reader value);
+  inline  ::cereal::CarState::NaviSafetyInfo::Builder initNaviSafetyInfo();
+  inline void adoptNaviSafetyInfo(::capnp::Orphan< ::cereal::CarState::NaviSafetyInfo>&& value);
+  inline ::capnp::Orphan< ::cereal::CarState::NaviSafetyInfo> disownNaviSafetyInfo();
+
 private:
   ::capnp::_::StructBuilder _builder;
   template <typename, ::capnp::Kind>
@@ -1180,6 +1207,108 @@ public:
   inline  ::cereal::CarState::WheelSpeeds::Pipeline getWheelSpeeds();
   inline  ::cereal::CarState::CruiseState::Pipeline getCruiseState();
   inline  ::cereal::CarState::Tpms::Pipeline getTpms();
+  inline  ::cereal::CarState::NaviSafetyInfo::Pipeline getNaviSafetyInfo();
+private:
+  ::capnp::AnyPointer::Pipeline _typeless;
+  friend class ::capnp::PipelineHook;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+};
+#endif  // !CAPNP_LITE
+
+class CarState::NaviSafetyInfo::Reader {
+public:
+  typedef NaviSafetyInfo Reads;
+
+  Reader() = default;
+  inline explicit Reader(::capnp::_::StructReader base): _reader(base) {}
+
+  inline ::capnp::MessageSize totalSize() const {
+    return _reader.totalSize().asPublic();
+  }
+
+#if !CAPNP_LITE
+  inline ::kj::StringTree toString() const {
+    return ::capnp::_::structString(_reader, *_capnpPrivate::brand());
+  }
+#endif  // !CAPNP_LITE
+
+  inline  ::int32_t getSign() const;
+
+  inline  ::int32_t getDist1() const;
+
+  inline  ::int32_t getSpeed2() const;
+
+  inline  ::int32_t getDist2() const;
+
+  inline  ::int32_t getSpeedLimit() const;
+
+  inline  ::int32_t getDist() const;
+
+private:
+  ::capnp::_::StructReader _reader;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::_::PointerHelpers;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::List;
+  friend class ::capnp::MessageBuilder;
+  friend class ::capnp::Orphanage;
+};
+
+class CarState::NaviSafetyInfo::Builder {
+public:
+  typedef NaviSafetyInfo Builds;
+
+  Builder() = delete;  // Deleted to discourage incorrect usage.
+                       // You can explicitly initialize to nullptr instead.
+  inline Builder(decltype(nullptr)) {}
+  inline explicit Builder(::capnp::_::StructBuilder base): _builder(base) {}
+  inline operator Reader() const { return Reader(_builder.asReader()); }
+  inline Reader asReader() const { return *this; }
+
+  inline ::capnp::MessageSize totalSize() const { return asReader().totalSize(); }
+#if !CAPNP_LITE
+  inline ::kj::StringTree toString() const { return asReader().toString(); }
+#endif  // !CAPNP_LITE
+
+  inline  ::int32_t getSign();
+  inline void setSign( ::int32_t value);
+
+  inline  ::int32_t getDist1();
+  inline void setDist1( ::int32_t value);
+
+  inline  ::int32_t getSpeed2();
+  inline void setSpeed2( ::int32_t value);
+
+  inline  ::int32_t getDist2();
+  inline void setDist2( ::int32_t value);
+
+  inline  ::int32_t getSpeedLimit();
+  inline void setSpeedLimit( ::int32_t value);
+
+  inline  ::int32_t getDist();
+  inline void setDist( ::int32_t value);
+
+private:
+  ::capnp::_::StructBuilder _builder;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+  friend class ::capnp::Orphanage;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::_::PointerHelpers;
+};
+
+#if !CAPNP_LITE
+class CarState::NaviSafetyInfo::Pipeline {
+public:
+  typedef NaviSafetyInfo Pipelines;
+
+  inline Pipeline(decltype(nullptr)): _typeless(nullptr) {}
+  inline explicit Pipeline(::capnp::AnyPointer::Pipeline&& typeless)
+      : _typeless(kj::mv(typeless)) {}
+
 private:
   ::capnp::AnyPointer::Pipeline _typeless;
   friend class ::capnp::PipelineHook;
@@ -1399,6 +1528,10 @@ public:
 
   inline bool getNonAdaptive() const;
 
+  inline float getSpeedCluster() const;
+
+  inline float getSpeedLimit() const;
+
   inline bool getEnabledAcc() const;
 
 private:
@@ -1446,6 +1579,12 @@ public:
 
   inline bool getNonAdaptive();
   inline void setNonAdaptive(bool value);
+
+  inline float getSpeedCluster();
+  inline void setSpeedCluster(float value);
+
+  inline float getSpeedLimit();
+  inline void setSpeedLimit(float value);
 
   inline bool getEnabledAcc();
   inline void setEnabledAcc(bool value);
@@ -2567,6 +2706,8 @@ public:
 
   inline float getMaxLateralAccel() const;
 
+  inline  ::int8_t getNaviCluster() const;
+
 private:
   ::capnp::_::StructReader _reader;
   template <typename, ::capnp::Kind>
@@ -2883,6 +3024,9 @@ public:
 
   inline float getMaxLateralAccel();
   inline void setMaxLateralAccel(float value);
+
+  inline  ::int8_t getNaviCluster();
+  inline void setNaviCluster( ::int8_t value);
 
 private:
   ::capnp::_::StructBuilder _builder;
@@ -4982,6 +5126,129 @@ inline void CarState::Builder::setABasis(float value) {
       ::capnp::bounded<17>() * ::capnp::ELEMENTS, value);
 }
 
+inline bool CarState::Reader::hasNaviSafetyInfo() const {
+  return !_reader.getPointerField(
+      ::capnp::bounded<7>() * ::capnp::POINTERS).isNull();
+}
+inline bool CarState::Builder::hasNaviSafetyInfo() {
+  return !_builder.getPointerField(
+      ::capnp::bounded<7>() * ::capnp::POINTERS).isNull();
+}
+inline  ::cereal::CarState::NaviSafetyInfo::Reader CarState::Reader::getNaviSafetyInfo() const {
+  return ::capnp::_::PointerHelpers< ::cereal::CarState::NaviSafetyInfo>::get(_reader.getPointerField(
+      ::capnp::bounded<7>() * ::capnp::POINTERS));
+}
+inline  ::cereal::CarState::NaviSafetyInfo::Builder CarState::Builder::getNaviSafetyInfo() {
+  return ::capnp::_::PointerHelpers< ::cereal::CarState::NaviSafetyInfo>::get(_builder.getPointerField(
+      ::capnp::bounded<7>() * ::capnp::POINTERS));
+}
+#if !CAPNP_LITE
+inline  ::cereal::CarState::NaviSafetyInfo::Pipeline CarState::Pipeline::getNaviSafetyInfo() {
+  return  ::cereal::CarState::NaviSafetyInfo::Pipeline(_typeless.getPointerField(7));
+}
+#endif  // !CAPNP_LITE
+inline void CarState::Builder::setNaviSafetyInfo( ::cereal::CarState::NaviSafetyInfo::Reader value) {
+  ::capnp::_::PointerHelpers< ::cereal::CarState::NaviSafetyInfo>::set(_builder.getPointerField(
+      ::capnp::bounded<7>() * ::capnp::POINTERS), value);
+}
+inline  ::cereal::CarState::NaviSafetyInfo::Builder CarState::Builder::initNaviSafetyInfo() {
+  return ::capnp::_::PointerHelpers< ::cereal::CarState::NaviSafetyInfo>::init(_builder.getPointerField(
+      ::capnp::bounded<7>() * ::capnp::POINTERS));
+}
+inline void CarState::Builder::adoptNaviSafetyInfo(
+    ::capnp::Orphan< ::cereal::CarState::NaviSafetyInfo>&& value) {
+  ::capnp::_::PointerHelpers< ::cereal::CarState::NaviSafetyInfo>::adopt(_builder.getPointerField(
+      ::capnp::bounded<7>() * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::cereal::CarState::NaviSafetyInfo> CarState::Builder::disownNaviSafetyInfo() {
+  return ::capnp::_::PointerHelpers< ::cereal::CarState::NaviSafetyInfo>::disown(_builder.getPointerField(
+      ::capnp::bounded<7>() * ::capnp::POINTERS));
+}
+
+inline  ::int32_t CarState::NaviSafetyInfo::Reader::getSign() const {
+  return _reader.getDataField< ::int32_t>(
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
+}
+
+inline  ::int32_t CarState::NaviSafetyInfo::Builder::getSign() {
+  return _builder.getDataField< ::int32_t>(
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
+}
+inline void CarState::NaviSafetyInfo::Builder::setSign( ::int32_t value) {
+  _builder.setDataField< ::int32_t>(
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, value);
+}
+
+inline  ::int32_t CarState::NaviSafetyInfo::Reader::getDist1() const {
+  return _reader.getDataField< ::int32_t>(
+      ::capnp::bounded<1>() * ::capnp::ELEMENTS);
+}
+
+inline  ::int32_t CarState::NaviSafetyInfo::Builder::getDist1() {
+  return _builder.getDataField< ::int32_t>(
+      ::capnp::bounded<1>() * ::capnp::ELEMENTS);
+}
+inline void CarState::NaviSafetyInfo::Builder::setDist1( ::int32_t value) {
+  _builder.setDataField< ::int32_t>(
+      ::capnp::bounded<1>() * ::capnp::ELEMENTS, value);
+}
+
+inline  ::int32_t CarState::NaviSafetyInfo::Reader::getSpeed2() const {
+  return _reader.getDataField< ::int32_t>(
+      ::capnp::bounded<2>() * ::capnp::ELEMENTS);
+}
+
+inline  ::int32_t CarState::NaviSafetyInfo::Builder::getSpeed2() {
+  return _builder.getDataField< ::int32_t>(
+      ::capnp::bounded<2>() * ::capnp::ELEMENTS);
+}
+inline void CarState::NaviSafetyInfo::Builder::setSpeed2( ::int32_t value) {
+  _builder.setDataField< ::int32_t>(
+      ::capnp::bounded<2>() * ::capnp::ELEMENTS, value);
+}
+
+inline  ::int32_t CarState::NaviSafetyInfo::Reader::getDist2() const {
+  return _reader.getDataField< ::int32_t>(
+      ::capnp::bounded<3>() * ::capnp::ELEMENTS);
+}
+
+inline  ::int32_t CarState::NaviSafetyInfo::Builder::getDist2() {
+  return _builder.getDataField< ::int32_t>(
+      ::capnp::bounded<3>() * ::capnp::ELEMENTS);
+}
+inline void CarState::NaviSafetyInfo::Builder::setDist2( ::int32_t value) {
+  _builder.setDataField< ::int32_t>(
+      ::capnp::bounded<3>() * ::capnp::ELEMENTS, value);
+}
+
+inline  ::int32_t CarState::NaviSafetyInfo::Reader::getSpeedLimit() const {
+  return _reader.getDataField< ::int32_t>(
+      ::capnp::bounded<4>() * ::capnp::ELEMENTS);
+}
+
+inline  ::int32_t CarState::NaviSafetyInfo::Builder::getSpeedLimit() {
+  return _builder.getDataField< ::int32_t>(
+      ::capnp::bounded<4>() * ::capnp::ELEMENTS);
+}
+inline void CarState::NaviSafetyInfo::Builder::setSpeedLimit( ::int32_t value) {
+  _builder.setDataField< ::int32_t>(
+      ::capnp::bounded<4>() * ::capnp::ELEMENTS, value);
+}
+
+inline  ::int32_t CarState::NaviSafetyInfo::Reader::getDist() const {
+  return _reader.getDataField< ::int32_t>(
+      ::capnp::bounded<5>() * ::capnp::ELEMENTS);
+}
+
+inline  ::int32_t CarState::NaviSafetyInfo::Builder::getDist() {
+  return _builder.getDataField< ::int32_t>(
+      ::capnp::bounded<5>() * ::capnp::ELEMENTS);
+}
+inline void CarState::NaviSafetyInfo::Builder::setDist( ::int32_t value) {
+  _builder.setDataField< ::int32_t>(
+      ::capnp::bounded<5>() * ::capnp::ELEMENTS, value);
+}
+
 inline float CarState::Tpms::Reader::getFl() const {
   return _reader.getDataField<float>(
       ::capnp::bounded<0>() * ::capnp::ELEMENTS);
@@ -5176,6 +5443,34 @@ inline bool CarState::CruiseState::Builder::getNonAdaptive() {
 inline void CarState::CruiseState::Builder::setNonAdaptive(bool value) {
   _builder.setDataField<bool>(
       ::capnp::bounded<3>() * ::capnp::ELEMENTS, value);
+}
+
+inline float CarState::CruiseState::Reader::getSpeedCluster() const {
+  return _reader.getDataField<float>(
+      ::capnp::bounded<3>() * ::capnp::ELEMENTS);
+}
+
+inline float CarState::CruiseState::Builder::getSpeedCluster() {
+  return _builder.getDataField<float>(
+      ::capnp::bounded<3>() * ::capnp::ELEMENTS);
+}
+inline void CarState::CruiseState::Builder::setSpeedCluster(float value) {
+  _builder.setDataField<float>(
+      ::capnp::bounded<3>() * ::capnp::ELEMENTS, value);
+}
+
+inline float CarState::CruiseState::Reader::getSpeedLimit() const {
+  return _reader.getDataField<float>(
+      ::capnp::bounded<4>() * ::capnp::ELEMENTS);
+}
+
+inline float CarState::CruiseState::Builder::getSpeedLimit() {
+  return _builder.getDataField<float>(
+      ::capnp::bounded<4>() * ::capnp::ELEMENTS);
+}
+inline void CarState::CruiseState::Builder::setSpeedLimit(float value) {
+  _builder.setDataField<float>(
+      ::capnp::bounded<4>() * ::capnp::ELEMENTS, value);
 }
 
 inline bool CarState::CruiseState::Reader::getEnabledAcc() const {
@@ -7595,6 +7890,20 @@ inline float CarParams::Builder::getMaxLateralAccel() {
 inline void CarParams::Builder::setMaxLateralAccel(float value) {
   _builder.setDataField<float>(
       ::capnp::bounded<33>() * ::capnp::ELEMENTS, value);
+}
+
+inline  ::int8_t CarParams::Reader::getNaviCluster() const {
+  return _reader.getDataField< ::int8_t>(
+      ::capnp::bounded<136>() * ::capnp::ELEMENTS);
+}
+
+inline  ::int8_t CarParams::Builder::getNaviCluster() {
+  return _builder.getDataField< ::int8_t>(
+      ::capnp::bounded<136>() * ::capnp::ELEMENTS);
+}
+inline void CarParams::Builder::setNaviCluster( ::int8_t value) {
+  _builder.setDataField< ::int8_t>(
+      ::capnp::bounded<136>() * ::capnp::ELEMENTS, value);
 }
 
 inline  ::cereal::CarParams::SafetyModel CarParams::SafetyConfig::Reader::getSafetyModel() const {

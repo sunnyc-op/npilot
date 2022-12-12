@@ -225,6 +225,17 @@ struct CarState {
   vCluRatio @45 :Float32;
   aBasis @46 :Float32;
 
+  naviSafetyInfo @47 : NaviSafetyInfo;
+
+   struct NaviSafetyInfo {
+     sign @0 : Int32; # OPKR_S_Sign
+     dist1 @1 : Int32; # OPKR_S_Dist  < 1023
+     speed2 @2 : Int32; # OPKR_SBR_LSpd < 150 
+     dist2 @3 : Int32; # OPKR_SBR_Dist < 65535
+     speedLimit @4: Int32; # SpeedLim_Nav_Clu
+     dist @5: Int32; # SafetyDist
+   }  
+
   struct Tpms {
     fl @0 :Float32;
     fr @1 :Float32;
@@ -243,11 +254,13 @@ struct CarState {
   struct CruiseState {
     enabled @0 :Bool;
     speed @1 :Float32;
+    speedCluster @6 :Float32;  # Set speed as shown on instrument cluster
     available @2 :Bool;
     speedOffset @3 :Float32;
     standstill @4 :Bool;
     nonAdaptive @5 :Bool;
-    enabledAcc @6 :Bool;
+    speedLimit @7 :Float32;
+    enabledAcc @8 :Bool;
   }
 
   enum GearShifter {
@@ -531,6 +544,7 @@ struct CarParams {
   steerFaultMaxAngle @76 :Int16;
   steerFaultMaxFrames @77 :Int16;
   disableLateralLiveTuning @78 :Bool;
+  naviCluster @80 : Int8;
 
   struct LateralParams {
     torqueBP @0 :List(Int32);

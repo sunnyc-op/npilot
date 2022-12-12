@@ -266,6 +266,8 @@ struct GpsLocationData {
   # Represents velocity accuracy in m/s. (presumably 1 sigma?)
   speedAccuracy @12 :Float32;
 
+  unixTimestampMillis @13 :Int64;
+
   enum SensorSource {
     android @0;
     iOS @1;
@@ -609,9 +611,12 @@ struct ControlsState @0x97ff69c53601abf1 {
   latAccelFactor @75 :Float32;
   latAccelOffset @76 :Float32;
   friction @77 :Float32;
-  totalBucketPoints @79 :Float32;
+  totalBucketPoints @78 :Float32;
   
-  totalCameraOffset @78 :Float32;
+  totalCameraOffset @79 :Float32;
+  longActiveUser @80: Int32;
+  vCruiseOut @81: Float32;
+  cruiseButtonCounter @82: Int32;
 
   enum OpenpilotState @0xdbe58b96d2d1ac61 {
     disabled @0;
@@ -924,6 +929,8 @@ struct LongitudinalPlan @0xe00b5b3eba12876c {
   lead1Obstacle @52 :List(Float64) = [0.];
   cruiseTarget @53 :List(Float64) = [0.];
   onStop @54 : Bool;
+  xStop @55 : Float32;
+  xState @56 : Text;
 
   enum LongitudinalPlanSource {
     cruise @0;
@@ -994,6 +1001,10 @@ struct LateralPlan @0xe1e9318e2ae8b51e {
   rProb @7 :Float32;
   dPathPoints @20 :List(Float32);
   dProb @21 :Float32;
+
+  #dp
+  dPathWLinesX @35 :List(Float32);
+  dPathWLinesY @36 :List(Float32);
 
   mpcSolutionValid @9 :Bool;
   desire @17 :Desire;
@@ -1762,7 +1773,7 @@ struct LiveTorqueParametersData {
   useParams @12 :Bool;
 }
 
-
+#dp
 struct LiveMapDataDEPRECATED {
   speedLimitValid @0 :Bool;
   speedLimit @1 :Float32;
@@ -1790,6 +1801,29 @@ struct CameraOdometry {
   rot @1 :List(Float32); # rad/s in device frame
   transStd @2 :List(Float32); # std m/s in device frame
   rotStd @3 :List(Float32); # std rad/s in device frame
+}
+
+struct LiveMapData {
+  speedLimitValid @0 :Bool;
+  speedLimit @1 :Float32;
+  speedLimitAheadValid @2 :Bool;
+  speedLimitAhead @3 :Float32;
+  speedLimitAheadDistance @4 :Float32;
+  turnSpeedLimitValid @5 :Bool;
+  turnSpeedLimit @6 :Float32;
+  turnSpeedLimitEndDistance @7 :Float32;
+  turnSpeedLimitSign @8 :Int16;
+  turnSpeedLimitsAhead @9 :List(Float32);
+  turnSpeedLimitsAheadDistances @10 :List(Float32);
+  turnSpeedLimitsAheadSigns @11 :List(Int16);
+  lastGpsTimestamp @12 :Int64;  # Milliseconds since January 1, 1970.
+  currentRoadName @13 :Text;
+  lastGpsLatitude @14 :Float64;
+  lastGpsLongitude @15 :Float64;
+  lastGpsSpeed @16 :Float32;
+  lastGpsBearingDeg @17 :Float32;
+  lastGpsAccuracy @18 :Float32;
+  lastGpsBearingAccuracyDeg @19 :Float32;
 }
 
 struct Sentinel {
@@ -1841,6 +1875,9 @@ struct NavInstruction {
   lanes @8 :List(Lane);
   showFull @9 :Bool;
 
+  speedLimit @10 :Float32; # m/s
+  speedLimitSign @11 :SpeedLimitSign;
+
   struct Lane {
     directions @0 :List(Direction);
     active @1 :Bool;
@@ -1854,6 +1891,10 @@ struct NavInstruction {
     straight @3;
   }
 
+  enum SpeedLimitSign {
+    mutcd @0; # US Style
+    vienna @1; # EU Style
+  }
 }
 
 struct NavRoute {
@@ -1964,6 +2005,9 @@ struct Event {
     roadEncodeData @86 :EncodeData;
     driverEncodeData @87 :EncodeData;
     wideRoadEncodeData @88 :EncodeData;
+
+    #dp
+    liveMapData @91: LiveMapData;
 
     # *********** legacy + deprecated ***********
     model @9 :Legacy.ModelData; # TODO: rename modelV2 and mark this as deprecated

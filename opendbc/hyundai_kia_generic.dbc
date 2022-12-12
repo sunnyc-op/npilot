@@ -1440,6 +1440,7 @@ BO_ 909 FCA11: 8 FCA
  SG_ FCA_DrvSetStatus : 22|3@1+ (1,0) [0|7] "" CLU,ESC
  SG_ CF_VSM_DecCmdAct : 31|1@1+ (1,0) [0|1] "" ESC
  SG_ FCA_Failinfo : 32|3@1+ (1,0) [0|7] "" ACU,CLU,ESC
+ SG_ CR_FCA_Alive : 35|4@1+ (1,0) [0|15] "" ESC
  SG_ FCA_RelativeVelocity : 39|9@1+ (0.1,-25.5) [-25.5|25.5] "m/s" iBAU
  SG_ FCA_TimetoCollision : 48|8@1+ (10,0) [0|2540] "ms" iBAU
  SG_ CR_FCA_Alive : 56|4@1+ (1,0) [0|15] "" ESC
@@ -1471,9 +1472,18 @@ BO_ 905 SCC14: 8 SCC
  SG_ ComfortBandLower : 6|6@1+ (0.02,0) [0|1.26] "m/s^2" ESC
  SG_ JerkUpperLimit : 12|7@1+ (0.1,0) [0|12.7] "m/s^3" ESC
  SG_ JerkLowerLimit : 19|7@1+ (0.1,0) [0|12.7] "m/s^3" ESC
+ SG_ SCC14_Signal_26 : 26|3@1+ (1,0) [0|7] "" XXX
+ SG_ SCC14_Signal_29 : 29|1@1+ (1,0) [0|1] "" XXX
+ SG_ SCC14_Signal_30 : 30|2@1+ (1,0) [0|3] "" XXX
  SG_ ACCMode : 32|3@1+ (1,0) [0|7] "" CLU,HUD,LDWS_LKAS,ESC
+ SG_ SCC14_Signal_1 : 35|7@1+ (1,0) [0|127] "" XXX
+ SG_ ObjGap2 : 42|2@1+ (1,0) [0|3] "" XXX
+ SG_ SCC14_Signal_4 : 44|1@1+ (1,0) [0|1] "" XXX
+ SG_ SCC14_Signal_5 : 45|1@1+ (1,0) [0|1] "" XXX
+ SG_ SCC14_Signal_46 : 46|1@1+ (1,0) [0|1] "" XXX
+ SG_ SCC14_Signal_47 : 47|1@1+ (1,0) [0|1] "" XXX
+ SG_ SCC14_Signal_48 : 48|8@1+ (1,0) [0|255] "" XXX
  SG_ ObjGap : 56|8@1+ (1,0) [0|255] "" CLU,HUD,ESC
- SG_ ObjGap2 : 43|1@1+ (1,0) [0|1] "" XXX
 
 BO_ 1157 LFAHDA_MFC: 4 XXX
  SG_ HDA_USM : 0|2@1+ (1,0) [0|3] "" XXX
@@ -1516,6 +1526,9 @@ BO_ 865 ADAS_PRK_11: 8 ADAS_PRK
 
 BO_ 882 ELECT_GEAR: 8 XXX
  SG_ Elect_Gear_Shifter : 16|4@1+ (1,0) [0|7] ""  CLU
+ SG_ Elect_Gear_Shifter_NEXO : 16|16@1+ (1,0) [0|65535] ""  CLU
+ SG_ Elect_Gear_Step : 22|3@0+ (1,0) [0|7] "" XXX
+ SG_ Elect_Motor_Speed : 0|8@1+ (1,0) [0|255] "" XXX
 
 BO_ 881 E_EMS11: 8 XXX
  SG_ Brake_Pedal_Pos : 0|8@1+ (1,0) [0|127] "" XXX
@@ -1525,6 +1538,8 @@ BO_ 881 E_EMS11: 8 XXX
  SG_ Cruise_Limit_Target : 23|8@1+ (1,0) [0|15] "" XXX
  SG_ Accel_Pedal_Pos : 31|8@1+ (1,0) [0|254] "" XXX
  SG_ CR_Vcu_AccPedDep_Pos : 56|8@1+ (1,0) [0|254] "" XXX
+ SG_ Engine_Run : 14|1@0+ (1,0) [0|1] "" XXX
+ SG_ N : 18|13@1+ (1,0) [0|15] "" XXX
 
 BO_ 1355 EV_PC6: 8 CGW
  SG_ CF_Vcu_SbwWarnMsg : 16|3@1+ (1,0) [0|7] "" Vector__XXX
@@ -1640,17 +1655,27 @@ BO_ 1042 ICM_412h: 8 ICM
  SG_ PopupMessageOutput_7Level : 54|1@0+ (1,0) [0|1] "" Vector__XXX
  SG_ PopupMessageOutput_8Level : 55|1@0+ (1,0) [0|1] "" Vector__XXX
 
+BO_ 1332 NAVI: 8 XXX
+ SG_ OPKR_S_Dist : 15|10@0+ (1,0) [0|1023] "" XXX
+ SG_ OPKR_S_Sign : 21|5@0+ (1,0) [0|31] "" XXX
+ SG_ OPKR_SBR_Dist : 32|16@1+ (1,0) [0|65535] "" XXX
+ SG_ OPKR_SBR_LSpd : 51|4@0+ (10,0) [0|150] "" XXX
+
 BO_ 1348 Navi_HU: 8 XXX
  SG_ SpeedLim_Nav_Clu : 7|8@0+ (1,0) [0|255] "" XXX
 
+BO_ 1291 EV_Info: 8 XXX
+ SG_ OPKR_EV_Charge_Level : 17|7@1+ (1,0) [0|100] "%" XXX
 CM_ "BO_ E_EMS11: All (plug-in) hybrids use this gas signal: CR_Vcu_AccPedDep_Pos, and all EVs use the Accel_Pedal_Pos signal. See hyundai/values.py for a specific car list";
 CM_ SG_ 1348 SpeedLim_Nav_Clu "Speed limit displayed on Nav, Cluster and HUD";
+VAL_ 882 Elect_Gear_Shifter_NEXO  1546 "D" 2314 "N" 2566 "R" 2569 "P";
 
 VAL_ 274 CUR_GR 1 "D" 2 "D" 3 "D" 4 "D" 5 "D" 6 "D" 7 "D" 8 "D" 14 "R" 0 "P";
-VAL_ 871 CF_Lvr_Gear 5 "D" 8 "S" 6 "N" 7 "R" 0 "P";
+VAL_ 871 CF_Lvr_Gear 12 "T" 5 "D" 8 "S" 6 "N" 7 "R" 0 "P";
 VAL_ 882 Elect_Gear_Shifter 5 "D" 8 "S" 6 "N" 7 "R" 0 "P";
 VAL_ 905 ACCMode 0 "off" 1 "enabled" 2 "driver_override" 3 "off_maybe_fault" 4 "cancelled";
 VAL_ 909 CF_VSM_Warn 2 "FCW" 3 "AEB";
+VAL_ 916 ACCEnable 0 "SCC ready" 1 "SCC temp fault" 2 "SCC permanent fault" 3 "SCC permanent fault, communication issue";
 VAL_ 1057 ACCMode 0 "off" 1 "enabled" 2 "driver_override" 3 "off_maybe_fault";
 VAL_ 1157 HDA_Icon_State 0 "no_hda" 1 "white_hda" 2 "green_hda";
 VAL_ 1157 LFA_SysWarning 0 "no_message" 1 "switching_to_hda" 2 "switching_to_scc" 3 "lfa_error" 4 "check_hda" 5 "keep_hands_on_wheel_orange" 6 "keep_hands_on_wheel_red";

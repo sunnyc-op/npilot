@@ -20,8 +20,14 @@ from selfdrive.controls.lib.events import Events
 LON_MPC_STEP = 0.2  # first step is 0.2s
 AWARENESS_DECEL = -0.2  # car smoothly decel at .2m/s^2 when user is distracted
 A_CRUISE_MIN = -1.2
+
+# neokii
 A_CRUISE_MAX_VALS = [1.5, 1.2, 0.8, 0.6]
 A_CRUISE_MAX_BP = [0., 15., 25., 40.]
+
+# apilot
+A_CRUISE_MAX_VALS = [1.6, 1.2, 0.8, 0.6]
+A_CRUISE_MAX_BP = [0., 10.0, 25., 40.]
 
 # Lookup table for turns
 _A_TOTAL_MAX_V = [1.7, 3.2]
@@ -80,12 +86,14 @@ class Planner:
       a_sparse = np.interp(self.t_uniform, T_IDXS, model_msg.acceleration.x)
       j_sparse = np.gradient(a_sparse, self.t_uniform)
       j = np.interp(T_IDXS_MPC, self.t_uniform, j_sparse)
+      y = np.interp(T_IDXS_MPC, T_IDXS, model_msg.position.y)
     else:
       x = np.zeros(len(T_IDXS_MPC))
       v = np.zeros(len(T_IDXS_MPC))
       a = np.zeros(len(T_IDXS_MPC))
       j = np.zeros(len(T_IDXS_MPC))
-    return x, v, a, j
+      y = np.zeros(len(T_IDXS_MPC))
+    return x, v, a, j, y
 
   def update(self, sm):
     v_ego = sm['carState'].vEgo
@@ -137,8 +145,8 @@ class Planner:
     self.mpc.set_accel_limits(accel_limits_turns[0], accel_limits_turns[1])
     self.mpc.set_cur_state(self.v_desired_filter.x, self.a_desired)
     #dp
-    x, v, a, j = self.parse_model(sm['modelV2'])
-    self.mpc.update(sm['carState'], sm['radarState'], sm['modelV2'], v_cruise_sol, x, v, a, j, prev_accel_constraint)
+    x, v, a, j, y = self.parse_model(sm['modelV2'])
+    self.mpc.update(sm['carState'], sm['radarState'], sm['modelV2'], sm['controlsState'], v_cruise_sol, x, v, a, j, y, prev_accel_constraint)
 
     self.v_desired_trajectory = np.interp(T_IDXS[:CONTROL_N], T_IDXS_MPC, self.mpc.v_solution)
     self.a_desired_trajectory = np.interp(T_IDXS[:CONTROL_N], T_IDXS_MPC, self.mpc.a_solution)

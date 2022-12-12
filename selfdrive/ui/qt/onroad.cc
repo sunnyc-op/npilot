@@ -340,6 +340,8 @@ void NvgWindow::drawLead(QPainter &painter, const cereal::ModelDataV2::LeadDataV
   const float d_rel = lead_data.getX()[0];
   const float v_rel = lead_data.getV()[0];
 
+  painter.save();
+
   float fillAlpha = 0;
   if (d_rel < leadBuff) {
     fillAlpha = 255 * (1.0 - (d_rel / leadBuff));
@@ -364,6 +366,37 @@ void NvgWindow::drawLead(QPainter &painter, const cereal::ModelDataV2::LeadDataV
   QPointF chevron[] = {{x + (sz * 1.25), y + sz}, {x, y}, {x - (sz * 1.25), y + sz}};
   painter.setBrush(redColor(fillAlpha));
   painter.drawPolygon(chevron, std::size(chevron));
+
+  UIState* s = uiState();
+  SubMaster& sm = *(s->sm);
+  auto lead_radar = sm["radarState"].getRadarState().getLeadOne();
+  auto lead_one = sm["modelV2"].getModelV2().getLeadsV3()[0];
+  bool radar_detected = lead_radar.getStatus() && lead_radar.getRadar();
+  float radar_dist = radar_detected ? lead_radar.getDRel() : 0;
+  float vision_dist = lead_one.getProb() > .5 ? (lead_one.getX()[0] - 0) : 0;
+  float m_cur_speed = std::max(0.0, sm["carState"].getCarState().getCluSpeedMs() * (s->scene.is_metric ? MS_TO_KPH : MS_TO_MPH));
+
+  QString str;
+  str.sprintf("%.1fm", radar_detected ? radar_dist : vision_dist);
+  QColor textColor = QColor(255, 255, 255, 200);
+  configFont(painter, "Inter", 75, "Bold");
+  drawTextWithColor(painter, x, y + sz / 1.5f + 80.0, str, textColor);
+
+  if (radar_detected) {
+      float radar_rel_speed = lead_radar.getVRel();
+      if(s->scene.is_metric)
+        str.sprintf("%.0fkm/h", m_cur_speed + radar_rel_speed * 3.6);
+      else
+        str.sprintf("%.0fmph", (m_cur_speed + radar_rel_speed * 3.6) * KM_TO_MILE);
+
+      if (radar_rel_speed < -0.1) textColor = QColor(255, 0, 255, 200);
+      else if (radar_rel_speed > 0.1) textColor = QColor(0, 255, 0, 200);
+      else textColor = QColor(255, 255, 255, 200);
+      configFont(painter, "Inter", 60, "Bold");
+      drawTextWithColor(painter, x, y + sz / 1.5f - 80.0, str, textColor);
+  }
+
+  painter.restore();
 }
 
 void NvgWindow::drawStopLine(QPainter& painter, const UIState* s, const cereal::ModelDataV2::StopLineData::Reader &stop_line_data, const QPolygonF &vd) {

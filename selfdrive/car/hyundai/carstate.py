@@ -6,6 +6,7 @@ from opendbc.can.parser import CANParser
 from opendbc.can.can_define import CANDefine
 from common.conversions import Conversions as CV
 from common.params import Params
+from common.log import Loger
 
 GearShifter = car.CarState.GearShifter
 
@@ -47,6 +48,7 @@ class CarState(CarStateBase):
     self.standstill = False
     self.cruiseState_enabled = False
     self.cruiseState_speed = 0
+    self.naviSafetyInfo = car.CarState.NaviSafetyInfo
 
     self.use_cluster_speed = Params().get_bool('UseClusterSpeed')
     self.long_control_enabled = Params().get_bool('LongControlEnabled')
@@ -239,6 +241,49 @@ class CarState(CarStateBase):
     if self.cruise_buttons == 4: #cancel
       self.prev_cruiseState_speed = 0
 
+    # OPKR에서 측정한 속도리밋(속도별로 다른듯)
+    # self.safety_sign_check: speed_limit
+    # 24,25,26: 30km/h
+    # 0,1,2 : 40km/h
+    # 8,9,10 : 50km/h
+    # 16,17,18: 60km/h
+    # 24,25,26: 70 km/h
+    # 0,1,2: 80km/h
+    # 8,9,10: 90km/h
+    # 16,17,18: 100km/h
+    # 24,25,26: 110km/h
+    # safety_block_sl < 150 : safety_block_sl
+    #self.safety_sign_check = cp.vl["NAVI"]["OPKR_S_Sign"]
+    #self.safety_block_sl = cp.vl["NAVI"]["OPKR_SBR_LSpd"]
+    #if cp.vl["NAVI"]["OPKR_S_Dist"] < 1023:
+    #  self.safety_dist = cp.vl["NAVI"]["OPKR_S_Dist"]
+    #elif cp.vl["NAVI"]["OPKR_SBR_Dist"] < 65535:
+    #  self.safety_dist = cp.vl["NAVI"]["OPKR_SBR_Dist"]
+    #else:
+    #  self.safety_dist = 0
+    #self.is_highway = cp_scc.vl["SCC11"]["Navi_SCC_Camera_Act"] != 0.
+
+    if "NAVI" in cp.vl:
+      ret.naviSafetyInfo.sign = cp.vl["NAVI"]["OPKR_S_Sign"]
+      ret.naviSafetyInfo.dist1 = cp.vl["NAVI"]["OPKR_S_Dist"]
+      ret.naviSafetyInfo.speed2 = cp.vl["NAVI"]["OPKR_SBR_LSpd"]
+      ret.naviSafetyInfo.dist2 = cp.vl["NAVI"]["OPKR_SBR_Dist"]
+      ret.naviSafetyInfo.dist = ret.naviSafetyInfo.dist1 if ret.naviSafetyInfo.dist1 < 1023 else ret.naviSafetyInfo.dist2 if ret.naviSafetyInfo.dist2 < 65535 else 0
+
+    if self.CP.naviCluster == 1:
+      speedLimit = cp.vl["Navi_HU"]["SpeedLim_Nav_Clu"]
+      ret.naviSafetyInfo.speedLimit = speedLimit if speedLimit < 255 else 0
+    else:
+      ret.naviSafetyInfo.speedLimit = 0
+
+    # try:
+    #   str_log = '{:}, {:}, {:}, {:}, {:}'.format(
+    #             ret.naviSafetyInfo.sign, ret.naviSafetyInfo.speed2, ret.naviSafetyInfo.dist1, ret.naviSafetyInfo.dist2, ret.naviSafetyInfo.speedLimit)
+    #   Loger().add( '{}'.format( str_log ) )
+    # except:
+    #   print("no navi data")
+
+    self.naviSafetyInfo = ret.naviSafetyInfo
     return ret
 
   @staticmethod
@@ -345,6 +390,12 @@ class CarState(CarStateBase):
       ("PRESSURE_FR", "TPMS11"),
       ("PRESSURE_RL", "TPMS11"),
       ("PRESSURE_RR", "TPMS11"),
+
+      ("OPKR_S_Dist", "NAVI"),
+      ("OPKR_S_Sign", "NAVI"),
+      ("OPKR_SBR_Dist", "NAVI"),
+      ("OPKR_SBR_LSpd", "NAVI"),
+
     ]
 
     checks = [
@@ -459,6 +510,10 @@ class CarState(CarStateBase):
         ("LDM_STAT", "ESP11"),
       ]
       checks += [("ESP11", 50)]
+
+    if CP.naviCluster == 1:
+      signals.append(("SpeedLim_Nav_Clu", "Navi_HU"))
+      checks.append(("Navi_HU", 5))
 
     return CANParser(DBC[CP.carFingerprint]["pt"], signals, checks, 0, enforce_checks=False)
 

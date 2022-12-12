@@ -2187,6 +2187,12 @@ CommunityPanel::CommunityPanel(QWidget* parent) : QWidget(parent) {
                                             "../assets/offroad/icon_openpilot.png",
                                             this));
 
+  toggles.append(new ParamControl("EnableRadarTracks",
+                                            "EnableRadarTracks",
+                                            "Using RadarTracks instead of SCC data",
+                                            "../assets/offroad/icon_openpilot.png",
+                                            this));
+
   toggles.append(new ParamControl("IsLdwsCar",
                                             "LDWS",
                                             "If your car only supports LDWS, turn it on.",

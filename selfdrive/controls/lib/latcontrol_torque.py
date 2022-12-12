@@ -20,9 +20,10 @@ from selfdrive.ntune import ntune_torque_get
 # friction in the steering wheel that needs to be overcome to
 # move it at all, this is compensated for too.
 
-LOW_SPEED_X = [0, 10, 20, 30]
-LOW_SPEED_Y = [15, 13, 10, 5] #comma
-#LOW_SPEED_Y = [15, 2, 2, 2] 
+# LOW_SPEED_X = [0, 10, 20, 30] #comma
+# LOW_SPEED_Y = [15, 13, 10, 5] #comma
+LOW_SPEED_X = [0, 5, 10, 20, 30]
+LOW_SPEED_Y = [15, 13, 0, 0, 5] 
 
 class LatControlTorque(LatControl):
   def __init__(self, CP, CI):

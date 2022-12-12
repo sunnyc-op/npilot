@@ -134,7 +134,7 @@ class CarInterfaceBase(ABC):
     ret.pcmCruise = True     # openpilot's state is tied to the PCM's cruise state on most cars
     ret.minEnableSpeed = -1. # enable is done by stock ACC, so ignore this
     ret.steerRatioRear = 0.  # no rear steering, at least on the listed cars aboveA
-    ret.openpilotLongitudinalControl = False
+    ret.openpilotLongitudinalControl = True
     ret.stopAccel = -2.0
     ret.stoppingDecelRate = 0.8 # brake_travel/s while trying to stop
     ret.vEgoStopping = 0.5
@@ -253,6 +253,7 @@ class CarInterfaceBase(ABC):
 
 class RadarInterfaceBase(ABC):
   def __init__(self, CP):
+    self.rcp = None #apilot
     self.pts = {}
     self.delay = 0
     self.radar_ts = CP.radarTimeStep

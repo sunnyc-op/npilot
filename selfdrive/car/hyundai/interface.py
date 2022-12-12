@@ -4,13 +4,17 @@ from typing import List
 from cereal import car
 from common.numpy_fast import interp
 from common.conversions import Conversions as CV
-from selfdrive.car.hyundai.values import CAR, Buttons, CarControllerParams
+from selfdrive.car.hyundai.values import CAR, DBC, Buttons, CarControllerParams
+from selfdrive.car.hyundai.radar_interface import RADAR_START_ADDR
 from selfdrive.car import STD_CARGO_KG, scale_rot_inertia, scale_tire_stiffness, gen_empty_fingerprint, get_safety_config
 from selfdrive.car.interfaces import CarInterfaceBase
 from common.params import Params
 from selfdrive.controls.lib.desire_helper import LANE_CHANGE_SPEED_MIN
 from decimal import Decimal
 from selfdrive.ntune import ntune_common_get, ntune_lqr_get, ntune_torque_get, ntune_scc_get
+from selfdrive.car.isotp_parallel_query import IsoTpParallelQuery
+from common.log import Loger
+from selfdrive.car.disable_ecu import enable_radar_tracks, disable_ecu
 
 GearShifter = car.CarState.GearShifter
 EventName = car.CarEvent.EventName
@@ -39,6 +43,8 @@ class CarInterface(CarInterfaceBase):
     ret.openpilotLongitudinalControl = Params().get_bool('LongControlEnabled')
 
     ret.carName = "hyundai"
+    ret.radarOffCan = RADAR_START_ADDR not in fingerprint[1] or DBC[ret.carFingerprint]["radar"] is None
+
     ret.safetyConfigs = [get_safety_config(car.CarParams.SafetyModel.hyundaiLegacy, 0)]
 
     tire_stiffness_factor = 1.
@@ -385,6 +391,16 @@ class CarInterface(CarInterfaceBase):
     if ret.radarOffCan or ret.mdpsBus == 1 or ret.openpilotLongitudinalControl or ret.sccBus == 1 or Params().get_bool('MadModeEnabled'):
       ret.safetyConfigs = [get_safety_config(car.CarParams.SafetyModel.hyundaiCommunity, 0)]
     return ret
+
+  # @staticmethod
+  # def init(CP, logcan, sendcan):
+  #   if CP.openpilotLongitudinalControl and CP.sccBus == 0:
+  #     addr, bus = 0x7d0, 0
+  #     disable_ecu(logcan, sendcan, bus=bus, addr=addr, com_cont_req=b'\x28\x83\x01')
+  #     enable_radar_tracks(CP, logcan, sendcan)
+  #     Params().put_bool("EnableRadarTracks", True)
+  #   elif Params().get_bool("EnableRadarTracks"):
+  #     enable_radar_tracks(CP, logcan, sendcan)    
 
   def _update(self, c: car.CarControl) -> car.CarState:
     pass

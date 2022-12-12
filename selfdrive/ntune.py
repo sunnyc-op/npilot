@@ -248,16 +248,16 @@ class nTune():
     if self.checkValue("sccBrakeFactor", 0.5, 1.5, 1.0):
       updated = True
 
-    if self.checkValue("sccCurvatureFactor", 0.5, 1.5, 0.96):
+    if self.checkValue("sccCurvatureFactor", 0.5, 1.5, 0.95):
       updated = True
 
-    if self.checkValue("stoppingDecelRate", 0.4, 1.0, 0.9):
+    if self.checkValue("stoppingDecelRate", 0.4, 1.0, 0.8):
       updated = True
 
-    if self.checkValue("vEgoStopping", 0.4, 1.0, 0.8):
+    if self.checkValue("vEgoStopping", 0.4, 1.0, 0.5):
       updated = True
 
-    if self.checkValue("vEgoStarting", 0.4, 1.0, 0.4):
+    if self.checkValue("vEgoStarting", 0.4, 1.0, 0.5):
       updated = True
 
     if self.checkValue("stopAccel", -3.0, -2.0, -2.0):
@@ -270,6 +270,12 @@ class nTune():
       updated = True
 
     if self.checkValue("StopAtStopSign", 0., 1., 0.):
+      updated = True
+
+    if self.checkValue("TrafficStopDistanceAdjust", 0., 10., 5.5):
+      updated = True
+
+    if self.checkValue("X_EGO_OBSTACLE_COST", 3.0, 8.0, 6.0):
       updated = True
 
     return updated

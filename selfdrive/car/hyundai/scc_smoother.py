@@ -3,6 +3,7 @@ import random
 from math import sqrt
 
 import numpy as np
+from common.log import Loger
 from common.numpy_fast import clip, interp, mean
 from cereal import car
 from common.realtime import DT_CTRL
@@ -64,7 +65,7 @@ class SccSmoother:
     return int(kph * CV.KPH_TO_MS * self.speed_conv_to_clu)
 
   def __init__(self):
-
+    self.log = Loger()
     self.longcontrol = Params().get_bool('LongControlEnabled')
     self.slow_on_curves = False if Params().get_bool("TurnVisionControl") else Params().get_bool('SccSmootherSlowOnCurves')
     self.sync_set_speed_while_gas_pressed = Params().get_bool('SccSmootherSyncGasPressed')
@@ -163,6 +164,24 @@ class SccSmoother:
     ascc_enabled = CS.acc_mode and CS.cruiseState_enabled \
                    and 1 < CS.cruiseState_speed < 255 and not CS.brake_pressed
 
+    # HDA
+    # navi = CS.naviSafetyInfo
+
+    # try:
+    #   str_log = '{:}, {:}, {:}, {:}, {:}'.format(
+    #             navi.sign, navi.speed2, navi.dist1, navi.dist2, navi.speedLimit)
+    #   self.log.add( '{}'.format( str_log ) )
+    # except:
+    #   print("no navi data")
+
+    # try:
+    #   if navi is not None and navi.speedLimit >= self.kph_to_clu(10) and ascc_enabled: 
+    #     max_speed_navi = min(max_speed_clu, navi.speedLimit)
+    #     self.log.add(max_speed_navi)
+    # except:
+    #   print("navi is None")
+
+    # NDA
     if apply_limit_speed >= self.kph_to_clu(10) and ascc_enabled:
 
       if first_started:

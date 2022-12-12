@@ -40,7 +40,7 @@
 #define LONG_NX     3
 #define LONG_NZ     0
 #define LONG_NU     1
-#define LONG_NP     5
+#define LONG_NP     8
 
 #ifdef __cplusplus
 extern "C" {
