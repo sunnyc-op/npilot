@@ -28,6 +28,10 @@ class ConfigValues(NamedTuple):
 # NOTE: these firmware versions do not match what openpilot uses
 #       because this script uses a different diagnostic session type
 SUPPORTED_FW_VERSIONS = {
+  # 2020 TELLURIDE LX
+  b'ON__ FCA F-CUP      1.00 1.01 99110-S9100\x18\x10\x10\x07$    ': ConfigValues(
+    default_config=b"\x00\x00\x00\x01\x00\x00",
+    tracks_enabled=b"\x00\x00\x00\x01\x00\x01"),
   # 2020 SONATA
   b"DN8_ SCC FHCUP      1.00 1.00 99110-L0000\x19\x08)\x15T    ": ConfigValues(
     default_config=b"\x00\x00\x00\x01\x00\x00",
@@ -57,7 +61,7 @@ SUPPORTED_FW_VERSIONS = {
 if __name__ == "__main__":
   parser = argparse.ArgumentParser(description='configure radar to output points (or reset to default)')
   parser.add_argument('--default', action="store_true", default=False, help='reset to default configuration (default: false)')
-  parser.add_argument('--debug', action="store_true", default=False, help='enable debug output (default: false)')
+  parser.add_argument('--debug', action="store_true", default=True, help='enable debug output (default: false)')
   parser.add_argument('--bus', type=int, default=0, help='can bus to use (default: 0)')
   args = parser.parse_args()
 
