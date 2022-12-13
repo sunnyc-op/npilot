@@ -370,19 +370,6 @@ class LongitudinalMpc:
     self.lo_timer += 1
     if self.lo_timer > 100:
       self.lo_timer = 0
-    #   self.XEgoObstacleCost = float(int(Params().get("XEgoObstacleCost", encoding="utf8")))
-    #   self.JEgoCost = float(int(Params().get("JEgoCost", encoding="utf8")))
-    #   self.AChangeCost = float(int(Params().get("AChangeCost", encoding="utf8")))
-    #   self.DangerZoneCost = float(int(Params().get("DangerZoneCost", encoding="utf8")))
-      # self.trafficStopDistanceAdjust = float(int(Params().get("TrafficStopDistanceAdjust", encoding="utf8"))) / 100.
-    #   self.applyLongDynamicCost = Params().get_bool("ApplyLongDynamicCost")
-    # if self.lo_timer == 50:
-    #   self.trafficStopAccel = float(int(Params().get("TrafficStopAccel", encoding="utf8"))) / 100.
-    #   self.trafficStopModelSpeed = Params().get_bool("TrafficStopModelSpeed")
-    #   self.stopDistance = float(int(Params().get("StopDistance", encoding="utf8"))) / 100.
-    #   self.e2eDecelSpeed = float(int(Params().get("E2eDecelSpeed", encoding="utf8")))
-    #   self.tFollowRatio = float(int(Params().get("TFollowRatio", encoding="utf8"))) / 100.     
-
       self.trafficStopDistanceAdjust = ntune_scc_get("TrafficStopDistanceAdjust")
 
     self.trafficState = 0
@@ -393,14 +380,6 @@ class LongitudinalMpc:
     lead_xv_1 = self.process_lead(radarstate.leadTwo)
 
     v_ego_kph = v_ego * CV.MS_TO_KPH
-
-    # self.t_follow = interp(carstate.vEgo, AUTO_TR_BP, AUTO_TR_V) #if self.mode == 'acc' else T_FOLLOW
-    # self.t_follow *= self.tFollowRatio
-    #apilot
-    #cruiseGapRatio = interp(carstate.cruiseGap, [1,2,3,4], [0.8, 0.9, 1.0, 1.1])
-    #my
-    # cruiseGapRatio = interp(carstate.cruiseGap, [1,2,3,4], [1.0, 1.2, 1.3, 1.5])
-    # self.t_follow *= cruiseGapRatio
 
     self.comfort_brake = COMFORT_BRAKE
     self.set_weights(prev_accel_constraint=prev_accel_constraint, v_lead0=lead_xv_0[0,1], v_lead1=lead_xv_1[0,1])
@@ -428,12 +407,6 @@ class LongitudinalMpc:
     if self.mode == 'acc':
       self.params[:,5] = LEAD_DANGER_FACTOR
 
-      #cruiseButtonCounterDiff = controls.cruiseButtonCounter - self.cruiseButtonCounter
-      #active_mode => -3(OFF auto), -2(OFF brake), -1(OFF user), 0(OFF), 1(ON user), 2(ON gas), 3(ON auto)
-      # if controls.longActiveUser <= 0:
-      #   self.e2ePaused = False
-      # if self.e2ePaused and cruiseButtonCounterDiff != 0: #신호감지무시중 버튼이 눌리면 다시 재개함.
-      #   self.e2ePaused = False
       if v_ego_kph > 50.0 or self.xState in ["LEAD", "CRUISE"] or (v_ego_kph > 30.0 and (model_x > 40.0 and abs(y[-1])<3.0)):
         self.e2ePaused = False
 
