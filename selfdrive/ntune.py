@@ -254,7 +254,7 @@ class nTune():
     if self.checkValue("stoppingDecelRate", 0.4, 1.0, 0.8):
       updated = True
 
-    if self.checkValue("vEgoStopping", 0.4, 1.0, 0.5):
+    if self.checkValue("vEgoStopping", 0.4, 1.0, 1.0):
       updated = True
 
     if self.checkValue("vEgoStarting", 0.4, 1.0, 0.5):
@@ -272,7 +272,7 @@ class nTune():
     if self.checkValue("StopAtStopSign", 0., 1., 0.):
       updated = True
 
-    if self.checkValue("TrafficStopDistanceAdjust", 0., 10., 5.5):
+    if self.checkValue("TrafficStopDistanceAdjust", 0., 10., 4.0):
       updated = True
 
     if self.checkValue("X_EGO_OBSTACLE_COST", 3.0, 8.0, 6.0):
