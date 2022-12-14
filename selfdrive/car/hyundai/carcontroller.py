@@ -304,9 +304,6 @@ class CarController:
         #opkr
         aReqValue = CS.scc12["aReqValue"]
 
-        #my
-        #apply_accel = actuators.accel if CC.longActive and not CS.out.gasPressed else 0
-
         #neokii
         apply_accel = self.scc_smoother.get_apply_accel(CS, controls.sm, actuators.accel, stopping)
 
@@ -320,10 +317,19 @@ class CarController:
           else:
             stock_weight = 0.0         
 
-          # if 5.5 < CS.lead_distance <= 6.5 and aReqValue < 0.0 and not CS.out.cruiseState.standstill:
-          #   stock_weight = interp(CS.lead_distance, [5.5, 6.5], [0.2, 1.0])
-
           apply_accel = apply_accel * (1.0 - stock_weight) + aReqValue * stock_weight
+
+        else:
+          
+          self.sm.update(0)
+
+          if self.sm['longitudinalPlan'].onStop:
+            stop_distance = self.sm['longitudinalPlan'].stopLine[12]
+
+            if 0 < stop_distance <= 8.0 and CS.clu_Vanz > 0: #force to stop
+              # accel = apply_accel * interp(CS.out.vEgo*CV.MS_TO_MPH, [0.0, 4.0], [1.0, 1.5])
+              accel = self.accel - (DT_CTRL * interp(CS.out.vEgo, [0.9, 3.0], [1.0, 3.0]))
+              apply_accel = min(apply_accel, accel)
 
         if stopping:
           self.stopped = True
