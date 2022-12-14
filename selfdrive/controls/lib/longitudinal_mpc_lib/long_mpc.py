@@ -470,6 +470,7 @@ class LongitudinalMpc:
         self.trafficState = 0
 
       fakeCruiseDistance = 0.0
+      self.on_stopping = False 
       #3단계: 조건에 따른. 감속및 주행.
       if self.xState in ["LEAD", "CRUISE"] or self.e2ePaused:
         model_x = 1000.0
@@ -486,6 +487,7 @@ class LongitudinalMpc:
       elif self.xState == "E2E_STOP":
         self.comfort_brake = COMFORT_BRAKE * self.trafficStopAccel
         fakeCruiseDistance = 10.0
+        self.on_stopping = True #force to stop carcontroller.py
 
         if False: #self.trafficStopModelSpeed:
           v_cruise = v[0]
