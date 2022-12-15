@@ -254,7 +254,7 @@ class nTune():
     if self.checkValue("stoppingDecelRate", 0.4, 1.0, 0.8):
       updated = True
 
-    if self.checkValue("vEgoStopping", 0.4, 1.0, 1.0):
+    if self.checkValue("vEgoStopping", 0.4, 2.0, 1.0):
       updated = True
 
     if self.checkValue("vEgoStarting", 0.4, 1.0, 0.5):
