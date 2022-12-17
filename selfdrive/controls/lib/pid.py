@@ -70,9 +70,9 @@ class PIDController():
         self.i = i
 
       # Dynamic Clamp 적용 시험.. apilot
-      i_max = max(self.pos_limit - self.p, 0)
-      i_min = min(self.neg_limit - self.p, 0)
-      self.i = clip(self.i, i_min, i_max)
+      #i_max = max(self.pos_limit - self.p, 0)
+      #i_min = min(self.neg_limit - self.p, 0)
+      #self.i = clip(self.i, i_min, i_max)
 
     control = self.p + self.i + self.d + self.f
 
