@@ -413,7 +413,8 @@ class LongitudinalMpc:
       if self.stop_line:
         #1단계: 모델값을 이용한 신호감지
         startSign = v[-1] > 5.0 or v[-1] > (v[0]+2)
-        stopSign = v_ego_kph<80.0 and model_x < 130.0 and ((v[-1] < 3.0) or (v[-1] < v[0]*0.70)) and abs(y[N]) < 3.0 #직선도로에서만 감지하도록 함~ 모델속도가 70% 감소할때만..
+        stopSign = v_ego_kph < 80.0 and ((v[-1] < 3.0) or (v[-1] < v[0]*0.70)) and abs(y[N]) < 3.0 #직선도로에서만 감지하도록 함~ 모델속도가 70% 감소할때만..
+        
         if startSign:
           self.startSignCount = self.startSignCount + 1 #모델은 0.05초  /1 frame
         else:
