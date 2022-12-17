@@ -327,9 +327,7 @@ class CarController:
             stop_distance = self.sm['longitudinalPlan'].stopLine[12]
 
             if 0 < stop_distance <= 8.0 and CS.clu_Vanz > 0: #force to stop
-              # accel = apply_accel * interp(CS.out.vEgo*CV.MS_TO_MPH, [0.0, 4.0], [1.0, 1.5])
-              accel = self.accel - (DT_CTRL * interp(CS.out.vEgo, [0.9, 3.0], [1.0, 3.0]))
-              apply_accel = min(apply_accel, accel)
+              apply_accel = self.accel - (DT_CTRL * interp(CS.out.vEgo, [0.9, 3.0], [1.0, 3.0]))
 
         if stopping:
           self.stopped = True
