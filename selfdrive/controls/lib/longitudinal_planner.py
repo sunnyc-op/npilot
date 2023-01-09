@@ -22,8 +22,8 @@ AWARENESS_DECEL = -0.2  # car smoothly decel at .2m/s^2 when user is distracted
 A_CRUISE_MIN = -1.2
 
 # neokii
-A_CRUISE_MAX_VALS = [1.5, 1.2, 0.8, 0.6]
-A_CRUISE_MAX_BP = [0., 15., 25., 40.]
+#A_CRUISE_MAX_VALS = [1.5, 1.2, 0.8, 0.6]
+#A_CRUISE_MAX_BP = [0., 15., 25., 40.]
 
 # apilot
 A_CRUISE_MAX_VALS = [1.6, 1.2, 0.8, 0.6]
