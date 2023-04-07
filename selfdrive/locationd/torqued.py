@@ -147,11 +147,11 @@ class TorqueEstimator:
           cloudlog.info("restored torque params from cache")
       except Exception:
         cloudlog.exception("failed to restore cached torque params")
-        try:
-          params.remove("LiveTorqueCarParams")
-          params.remove("LiveTorqueParameters")
-        except:
-          print("torqued remove error.")
+        #try:
+        #  params.remove("LiveTorqueCarParams")
+        #  params.remove("LiveTorqueParameters")
+        #except:
+        #  print("torqued remove error.")
 
     self.filtered_params = {}
     for param in initial_params:
@@ -271,19 +271,19 @@ def main(sm=None, pm=None):
   CP = car.CarParams.from_bytes(params.get("CarParams", block=True))
   estimator = TorqueEstimator(CP)
 
-  def cache_params(sig, frame):
-    signal.signal(sig, signal.SIG_DFL)
-    cloudlog.warning("caching torque params")
-
-    params = Params()
-    params.put("LiveTorqueCarParams", CP.as_builder().to_bytes())
-
-    msg = estimator.get_msg(with_points=True)
-    params.put("LiveTorqueParameters", msg.to_bytes())
-
-    sys.exit(0)
-  if "REPLAY" not in os.environ:
-    signal.signal(signal.SIGINT, cache_params)
+#  def cache_params(sig, frame):
+#    signal.signal(sig, signal.SIG_DFL)
+#    cloudlog.warning("caching torque params")
+#
+#    params = Params()
+#    params.put("LiveTorqueCarParams", CP.as_builder().to_bytes())
+#
+#    msg = estimator.get_msg(with_points=True)
+#    params.put("LiveTorqueParameters", msg.to_bytes())
+#
+#    sys.exit(0)
+#  if "REPLAY" not in os.environ:
+#    signal.signal(signal.SIGINT, cache_params)
 
   while True:
     sm.update()
@@ -292,6 +292,7 @@ def main(sm=None, pm=None):
 #        if sm.updated[which]:
 #          t = sm.logMonoTime[which] * 1e-9
 #          estimator.handle_log(t, which, sm[which])
+
     for which in sm.updated.keys():
       if sm.updated[which]:
         t = sm.logMonoTime[which] * 1e-9
@@ -301,12 +302,14 @@ def main(sm=None, pm=None):
     # 4Hz driven by liveLocationKalman
     if sm.frame % 5 == 0:
       pm.send('liveTorqueParameters', estimator.get_msg(valid=sm.all_checks()))
-      
+
     # dp - auto save every 3 mins: 4 hz * 60 * 3 = 720 (3 mins)
     if sm.frame % 720 == 0:
-      put_nonblocking("LiveTorqueCarParams", CP.as_builder().to_bytes())
       msg = estimator.get_msg(with_points=True)
-      put_nonblocking("LiveTorqueParameters", msg.to_bytes())
+      if msg.liveTorqueParameters.totalBucketPoints > 0 and msg.liveTorqueParameters.totalBucketPoints <= 12000:
+        put_nonblocking("LiveTorqueCarParams", CP.as_builder().to_bytes())
+        #msg = estimator.get_msg(with_points=True)
+        put_nonblocking("LiveTorqueParameters", msg.to_bytes())
 
 if __name__ == "__main__":
   main()
